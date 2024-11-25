@@ -1,15 +1,12 @@
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 public class Receipt {
-    protected String customerName;
+    protected Customer customer;
     protected LocalDateTime dateTime;
-    protected double totalCost;
+    protected double totalCost = 0;
 
-    public Receipt(String customerName, LocalDateTime dateTime, Service[] services) {
-        this.customerName = customerName;
+    public Receipt(Customer customer, LocalDateTime dateTime) {
+        this.customer = customer;
         this.dateTime = dateTime;
     }
-
 }
