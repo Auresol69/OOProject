@@ -30,7 +30,7 @@ public class BookingManager {
     public void findBookingByCustomer(Customer cus) {
         for (Booking booking : bookings) {
             if (booking.getCus() == cus)
-                System.out.println(booking.getCus());
+                System.out.println(booking.getCus().XuatThongTin());
         }
     }
 }
