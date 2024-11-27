@@ -44,16 +44,29 @@ public class Booking {
         selectedServices.add(service);
     }
 
+    public Customer findCustomerByPhone(String phoneNumber, ArrayList<Customer> customers) {
+        for (Customer customer : customers) {
+            if (customer.getPhoneNumber().equals(phoneNumber)) {
+                return customer;
+            }
+        }
+        return null;
+    }
+
     public void setInfo() {
-        cus.setInfo();
+        this.cus.setInfo();
 
-        // for (cus tmp : CusManager) {
-        // if (cus.getPhoneNumber().equals(tmp.getPhoneNumber())) {
-        // cus = tmp;
-        // break;
-        // }
-        // }
-
+        // Tìm thông tin khách hàng trong danh sách
+        Customer foundCustomer = findCustomerByPhone(cus.getPhoneNumber(), CustomerManager.getCustomers());
+        if (foundCustomer != null) {
+            cus = foundCustomer;
+            // this.cus.CongDiemTichLuy();
+            System.out.println("Customer found: " + foundCustomer.getName());
+        } else {
+            System.out.println("Customer not found. Using new customer info.");
+            CustomerManager.addCustomer(cus);
+        }
+        // Danh sách dịch vụ
         Scanner scanner = new Scanner(System.in);
         System.out.println("Which service do you want to use?");
         System.out.println("0. Tee & Coffee");
