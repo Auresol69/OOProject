@@ -1,33 +1,34 @@
 import java.util.ArrayList;
 
 public class BookingManager {
-    protected ArrayList<Booking> bookings;
+    protected static ArrayList<Booking> bookings;
 
-    public BookingManager() {
-        bookings = new ArrayList<>();
-    }
-
-    public void addBooking(Booking booking) {
+    public static void addBooking(Booking booking) {
         bookings.add(booking);
     }
 
-    public void removeBooking(int index) {
+    public static void removeBooking(int index) {
         bookings.remove(index);
     }
 
-    public void clearBooking() {
+    public static void clearBooking() {
         bookings.clear();
     }
 
-    public ArrayList<Booking> getBookings() {
+    public static ArrayList<Booking> getBookings() {
         return bookings;
     }
 
-    public void setBookings(ArrayList<Booking> bookings) {
-        this.bookings = bookings;
+    public static void setBookings(ArrayList<Booking> bookings) {
+        BookingManager.bookings = bookings;
     }
 
-    public void findBookingByCustomer(Customer cus) {
+    // THAO TÁC
+    public static void terminal() {
+
+    }
+
+    public static void findBookingByCustomer(Customer cus) {
         for (Booking booking : bookings) {
             if (booking.getCus() == cus)
                 System.out.println(booking.getCus().XuatThongTin());
