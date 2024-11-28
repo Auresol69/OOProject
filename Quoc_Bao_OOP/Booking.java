@@ -108,6 +108,7 @@ public class Booking {
             }
 
         } while (continueChoosing);
+        BookingManager.addBooking(this);
     }
 
     public void printServices() {
