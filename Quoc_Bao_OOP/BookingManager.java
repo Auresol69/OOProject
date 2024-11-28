@@ -3,6 +3,10 @@ import java.util.ArrayList;
 public class BookingManager {
     protected static ArrayList<Booking> bookings;
 
+    static {
+        bookings = new ArrayList<>();
+    }
+
     public static void addBooking(Booking booking) {
         bookings.add(booking);
     }
@@ -28,10 +32,11 @@ public class BookingManager {
 
     }
 
-    public static void findBookingByCustomer(Customer cus) {
+    public static void findBookingByPhoneNumber(String phonenumber) {
         for (Booking booking : bookings) {
-            if (booking.getCus() == cus)
+            if (booking.getCus().getPhoneNumber().equals(phonenumber)) {
                 System.out.println(booking.getCus().XuatThongTin());
+            }
         }
     }
 }
