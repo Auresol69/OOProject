@@ -39,8 +39,7 @@ public abstract class Person {
     }
 
     public String XuatThongTin() {
-        return "Person{" + "Name=" + Name + ", PhoneNumber=" + PhoneNumber + ", Sex=" + (Sex == false ? "Nữ" : "Nam")
-                + '}';
+        return "Person{Name=" + Name + ", PhoneNumber=" + PhoneNumber + ", Sex=" + (Sex ? "Male" : "Female") + "}";
     }
 
     public void NhapThongTin() {
