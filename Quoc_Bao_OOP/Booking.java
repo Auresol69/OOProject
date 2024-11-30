@@ -68,10 +68,14 @@ public class Booking {
         }
         // Danh sách dịch vụ
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Which service do you want to use?");
-        System.out.println("0. Tee & Coffee");
-        System.out.println("1. Technical Support");
-        System.out.println("2. Wifi");
+        System.out.println(" ╔═════════════════════════════════╗");
+        System.out.println(" ║   Which service do you want?    ║");
+        System.out.println(" ╠═════════════════════════════════╣");
+        System.out.println(" ║ 0. Tea & Coffee                 ║");
+        System.out.println(" ║ 1. Technical Support            ║");
+        System.out.println(" ║ 2. Wifi                         ║");
+        System.out.println(" ╚═════════════════════════════════╝");
+
         System.out.print("Enter your choice: ");
         ArrayList<Service> services = ServiceManager.availableServices;
         int choice = Integer.parseInt(scanner.nextLine());
@@ -96,10 +100,13 @@ public class Booking {
                 continueChoosing = false; // Nếu người dùng chọn không thì dừng lại
             } else {
                 // Nếu muốn chọn dịch vụ khác, yêu cầu nhập lại
-                System.out.println("Which service do you want to use?");
-                System.out.println("0. Tea & Coffee");
-                System.out.println("1. Technical Support");
-                System.out.println("2. Wifi");
+                System.out.println(" ╔═════════════════════════════════╗");
+                System.out.println(" ║   Which service do you want?    ║");
+                System.out.println(" ╠═════════════════════════════════╣");
+                System.out.println(" ║ 0. Tea & Coffee                 ║");
+                System.out.println(" ║ 1. Technical Support            ║");
+                System.out.println(" ║ 2. Wifi                         ║");
+                System.out.println(" ╚═════════════════════════════════╝");
                 System.out.print("Enter your choice: ");
                 choice = Integer.parseInt(scanner.nextLine());
                 if (choice < 0 || choice > 2) {
