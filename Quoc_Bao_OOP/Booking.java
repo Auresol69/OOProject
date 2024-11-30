@@ -45,11 +45,16 @@ public class Booking {
     }
 
     public Customer findCustomerByPhone(String phoneNumber, ArrayList<Customer> customers) {
+        if (customers == null || phoneNumber == null) {
+            return null;
+        }
+
         for (Customer customer : customers) {
-            if (customer.getPhoneNumber().equals(phoneNumber)) {
+            if (customer != null && phoneNumber.equals(customer.getPhoneNumber())) {
                 return customer;
             }
         }
+
         return null;
     }
 
