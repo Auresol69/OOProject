@@ -33,10 +33,19 @@ public class BookingManager {
     }
 
     public static void findBookingByPhoneNumber(String phonenumber) {
+        boolean found = false;
+
         for (Booking booking : bookings) {
-            if (booking.getCus().getPhoneNumber().equals(phonenumber)) {
+            if (booking != null && booking.getCus() != null &&
+                    phonenumber.equals(booking.getCus().getPhoneNumber())) {
                 System.out.println(booking.getCus().XuatThongTin());
+                found = true;
             }
         }
+
+        if (!found) {
+            System.out.println("No booking found with the phone number: " + phonenumber);
+        }
     }
+
 }
