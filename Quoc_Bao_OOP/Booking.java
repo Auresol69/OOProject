@@ -1,18 +1,37 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Booking {
+public class Booking extends IdManager {
+    protected int id = 0;
     protected Customer cus;
     protected ArrayList<Service> selectedServices;
 
-    public Booking(Customer cus, ArrayList<Service> selectedServices) {
+    public Booking(int id, Customer cus, ArrayList<Service> selectedServices) {
+        this.id = id;
         this.cus = cus;
         this.selectedServices = selectedServices;
     }
 
     public Booking() {
+        this.id = IdManager.getNextId();
         this.cus = new Customer();
         this.selectedServices = new ArrayList<>();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public ArrayList<Service> getSelectedServices() {
+        return selectedServices;
+    }
+
+    public void setSelectedServices(ArrayList<Service> selectedServices) {
+        this.selectedServices = selectedServices;
     }
 
     public Customer getCus() {
