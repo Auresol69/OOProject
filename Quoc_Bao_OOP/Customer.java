@@ -5,8 +5,8 @@ public class Customer extends Person {
         super();
     }
 
-    public Customer(String Name, String PhoneNumber, boolean Sex, int Age) {
-        super(Name, PhoneNumber, Sex, Age);
+    public Customer(String Name, String PhoneNumber, boolean Sex) {
+        super(Name, PhoneNumber, Sex);
     }
 
     public void setInfo() {
