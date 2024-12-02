@@ -38,7 +38,7 @@ public class BookingManager {
         for (Booking booking : bookings) {
             if (booking != null && booking.getCus() != null &&
                     phonenumber.equals(booking.getCus().getPhoneNumber())) {
-                System.out.println(booking.getCus().XuatThongTin());
+                System.out.println(booking.getCus().XuatThongTin() + " " + "id: " + booking.getId());
                 found = true;
             }
         }
