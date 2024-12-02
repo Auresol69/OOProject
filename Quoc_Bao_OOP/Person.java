@@ -1,19 +1,17 @@
 import java.util.Scanner;
 
 public abstract class Person {
-    protected String Name;
-    protected String PhoneNumber;
+    protected String Name = "Unknown";
+    protected String PhoneNumber = "Unknown";
     protected boolean Sex;
-    protected int age;
 
     public Person() {
     };
 
-    public Person(String Name, String PhoneNumber, boolean Sex, int age) {
+    public Person(String Name, String PhoneNumber, boolean Sex) {
         this.Name = Name;
         this.PhoneNumber = PhoneNumber;
         this.Sex = Sex;
-        this.age = age;
     }
 
     public String getName() {
@@ -40,17 +38,9 @@ public abstract class Person {
         this.Sex = Sex;
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
     public String XuatThongTin() {
         return "Person{Name=" + Name + ", PhoneNumber=" + PhoneNumber + ", Sex=" + (Sex ? "Male" : "Female")
-                + ", Age=" + age + "}";
+                + "}";
     }
 
     public void NhapThongTin() {
@@ -62,14 +52,5 @@ public abstract class Person {
         this.setPhoneNumber(sc.nextLine());
         System.out.println("Sex:");
         this.setSex(Boolean.parseBoolean(sc.nextLine()));
-        while (true) {
-            try {
-                System.out.println("Age:");
-                this.setAge(Integer.parseInt(sc.nextLine()));
-                break;
-            } catch (Exception e) {
-                System.out.println("Invalid age. Please enter an integer.");
-            }
-        }
     }
 }
