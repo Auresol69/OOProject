@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -5,11 +7,17 @@ public class Booking extends IdManager {
     protected int id = 0;
     protected Customer cus;
     protected ArrayList<Service> selectedServices;
+    protected int session;
+    protected LocalDate date;
+    protected Room room;
+    
 
-    public Booking(int id, Customer cus, ArrayList<Service> selectedServices) {
+    public Booking(int id, LocalDate date,int session ,Customer cus, ArrayList<Service> selectedServices) {
         this.id = id;
         this.cus = cus;
         this.selectedServices = selectedServices;
+        this.date = date;
+        this.session = session;
     }
 
     public Booking() {
@@ -63,6 +71,22 @@ public class Booking extends IdManager {
         selectedServices.add(service);
     }
 
+    public int getSession() {
+        return session;
+    }
+
+    public void setSession(int session) {
+        this.session = session;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
     public Customer findCustomerByPhone(String phoneNumber, ArrayList<Customer> customers) {
         if (customers == null || phoneNumber == null) {
             return null;
@@ -77,8 +101,23 @@ public class Booking extends IdManager {
         return null;
     }
 
+    DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyy");
+    public void infoBook(){
+        Scanner sc = new Scanner(System.in);
+        LocalDate date = null;
+        String date_in ;
+        while(date == null){
+            try {
+                date_in = sc.nextLine();
+                date = LocalDate.parse(date_in,f);
+            } catch (Exception e) {
+                System.out.println("lỗi, Nhập lại ngày ");
+            }
+        }
+    }
     public void setInfo() {
         this.cus.setInfo();
+
 
         // Tìm thông tin khách hàng trong danh sách
         Customer foundCustomer = findCustomerByPhone(cus.getPhoneNumber(), CustomerManager.getCustomers());
@@ -163,6 +202,14 @@ public class Booking extends IdManager {
                     .append("/hour\n");
         }
         return sb.toString();
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
 }
