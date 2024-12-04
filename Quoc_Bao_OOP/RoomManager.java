@@ -1,7 +1,9 @@
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.TreeMap;
 
 public class RoomManager {
@@ -35,6 +37,7 @@ public class RoomManager {
         this.list_room = list_room;
     }
 
+    DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public String form_SO(Object c) {
 		StringBuilder k = new StringBuilder();
@@ -135,34 +138,61 @@ public class RoomManager {
         }
 
     }
+    
+    public void show_total_calendar_by_date(LocalDate begin, LocalDate end){
+        
+       
+        TreeMap<LocalDate,TreeMap<String,Booking[]>> bansao = new TreeMap<>();
+        TreeMap<String,Booking[]> k = new TreeMap<>();
+        Booking[] books = new Booking[3];
+        for (Room r : this.list_room){
+            k.put(r.getName(), books);
+        }
+       
+        for (LocalDate date = begin; !date.isAfter(end); date = date.plusDays(1)){
+            bansao.put(date, k);      
+        }
 
-    public void show_total_calendar(LocalDate begin, LocalDate end){
-        for (Map.Entry<LocalDate,TreeMap<String,Booking[]>> a : this.total_calendar.entrySet()){
-            if (a.getKey().isAfter(begin) && a.getKey().isBefore(end)){
-                System.out.println(" - " + a.getKey());
+       
+        for(Map.Entry<LocalDate,TreeMap<String,Booking[]>> mang : this.total_calendar.entrySet() ){
+            if ( (mang.getKey().isAfter(begin) && mang.getKey().isBefore(end)) || mang.getKey().isEqual(begin) || mang.getKey().isEqual(end) ){
+                bansao.put(mang.getKey(), mang.getValue());
+            }
+        }   
+
+       
+      
+        for (Map.Entry<LocalDate,TreeMap<String,Booking[] >> a : bansao.entrySet()){
+            System.out.println(a.getKey());
+        }
+
+        for (Map.Entry<LocalDate,TreeMap<String,Booking[]>> a : bansao.entrySet()){
+                System.out.println("\033[1m -  " + a.getKey()+"   \033[0m");
                 System.out.println(border(145));
-                System.out.println("|" + form_SO("Phòng") + "|" + form_SO("Sáng") + "|" + form_SO("Trưa") + "|" + form_SO("Tối") + "|");
-                for (Map.Entry<String,Booking[]> b : a.getValue().entrySet()){
-                    StringBuilder c = new StringBuilder();
-                    c.append("|" + form_SO(b.getKey()) + "|");
-                    for (int i = 0; i < 3; i++){
-                        if (b.getValue()[i] != null){
-                            c.append(form_SO(b.getValue()[i].getCus().getName() + " " +b.getValue()[i].getCus().getPhoneNumber()) + "|");
-                            
+                System.out.println("|\u001B[33m" + form_SO("Phong") + "\u001B[0m|\u001B[33m" + form_SO("Sang") + "\u001B[0m|\u001B[33m" + form_SO("Trua") + "\u001B[0m|\u001B[33m" + form_SO("Chieu") + "\u001B[0m|");
+                System.out.println(border(145));
+                for (Map.Entry<String,Booking[] > c : a.getValue().entrySet()){
+                    StringBuilder str = new StringBuilder();
+                    str.append("|"+form_SO(c.getKey())+"|");
+                    for (int i = 0; i< 3; i++){
+                        if (c.getValue()[i] != null){
+                            str.append(form_SO_red(c.getValue()[i].getCus().getName() + c.getValue()[i].getCus().getPhoneNumber()) +"|");
                         } else {
-                            c.append(form_SO("") + "|");
+                            str.append(form_SO("") +"|");
                         }
                     }
+                    System.out.println(str);
+                    System.out.println(border(145));
                 }
-            }
+                
         }
     }
 
-    public void show_total_calendar_by( ){
+    public void show_total_calendar( ){
         for (Map.Entry<LocalDate,TreeMap<String,Booking[]>> a : this.total_calendar.entrySet()){
                 System.out.println(" - " + a.getKey());
                 System.out.println(border(145));
-                System.out.println("|" + form_SO("Phong") + "|" + form_SO("Sang") + "|" + form_SO("Trua") + "|" + form_SO("Toi") + "|");
+                System.out.println("|\u001B[33m" + form_SO("Phong") + "\u001B[0m|\u001B[33m" + form_SO("Sang") + "\u001B[0m|\u001B[33m" + form_SO("Trua") + "\u001B[0m|\u001B[33m" + form_SO("Chieu") + "\u001B[0m|");
                 System.out.println(border(145));
                 for (Map.Entry<String,Booking[]> b : a.getValue().entrySet()){
                     StringBuilder c = new StringBuilder();
@@ -182,6 +212,40 @@ public class RoomManager {
                 }
             
         }
+    }
+
+    public LocalDate[] Get_time_Booking(){
+        LocalDate date_b = null;
+        LocalDate date_e = null;
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Nhap ngay theo dinh dang (dd/MM/yyyy)");
+        boolean kiemtra = false;
+       do { 
+           
+         do {
+        try {
+            System.out.println("Nhap ngay bat dau :");
+            String date_in = sc.nextLine();
+            date_b = LocalDate.parse(date_in, f);
+            System.out.println("Nhap ngay key thuc");
+            date_in = sc.nextLine();
+            date_e = LocalDate.parse(date_in, f);
+        } catch (Exception e) {
+            System.out.println("Loi!!, vui long nhap lai ngay bat dau : ");
+        }
+        
+       } while(date_b == null || date_e == null);
+
+       if (date_b.isAfter(date_e)){
+        System.out.println("Ngay bat dau phai truoc ngay ket thuc !!");
+            kiemtra = false;
+       }
+    } while(kiemtra);
+    System.out.println("toi day chua");
+        this.show_total_calendar_by_date(date_b, date_e);
+       
+       return new LocalDate[] {date_b,date_e};
+       
     }
 
   public static void main(String[] args) {
@@ -208,8 +272,13 @@ public class RoomManager {
 
     RoomManager mng = new RoomManager(list_room);
 
-   mng.show_total_calendar_by();
-    
+//    mng.show_total_calendar();
+    // LocalDate[] date = mng.Get_time_Booking();
+    // System.out.println(date[0] + " den " + date[1]);
+
+    LocalDate b = LocalDate.of(2024, 12, 11);
+    LocalDate e = LocalDate.of(2024, 12, 17);
+    mng.show_total_calendar_by_date(b, e);
 
   }
 }
