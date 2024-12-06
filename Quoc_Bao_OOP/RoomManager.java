@@ -3,7 +3,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.TreeMap;
 
 public class RoomManager {
@@ -16,7 +18,7 @@ public class RoomManager {
     }
     public RoomManager(ArrayList<Room> list) {
         this.list_room = list;
-        this.calendar = new TreeMap<>();
+        this.calendar = new TreeMap<>(Comparator.reverseOrder());
 
         for(Room r : list ){
             if (!r.getCalendar().isEmpty()){
@@ -38,6 +40,7 @@ public class RoomManager {
     }
 
     DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    DateTimeFormatter f_out = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     public String form_SO(Object c) {
 		StringBuilder k = new StringBuilder();
@@ -155,7 +158,7 @@ public class RoomManager {
                     //  15 10 10 10 15 20 10 10 20 20 
                     str.append("║" +form_SO(booking.getId(),10));
                     str.append("║" +form_SO(room.getName(),10));
-                    str.append("║" +form_SO(c.getKey(),15));
+                    str.append("║" +form_SO(c.getKey().format(f_out),15));
                     str.append("║"+ ( i== 0 ? form_SO("sang",10) : i == 1 ? form_SO("trua",10) : form_SO("chieu",10)));
                     str.append("║" +form_SO(booking.getCus().getPhoneNumber(),15));
                     str.append("║" +form_SO(booking.getCus().getName(),25));
@@ -166,6 +169,7 @@ public class RoomManager {
                 }
             }
            String s = dem == 0 ? ("╠" + border(154) +"╣") : ("║" + border_thuong(154) + "║");
+           dem++;
            System.out.println(s);
             System.out.println(str);
             
@@ -174,11 +178,146 @@ public class RoomManager {
     System.out.println("╚" + border(154) + "╝");
    }
 
-    
-    
 
-    
+   public void history_by_date(LocalDate begin, LocalDate end){
+    int dem = 0;
+        System.out.println("╔"+border(154) +'╗');
+        System.out.println("║"+form_SO("BK ID",10) + "║" + form_SO("PHONG",10)+"║"  + form_SO("NGAY",15) + "║" +form_SO("buoi",10)+"║" +form_SO("SDT KH",15) +"║" +form_SO("TEN Khach Hang",25) +"║" + form_SO("ID MNG",10) +"║" +form_SO("SV_TEAM",10) +"║" +form_SO("DICH VU",20)+"║" + form_SO("Total price",20) +"║");
 
+    for (Map.Entry<LocalDate,ArrayList<Room>> c: this.calendar.entrySet()){
+        if (!c.getKey().isAfter(end) && !c.getKey().isBefore(begin)){
+            for (Room room : c.getValue()){
+                StringBuilder str = new StringBuilder();
+                for (int i = 0; i< 3; i++){
+                    if(room.getCalendar().get(c.getKey())[i] != null ){
+                        Booking booking = room.getCalendar().get(c.getKey())[i];
+                        //  15 10 10 10 15 20 10 10 20 20 
+                        str.append("║" +form_SO(booking.getId(),10));
+                        str.append("║" +form_SO(room.getName(),10));
+                        str.append("║" +form_SO(c.getKey().format(f_out),15));
+                        str.append("║"+ ( i== 0 ? form_SO("sang",10) : i == 1 ? form_SO("trua",10) : form_SO("chieu",10)));
+                        str.append("║" +form_SO(booking.getCus().getPhoneNumber(),15));
+                        str.append("║" +form_SO(booking.getCus().getName(),25));
+                        str.append("║" +form_SO("booking",10));// dòng này thêm ID service manager 
+                        str.append("║" +form_SO("booking",10));// dòng này thêm ID team service 
+                        str.append("║" +form_SO("booking",20));// dòng này thêm các dịch vụ 
+                        str.append("║" +form_SO("booking",20)+"║");// dòng này là giá 
+                    }
+                }
+            String s = dem == 0 ? ("╠" + border(154) +"╣") : ("║" + border_thuong(154) + "║");
+            dem++;
+            System.out.println(s);
+                System.out.println(str);
+                
+            }
+        }
+        System.out.println("╚" + border(154) + "╝");
+    }
+   }
+    
+    public LocalDate setDate(LocalDate begin , LocalDate end){
+        Scanner sc = new Scanner(System.in);
+        show_carlendar(begin, end);
+        
+        LocalDate date = null;
+        
+        do{
+            System.out.print("Nhap ngay (dd/MM/yyyy) : ");
+            System.out.println();
+            String date_in = sc.nextLine();
+            try {
+                date = LocalDate.parse(date_in, f);
+            } catch (Exception e) {
+                System.out.println("loi dinh dang ngay vui long nhap lai!!");
+            }
+
+        } while(date == null);
+        sc.close();
+        return date;
+    }
+    public String setName_room(){
+        Scanner sc = new Scanner(System.in);
+        boolean kt = true ;
+        String tenphong;
+        for (Room r : this.list_room){
+            System.out.println(r.getName());
+        }
+        do{
+            
+        
+            System.out.print("Nhap ma phong : ");
+            tenphong = sc.nextLine();
+            System.out.println();
+            for (Room room : this.list_room){
+                if (room.getName().equals(tenphong.trim())){
+                    kt = false;
+                }
+            }
+            if (kt) System.out.println("Phong nay khong ton tai !!");
+        } while(kt);
+            
+        return tenphong.trim();
+    }
+
+    public int set_sesssoon(){
+        Scanner sc = new Scanner(System.in);
+        int i = -1;
+        do{
+        System.out.println("Chon thoi gian trong ngay : ");
+        System.out.println("0. Sang");
+        System.out.println("1. trua");
+        System.out.println("2. chieu");
+        i = sc.nextInt();
+        
+        if (i<0 || i> 2){
+            System.out.println("Loi!!!  Vui long nhap lai!");
+        }
+        } while (i<0 || i>2);
+        return i;
+    }
+    
+    public boolean check(Booking booking){
+        try {
+            for (Room room : this.calendar.get(booking.getDate())){
+                if (room.getName() == booking.getRoom().getName()){
+                    if (room.getCalendar().get(booking.getDate())[booking.getSession()] != null){
+                        return true;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
+    }
+
+    public boolean add_booking(Booking book){
+
+        if (this.check(book) ){
+            System.out.println("Them that bai !!");
+            return false;
+        } 
+        book.getRoom().add_booking(book);
+        if (!this.calendar.containsKey(book.getDate())){
+            this.calendar.put(book.getDate(), new ArrayList<>());
+        }
+
+        if(!this.calendar.get(book.getDate()).contains(book.getRoom())){
+            this.calendar.get(book.getDate()).add(book.getRoom());
+            System.out.println("them thanh cong");
+        }
+        return true;
+    }
+
+    public void show (){
+        for (Map.Entry<LocalDate,ArrayList<Room> > c : this.calendar.entrySet()){
+            System.out.print(c.getKey());
+            for (Room room : c.getValue()){
+                System.out.print( " : " +room.getName() +",");
+            }
+            System.out.println();
+        }
+    }
   public static void main(String[] args) {
     Room r1 = new Vip_room("vip1", 1, 1, 1000000);
     Room r2 = new Standard_room("101", 1, 1, 100);
@@ -210,7 +349,17 @@ public class RoomManager {
     LocalDate b = LocalDate.of(2024, 12, 11);
     LocalDate e = LocalDate.of(2024, 12, 17);
     
+    
     // mng.show_carlendar(b,e);
+    
+    // mng.setName_room();
+
+    LocalDate d5 = LocalDate.of(2025, 01, 01);
+    Booking b4 = new Booking(4, d5, 2, cus1, null);
+    //  mng.history();
+
+    b4.setRoom(r1);
+    mng.add_booking(b4);
     mng.history();
   }
 }

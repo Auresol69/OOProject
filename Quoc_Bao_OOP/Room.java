@@ -68,15 +68,9 @@ public abstract class Room {
         }
         return false;
     }
-    public void add_booking(Booking book){
+    public boolean add_booking(Booking book){
         if (check_calendar(book)){
-            return;
-        }
-        if (this.calendar.containsKey(book.getDate())){
-            if (this.calendar.get(book.getDate())[book.getSession()] != null){
-                System.out.println("Lich da bi trung vui long kiem tra lai !!! ");
-                return;
-            }
+            return false;
         }
         book.setRoom(this);
         if (!this.calendar.containsKey(book.getDate())){
@@ -87,6 +81,7 @@ public abstract class Room {
         } else {
             this.calendar.get(book.getDate())[book.getSession()] = book;
         }
+        return true;
     }  
     
     
