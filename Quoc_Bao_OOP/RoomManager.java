@@ -4,6 +4,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
@@ -318,9 +320,33 @@ public class RoomManager {
             System.out.println();
         }
     }
+
+   public void count_all(){
+    HashMap<Room,Integer> bansao = new HashMap<>();
+    for (Room r : this.list_room){
+        bansao.put(r, r.dem_sl());
+        }
+
+        List<Map.Entry<Room, Integer>> list_sort = new ArrayList<>(bansao.entrySet());
+        list_sort.sort(Map.Entry.comparingByValue()); 
+
+        for (Map.Entry<Room,Integer> c :list_sort ){
+            
+        }
+
+   }
+
+   
+
+
+   public void count_bydate(LocalDate begin, LocalDate end){
+        for (Room room : this.list_room){
+            
+        }
+   } 
   public static void main(String[] args) {
-    Room r1 = new Vip_room("vip1", 1, 1, 1000000);
-    Room r2 = new Standard_room("101", 1, 1, 100);
+    Room r1 = new Vip_room("vip1", 1, 1, 1000000,1);
+    Room r2 = new Standard_room("101", 1, 1, 100,1);
 
     Customer cus1 = new Customer("trinh tran phuong tuan", "0344700023", false);
     
@@ -361,5 +387,6 @@ public class RoomManager {
     b4.setRoom(r1);
     mng.add_booking(b4);
     mng.history();
+    // mng.count_all();
   }
 }

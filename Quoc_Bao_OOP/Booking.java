@@ -10,6 +10,7 @@ public class Booking extends IdManager {
     protected int session;
     protected LocalDate date;
     protected Room room;
+    protected float price;
     
 
     public Booking(int id, LocalDate date,int session ,Customer cus, ArrayList<Service> selectedServices) {
@@ -18,12 +19,14 @@ public class Booking extends IdManager {
         this.selectedServices = selectedServices;
         this.date = date;
         this.session = session;
+        this.price = 0;
     }
 
     public Booking() {
         this.id = IdManager.getNextId();
         this.cus = new Customer();
         this.selectedServices = new ArrayList<>();
+        this.price = 0;
     }
 
     public int getId() {
@@ -116,9 +119,30 @@ public class Booking extends IdManager {
         }
     }
     public void setInfo() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Nhap ngay : ");
+        String date = sc.nextLine();
+        this.setDate(date); // -> lcoaldate 
+
+        System.out.println("nhap buoi : ");
+        int session = sc.nextInt();
+        this.setSession(session);
+
+        // nhap khach hang 
+        this.setCus(cus);
+        // nhap thoi gian 
+        this.setDate(date);
+        this.setSession(session);
+        // chon phong 
+        this.setRoom(room);
+
+        // chon dich vu 
+        
+
+
         this.cus.setInfo();
 
-
+// them dich vu --------------------------------------------------------------------------------------------------------------
         // Tìm thông tin khách hàng trong danh sách
         Customer foundCustomer = findCustomerByPhone(cus.getPhoneNumber(), CustomerManager.getCustomers());
         if (foundCustomer != null) {
@@ -210,6 +234,14 @@ public class Booking extends IdManager {
 
     public void setRoom(Room room) {
         this.room = room;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
     }
 
 }

@@ -3,18 +3,20 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.TreeMap;
 
-public abstract class Room {
+public abstract class Room implements Comparable<Room> {
     protected String Name;
     protected int Size;
     protected int Status;
     protected float Price;
+    protected int tang;
     protected TreeMap<LocalDate,Booking[]> calendar;
 
-    public Room(String name, int size, int status,float price ){
+    public Room(String name, int size, int status,float price,int tang ){
         this.Name = name;
         this.Size = size;
         this.Status = status;
         this.Price = price;
+        this.tang = tang;
         this.calendar = new TreeMap<>();
     }
 
@@ -85,36 +87,55 @@ public abstract class Room {
     }  
     
     
-
-    public String form_SO(Object c) {
-		StringBuilder k = new StringBuilder();
-		k.append("");
-		int space_b = (30-c.toString().length())/2 ;
-		int space_a = 30-c.toString().length()-space_b;
-		for (int i = 0; i < space_b ; i++) {
-			k.append(" ");
-		}
-		k.append(c.toString());
-		for (int i = 0; i< space_a ; i++) {
-			k.append(" ");
-		}
-		
-		return k.toString();
-	}
-    public static String border(int a){
-        StringBuilder b = new StringBuilder();
-        for (int i =0 ; i < a; i++){
-            b.append("-");
+    public int dem_sl(){
+        int d = 0;
+        for (Map.Entry<LocalDate,Booking[]> c : this.calendar.entrySet()){
+            for(int i = 0; i < 3; i++){
+                if ( c.getValue()[i] != null){
+                    d++;
+                }
+            }  
         }
-        return b.toString();
+        return d;
+    }
+   
+    public int dem_sl_bydate(LocalDate begin, LocalDate end){
+        int d = 0;
+        for (Map.Entry<LocalDate,Booking[]> c : this.calendar.entrySet()){
+            if(!c.getKey().isBefore(begin) && !c.getKey().isAfter(end)){
+                for(int i = 0; i < 3; i++){
+                    if ( c.getValue()[i] != null){
+                        d++;
+                    }
+                }  
+            }
+           
+        }
+        return d;
     }
 
-    public void show_by_date(LocalDate b, LocalDate e){
-        
+    public float dem_price(){
+        float d = 0;
         for (Map.Entry<LocalDate,Booking[]> c : this.calendar.entrySet()){
-            if (c.getKey().isAfter(b) && c.getKey().isBefore(e)){
-                
-            }
+            for(int i = 0; i < 3; i++){
+                if ( c.getValue()[i] != null){
+                    d += c.getValue()[i].getPrice();
+                }
+            }  
         }
+        return d;
+    }
+
+    public int getTang() {
+        return tang;
+    }
+
+    public void setTang(int tang) {
+        this.tang = tang;
+    }
+
+    @Override
+    public int compareTo(Room other) {
+        return this.getName().compareTo(other.getName());
     }
 }
