@@ -10,14 +10,15 @@ public class Booking extends IdManager {
     protected int session;
     protected LocalDate date;
     protected Room room;
-    
+    protected int status = 0;
 
-    public Booking(int id, LocalDate date,int session ,Customer cus, ArrayList<Service> selectedServices) {
+    public Booking(int id, LocalDate date, int session, Customer cus, ArrayList<Service> selectedServices, int status) {
         this.id = id;
         this.cus = cus;
         this.selectedServices = selectedServices;
         this.date = date;
         this.session = session;
+        this.status = status;
     }
 
     public Booking() {
@@ -102,22 +103,23 @@ public class Booking extends IdManager {
     }
 
     DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyy");
-    public void infoBook(){
+
+    public void infoBook() {
         Scanner sc = new Scanner(System.in);
         LocalDate date = null;
-        String date_in ;
-        while(date == null){
+        String date_in;
+        while (date == null) {
             try {
                 date_in = sc.nextLine();
-                date = LocalDate.parse(date_in,f);
+                date = LocalDate.parse(date_in, f);
             } catch (Exception e) {
                 System.out.println("lỗi, Nhập lại ngày ");
             }
         }
     }
+
     public void setInfo() {
         this.cus.setInfo();
-
 
         // Tìm thông tin khách hàng trong danh sách
         Customer foundCustomer = findCustomerByPhone(cus.getPhoneNumber(), CustomerManager.getCustomers());
@@ -211,5 +213,4 @@ public class Booking extends IdManager {
     public void setRoom(Room room) {
         this.room = room;
     }
-
 }
