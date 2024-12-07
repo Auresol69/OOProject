@@ -44,7 +44,7 @@ public class Booking extends IdManager {
     }
 
     public ArrayList<Service> getSelectedServices() {
-        return selectedServices;
+        return this.selectedServices;
     }
 
     public void setSelectedServices(ArrayList<Service> selectedServices) {
@@ -57,14 +57,6 @@ public class Booking extends IdManager {
 
     public void setCus(Customer cus) {
         this.cus = cus;
-    }
-
-    public ArrayList<Service> getselectedServices() {
-        return selectedServices;
-    }
-
-    public void setselectedServices(ArrayList<Service> selectedServices) {
-        this.selectedServices = selectedServices;
     }
 
     public void clearselectedServices() {
@@ -255,7 +247,13 @@ public class Booking extends IdManager {
     }
 
     public void setRoom(Room room) {
+        if (this.room !=null){        
+            this.room.getCalendar().get(this.getDate())[this.getSession()] = null;        
+        }
+        
+        
         this.room = room;
+        this.room.add_booking(this);
     }
 
 }

@@ -321,6 +321,8 @@ public class RoomManager {
     }
 
       public void thong_ke(){
+        double total =0;
+        int bor = 0;
         StringBuilder row = new StringBuilder();
         ArrayList<Room> bansao = this.list_room;
         Collections.sort(bansao, (a, b) -> Double.compare(b.tong_doanh_thu(), a.tong_doanh_thu()));
@@ -340,11 +342,13 @@ public class RoomManager {
         System.out.println(row);
 
         for (Room room : bansao){
+            
             row = new StringBuilder();
             int soluong = room.dem_sl();
             double price = room.getPrice();
             double tien_dich_vu = room.tong_doanh_thu_dichvu();
             double doanh_thu_tt = room.tong_doanh_thu();
+            total += doanh_thu_tt;
             double tien_khuyen_mai = soluong*price + tien_dich_vu - doanh_thu_tt ;
             
             row.append("║"+form_SO(room.getName(),10));
@@ -356,8 +360,159 @@ public class RoomManager {
             row.append("║"+form_SO(form_tien.format(tien_dich_vu),20));
             row.append("║"+form_SO(form_tien.format(tien_khuyen_mai),20));
             row.append("║"+form_SO(form_tien.format(doanh_thu_tt),20)+"║");
+
+            String s = bor == 0 ? ("╠" + border(143) +"╣") : ("║" + border_thuong(143) + "║");
+            bor++;
+            System.out.println(s);
+            System.out.println(row);
         }
+        System.out.println("╚" + border(143) + "╝");
+        System.out.println("Tong doanh thu : " + total );
+
   }
+  public void thong_ke_bydate(LocalDate begin, LocalDate end){
+    double total =0;
+    int bor = 0;
+    StringBuilder row = new StringBuilder();
+    ArrayList<Room> bansao = this.list_room;
+    Collections.sort(bansao, (a, b) -> Double.compare(b.tong_doanh_thu_bydate(begin,end), a.tong_doanh_thu_bydate(begin,end)));
+
+    
+    row.append("║"+form_SO("TEN PHG",10));
+    row.append("║"+form_SO("SIZE",10));
+    row.append("║"+form_SO("STATUS",10));
+    row.append("║"+form_SO("PRICE",10));
+    row.append("║"+form_SO("SO LAN THUE",15));
+    row.append("║"+form_SO("TIEN THUE PHONG",20));
+    row.append("║"+form_SO("TIEN DICH VU",20));
+    row.append("║"+form_SO("TIEN KHUYEN MAI",20));
+    row.append("║"+form_SO("DOANH THU",20)+"║");
+    
+    System.out.println("╔"+border(143)+'╗');
+    System.out.println(row);
+
+    for (Room room : bansao){
+        
+        row = new StringBuilder();
+        int soluong = room.dem_sl_bydate(begin,end);
+        double price = room.getPrice();
+        double tien_dich_vu = room.tong_doanh_thu_dichvu_bydate(begin,end);
+        double doanh_thu_tt = room.tong_doanh_thu_bydate(begin,end);
+        total += doanh_thu_tt;
+        double tien_khuyen_mai = soluong*price + tien_dich_vu - doanh_thu_tt ;
+        
+        row.append("║"+form_SO(room.getName(),10));
+        row.append("║"+form_SO(room.getSize(),10));
+        row.append("║"+form_SO(room.getStatus(),10));
+        row.append("║"+form_SO(room.getPrice(),10));
+        row.append("║"+form_SO(soluong,15));
+        row.append("║"+form_SO(form_tien.format(soluong*price),20));
+        row.append("║"+form_SO(form_tien.format(tien_dich_vu),20));
+        row.append("║"+form_SO(form_tien.format(tien_khuyen_mai),20));
+        row.append("║"+form_SO(form_tien.format(doanh_thu_tt),20)+"║");
+
+        String s = bor == 0 ? ("╠" + border(143) +"╣") : ("║" + border_thuong(143) + "║");
+        bor++;
+        System.out.println(s);
+        System.out.println(row);
+    }
+    System.out.println("╚" + border(143) + "╝");
+    System.out.println("Tong doanh thu : " + total );
+
+}
+
+public void thong_ke_theo_quy(int nam){
+    System.out.println(" DOANH THU THEO QUY ");
+    System.out.println("QUY 1 ");
+    thong_ke_bydate(LocalDate.of(nam, 1, 1), LocalDate.of(nam, 4, 30));
+    System.out.println("QUY 2 ");
+    thong_ke_bydate(LocalDate.of(nam, 1, 4), LocalDate.of(nam, 7, 30));
+    System.out.println("QUY 3 ");
+    thong_ke_bydate(LocalDate.of(nam, 1, 7), LocalDate.of(nam, 10, 30));
+    System.out.println("QUY 4 ");
+    thong_ke_bydate(LocalDate.of(nam, 1, 10), LocalDate.of(nam, 12, 31));
+}
+
+public double tong_doanh_thu_theo_nam(int nam){
+    double d = 0;
+   for (Room room : this.list_room){
+    d+= room.tong_doanh_thu_bydate(LocalDate.of(nam, 1, 1), LocalDate.of(nam, 12, 31));
+   }
+    return d;
+}
+
+
+
+public void sosanh_cac_nam(){
+    Map.Entry<LocalDate,ArrayList<Room>> lasttime = this.calendar.firstEntry();
+    Map.Entry<LocalDate,ArrayList<Room>> firttime = this.calendar.lastEntry();
+    
+    int bor = 0;
+    StringBuilder row = new StringBuilder();
+    ArrayList<Room> bansao = this.list_room;
+
+    System.out.println("╔"+border(94)+'╗');
+    row.append("║"+form_SO("NAM",10));
+    row.append("║"+form_SO("TIEN THUE PHONG",20));
+    row.append("║"+form_SO("PHI DICH VU",20));
+    row.append("║"+form_SO("KHUYEN MAI",20));
+    row.append("║"+form_SO("DOANH THU ",20)+"║");
+    
+    System.out.println(row);
+    
+    for (LocalDate date = LocalDate.of(firttime.getKey().getYear(), 1, 1); !date.isAfter(lasttime.getKey()); date=date.plusYears(1)){
+        double total =0;
+        double thue =0;
+         double dichvu =0;
+        double khuyenmai =0;
+        for (Room room : this.list_room){
+            LocalDate b = LocalDate.of(date.getYear(), 1, 1);
+            LocalDate e = LocalDate.of(date.getYear(), 12, 31);
+            thue += room.dem_sl_by_date(b,e)+room.getPrice();
+            dichvu += room.tong_doanh_thu_dichvu_bydate(b, e);
+            total += room.tong_doanh_thu_bydate(b, e);
+        }
+        khuyenmai += dichvu + thue - total;
+        row = new StringBuilder();
+        row.append("║"+form_SO(date.getYear(),10));
+        row.append("║"+form_SO(thue,20));
+        row.append("║"+form_SO(dichvu,20));
+        row.append("║"+form_SO(khuyenmai,20));
+        row.append("║"+form_SO(total,20)+"║");
+
+        String s = bor == 0 ? ("╠" + border(94) +"╣") : ("║" + border_thuong(94) + "║");
+            bor++;
+            System.out.println(s);
+        System.out.println(row);
+    }
+    System.out.println("╚" + border(94) + "╝");
+
+    
+
+}
+
+
+
+
+public void thong_ke_theo_nam(){
+    TreeMap<Integer,Double> doanh_thu_byyear = new TreeMap<>();
+    Map.Entry<LocalDate,ArrayList<Room>> lasttime = this.calendar.firstEntry();
+
+    Map.Entry<LocalDate,ArrayList<Room>> firttime = this.calendar.lastEntry();
+    System.out.println(firttime.getKey() + " va " + lasttime.getKey());
+
+  for (LocalDate date = firttime.getKey() ; !date.isAfter(lasttime.getKey()) ; date = date.plusYears(1)){
+       System.out.println("DOANH THU CUA NAM " + date.getYear());
+       thong_ke_bydate(LocalDate.of(date.getYear(), 1, 1), LocalDate.of(date.getYear(), 12, 31));
+       doanh_thu_byyear.put(date.getYear(), this.tong_doanh_thu_theo_nam(date.getYear()));
+  }
+
+  for (Map.Entry<Integer,Double> c : doanh_thu_byyear.entrySet()){
+    System.out.println(c.getKey() + " : " + c.getValue()) ;
+  }
+}
+  
+
  
   public static void main(String[] args) {
     Room r1 = new Vip_room("vip1", 1, 1, 1000000,1);
@@ -368,31 +523,30 @@ public class RoomManager {
     LocalDate d1 = LocalDate.of(2024, 12, 12);
     LocalDate d2 = LocalDate.of(2024, 01, 01);
 
-    Service wifi = new wifiService("wifi", 100);
+    Service wifi = new wifiService("wifi", 1);
     Service tn = new technicalSupportService("tn", 150);
     ArrayList<Service> c = new ArrayList<>();
     c.add(tn);
     c.add(wifi);
 
 
-    Booking b1 = new Booking(1, d1, 0, cus1, c);b1.setPrice(100);
-    Booking b2 = new Booking(2, d1, 1, cus1, c);b2.setPrice(200);
-    Booking b3 = new Booking(3, d2, 2, cus1, c);b3.setPrice(300);
-    
-    r1.add_booking(b1);
-    r2.add_booking(b2);
-    r1.add_booking(b3);
+    Booking b1 = new Booking(1, d1, 0, cus1, c);b1.setPrice(1);b1.setSelectedServices(c);
+    Booking b2 = new Booking(2, d1, 1, cus1, c);b2.setPrice(20);b2.setSelectedServices(c);
+    Booking b3 = new Booking(3, d2, 2, cus1, c);b3.setPrice(300);b3.setSelectedServices(c);
+    Booking bs = new Booking(1, d1, 2, cus1, c);bs.setPrice(1000);bs.setSelectedServices(c);
 
-    // for (Map.Entry<LocalDate,Booking[]> as : r1.getCalendar().entrySet()){
-    //     System.out.println(as.getKey());
-    //     for (int i = 0 ;i < 3; i++){
-    //         if (as.getValue()[i]!=null){
-    //             for (Service se : as.getValue()[i].getSelectedServices()){
-    //                 System.out.println(se.getName());
-    //             }
-    //         }
-    //     }
-    // }
+    b1.setRoom(r1);
+    b2.setRoom(r2);
+    b3.setRoom(r1);
+    bs.setRoom(r1);
+    
+    
+
+    
+
+    LocalDate b = LocalDate.of(2024, 12, 11);
+    LocalDate e = LocalDate.of(2024, 12, 17);
+    
 
     ArrayList<Room> list_room = new ArrayList<>();
     list_room.add(r1);
@@ -403,8 +557,7 @@ public class RoomManager {
 
 
 
-    LocalDate b = LocalDate.of(2024, 12, 11);
-    LocalDate e = LocalDate.of(2024, 12, 17);
+    
     
     
     // mng.show_carlendar(b,e);
@@ -412,12 +565,14 @@ public class RoomManager {
     // mng.setName_room();
 
     LocalDate d5 = LocalDate.of(2025, 01, 01);
-    Booking b4 = new Booking(4, d5, 2, cus1, null);b4.setPrice(400);
+    Booking b4 = new Booking(4, d5, 2, cus1, c);
     //  mng.history();
 
     b4.setRoom(r1);
     mng.add_booking(b4);
     // mng.history();
-    mng.thong_ke();
+    // mng.thong_ke_theo_nam();
+    mng.sosanh_cac_nam();
+    
   }
 }

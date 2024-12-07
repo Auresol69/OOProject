@@ -74,7 +74,7 @@ public abstract class Room implements Comparable<Room> {
         if (check_calendar(book)){
             return false;
         }
-        book.setRoom(this);
+
         if (!this.calendar.containsKey(book.getDate())){
             Booking books[] = new Booking[3];
             books[book.getSession()] = book;
@@ -95,6 +95,21 @@ public abstract class Room implements Comparable<Room> {
                     d++;
                 }
             }  
+        }
+        return d;
+    }
+
+    public int dem_sl_bydate(LocalDate begin, LocalDate end){
+        int d = 0;
+        for (Map.Entry<LocalDate,Booking[]> c : this.calendar.entrySet()){
+            if(!c.getKey().isBefore(begin) && !c.getKey().isAfter(end)){
+                for(int i = 0; i < 3; i++){
+                    if ( c.getValue()[i] != null){
+                        d++;
+                    }
+                }  
+            }
+            
         }
         return d;
     }
@@ -125,34 +140,54 @@ public abstract class Room implements Comparable<Room> {
         }
         return d;
     }
+
+    public double tong_doanh_thu_bydate(LocalDate begin, LocalDate end){
+        double d = 0;
+        for (Map.Entry<LocalDate,Booking[]> c : this.calendar.entrySet()){
+            if(!c.getKey().isBefore(begin) && !c.getKey().isAfter(end)){
+                for(int i = 0; i < 3; i++){
+                    if ( c.getValue()[i] != null){
+                        d += c.getValue()[i].getPrice();
+                    }
+                } 
+            }
+             
+        }
+        return d;
+    }
+
+
     public double tong_doanh_thu_dichvu(){
         double d = 0;
         for (Map.Entry<LocalDate,Booking[]> c : this.calendar.entrySet()){
             for(int i = 0; i < 3; i++){
-                if ( c.getValue()[i] != null){                    
-                    for(Service s : c.getValue()[i].getselectedServices()){
-                    
-                         d += s.getPricepersession();
-                    }                    
+                if ( c.getValue()[i] != null){                   
+                    for (Service sc :  c.getValue()[i].getSelectedServices()){
+                            d += sc.getPricepersession();
+                    }           
                 }
             }  
         }
         return d;
     }
-
-    public double tong_doanh_thu_by_date(LocalDate begin, LocalDate end){
+    public double tong_doanh_thu_dichvu_bydate(LocalDate begin, LocalDate end){
         double d = 0;
         for (Map.Entry<LocalDate,Booking[]> c : this.calendar.entrySet()){
-            if (!c.getKey().isBefore(begin) && !c.getKey().isAfter(end)){
+            if(!c.getKey().isBefore(begin) && !c.getKey().isAfter(end)){
                 for(int i = 0; i < 3; i++){
-                    if ( c.getValue()[i] != null){
-                        d += c.getValue()[i].getPrice();
+                    if ( c.getValue()[i] != null){                   
+                        for (Service sc :  c.getValue()[i].getSelectedServices()){
+                                d += sc.getPricepersession();
+                        }           
                     }
-                }
-            }     
+                } 
+            }
+             
         }
         return d;
     }
+
+    
 
     public int getTang() {
         return tang;
