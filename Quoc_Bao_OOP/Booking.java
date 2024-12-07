@@ -10,21 +10,20 @@ public class Booking extends IdManager {
     protected int session;
     protected LocalDate date;
     protected Room room;
-    protected int status = 0;
 
-    public Booking(int id, LocalDate date, int session, Customer cus, ArrayList<Service> selectedServices, int status) {
+    public Booking(int id, LocalDate date, int session, Customer cus, ArrayList<Service> selectedServices) {
         this.id = id;
         this.cus = cus;
         this.selectedServices = selectedServices;
         this.date = date;
         this.session = session;
-        this.status = status;
     }
 
     public Booking() {
         this.id = IdManager.getNextId();
         this.cus = new Customer();
         this.selectedServices = new ArrayList<>();
+        this.price = 0;
     }
 
     public int getId() {
@@ -119,6 +118,25 @@ public class Booking extends IdManager {
     }
 
     public void setInfo() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Nhap ngay : ");
+        String date = sc.nextLine();
+        this.setDate(date); // -> lcoaldate
+
+        System.out.println("nhap buoi : ");
+        int session = sc.nextInt();
+        this.setSession(session);
+
+        // nhap khach hang
+        this.setCus(cus);
+        // nhap thoi gian
+        this.setDate(date);
+        this.setSession(session);
+        // chon phong
+        this.setRoom(room);
+
+        // chon dich vu
+
         this.cus.setInfo();
 
         // Tìm thông tin khách hàng trong danh sách
@@ -213,4 +231,5 @@ public class Booking extends IdManager {
     public void setRoom(Room room) {
         this.room = room;
     }
+
 }
