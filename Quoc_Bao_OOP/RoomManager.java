@@ -1,4 +1,5 @@
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class RoomManager {
 
     DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     DateTimeFormatter f_out = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
+    DecimalFormat form_tien = new DecimalFormat("#,###.00");
     public String form_SO(Object c) {
 		StringBuilder k = new StringBuilder();
 		k.append("");
@@ -320,13 +321,41 @@ public class RoomManager {
     }
 
       public void thong_ke(){
+        StringBuilder row = new StringBuilder();
         ArrayList<Room> bansao = this.list_room;
+        Collections.sort(bansao, (a, b) -> Double.compare(b.tong_doanh_thu(), a.tong_doanh_thu()));
 
-        Collections.sort(bansao, (a, b) -> Float.compare(b.tong_doanh_thu(), a.tong_doanh_thu()));
-
+        
+        row.append("║"+form_SO("TEN PHG",10));
+        row.append("║"+form_SO("SIZE",10));
+        row.append("║"+form_SO("STATUS",10));
+        row.append("║"+form_SO("PRICE",10));
+        row.append("║"+form_SO("SO LAN THUE",15));
+        row.append("║"+form_SO("TIEN THUE PHONG",20));
+        row.append("║"+form_SO("TIEN DICH VU",20));
+        row.append("║"+form_SO("TIEN KHUYEN MAI",20));
+        row.append("║"+form_SO("DOANH THU",20)+"║");
+        
+        System.out.println("╔"+border(143)+'╗');
+        System.out.println(row);
 
         for (Room room : bansao){
-            System.out.println(room.getName() + " : " + room.dem_sl() +" : " + room.tong_doanh_thu());
+            row = new StringBuilder();
+            int soluong = room.dem_sl();
+            double price = room.getPrice();
+            double tien_dich_vu = room.tong_doanh_thu_dichvu();
+            double doanh_thu_tt = room.tong_doanh_thu();
+            double tien_khuyen_mai = soluong*price + tien_dich_vu - doanh_thu_tt ;
+            
+            row.append("║"+form_SO(room.getName(),10));
+            row.append("║"+form_SO(room.getSize(),10));
+            row.append("║"+form_SO(room.getStatus(),10));
+            row.append("║"+form_SO(room.getPrice(),10));
+            row.append("║"+form_SO(soluong,15));
+            row.append("║"+form_SO(form_tien.format(soluong*price),20));
+            row.append("║"+form_SO(form_tien.format(tien_dich_vu),20));
+            row.append("║"+form_SO(form_tien.format(tien_khuyen_mai),20));
+            row.append("║"+form_SO(form_tien.format(doanh_thu_tt),20)+"║");
         }
   }
  
@@ -339,13 +368,31 @@ public class RoomManager {
     LocalDate d1 = LocalDate.of(2024, 12, 12);
     LocalDate d2 = LocalDate.of(2024, 01, 01);
 
-    Booking b1 = new Booking(1, d1, 0, cus1, null);b1.setPrice(100);
-    Booking b2 = new Booking(2, d1, 1, cus1, null);b2.setPrice(200);
-    Booking b3 = new Booking(3, d2, 2, cus1, null);b3.setPrice(300);
+    Service wifi = new wifiService("wifi", 100);
+    Service tn = new technicalSupportService("tn", 150);
+    ArrayList<Service> c = new ArrayList<>();
+    c.add(tn);
+    c.add(wifi);
+
+
+    Booking b1 = new Booking(1, d1, 0, cus1, c);b1.setPrice(100);
+    Booking b2 = new Booking(2, d1, 1, cus1, c);b2.setPrice(200);
+    Booking b3 = new Booking(3, d2, 2, cus1, c);b3.setPrice(300);
     
     r1.add_booking(b1);
     r2.add_booking(b2);
     r1.add_booking(b3);
+
+    // for (Map.Entry<LocalDate,Booking[]> as : r1.getCalendar().entrySet()){
+    //     System.out.println(as.getKey());
+    //     for (int i = 0 ;i < 3; i++){
+    //         if (as.getValue()[i]!=null){
+    //             for (Service se : as.getValue()[i].getSelectedServices()){
+    //                 System.out.println(se.getName());
+    //             }
+    //         }
+    //     }
+    // }
 
     ArrayList<Room> list_room = new ArrayList<>();
     list_room.add(r1);
@@ -354,9 +401,7 @@ public class RoomManager {
 
     RoomManager mng = new RoomManager(list_room);
 
-//    mng.show_total_calendar();
-    // LocalDate[] date = mng.Get_time_Booking();
-    // System.out.println(date[0] + " den " + date[1]);
+
 
     LocalDate b = LocalDate.of(2024, 12, 11);
     LocalDate e = LocalDate.of(2024, 12, 17);
@@ -372,7 +417,7 @@ public class RoomManager {
 
     b4.setRoom(r1);
     mng.add_booking(b4);
-    mng.history();
+    // mng.history();
     mng.thong_ke();
   }
 }

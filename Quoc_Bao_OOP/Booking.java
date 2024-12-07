@@ -184,7 +184,7 @@ public class Booking extends IdManager {
                     // Thêm dịch vụ vào danh sách
                     selectedServices.add(services.get(choice));
                     System.out.println("Service added: " + services.get(choice).getName());
-                    double tmp;
+                    double tmp = 0;
                     for (Service sv : selectedServices) {
                         tmp += sv.getPricepersession() * getSession();
                     }

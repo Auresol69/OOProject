@@ -7,11 +7,11 @@ public abstract class Room implements Comparable<Room> {
     protected String Name;
     protected int Size;
     protected int Status;
-    protected float Price;
+    protected double Price;
     protected int tang;
     protected TreeMap<LocalDate,Booking[]> calendar;
 
-    public Room(String name, int size, int status,float price,int tang ){
+    public Room(String name, int size, int status,double price,int tang ){
         this.Name = name;
         this.Size = size;
         this.Status = status;
@@ -44,11 +44,11 @@ public abstract class Room implements Comparable<Room> {
         Status = status;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return Price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         Price = price;
     }
 
@@ -114,8 +114,8 @@ public abstract class Room implements Comparable<Room> {
         return d;
     }
 
-    public float tong_doanh_thu(){
-        float d = 0;
+    public double tong_doanh_thu(){
+        double d = 0;
         for (Map.Entry<LocalDate,Booking[]> c : this.calendar.entrySet()){
             for(int i = 0; i < 3; i++){
                 if ( c.getValue()[i] != null){
@@ -125,9 +125,23 @@ public abstract class Room implements Comparable<Room> {
         }
         return d;
     }
+    public double tong_doanh_thu_dichvu(){
+        double d = 0;
+        for (Map.Entry<LocalDate,Booking[]> c : this.calendar.entrySet()){
+            for(int i = 0; i < 3; i++){
+                if ( c.getValue()[i] != null){                    
+                    for(Service s : c.getValue()[i].getselectedServices()){
+                    
+                         d += s.getPricepersession();
+                    }                    
+                }
+            }  
+        }
+        return d;
+    }
 
-    public float tong_doanh_thu_by_date(LocalDate begin, LocalDate end){
-        float d = 0;
+    public double tong_doanh_thu_by_date(LocalDate begin, LocalDate end){
+        double d = 0;
         for (Map.Entry<LocalDate,Booking[]> c : this.calendar.entrySet()){
             if (!c.getKey().isBefore(begin) && !c.getKey().isAfter(end)){
                 for(int i = 0; i < 3; i++){
