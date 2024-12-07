@@ -99,7 +99,7 @@ public abstract class Room implements Comparable<Room> {
         return d;
     }
    
-    public int dem_sl_bydate(LocalDate begin, LocalDate end){
+    public int dem_sl_by_date(LocalDate begin, LocalDate end){
         int d = 0;
         for (Map.Entry<LocalDate,Booking[]> c : this.calendar.entrySet()){
             if(!c.getKey().isBefore(begin) && !c.getKey().isAfter(end)){
@@ -114,7 +114,7 @@ public abstract class Room implements Comparable<Room> {
         return d;
     }
 
-    public float dem_price(){
+    public float tong_doanh_thu(){
         float d = 0;
         for (Map.Entry<LocalDate,Booking[]> c : this.calendar.entrySet()){
             for(int i = 0; i < 3; i++){
@@ -122,6 +122,20 @@ public abstract class Room implements Comparable<Room> {
                     d += c.getValue()[i].getPrice();
                 }
             }  
+        }
+        return d;
+    }
+
+    public float tong_doanh_thu_by_date(LocalDate begin, LocalDate end){
+        float d = 0;
+        for (Map.Entry<LocalDate,Booking[]> c : this.calendar.entrySet()){
+            if (!c.getKey().isBefore(begin) && !c.getKey().isAfter(end)){
+                for(int i = 0; i < 3; i++){
+                    if ( c.getValue()[i] != null){
+                        d += c.getValue()[i].getPrice();
+                    }
+                }
+            }     
         }
         return d;
     }
@@ -137,5 +151,5 @@ public abstract class Room implements Comparable<Room> {
     @Override
     public int compareTo(Room other) {
         return this.getName().compareTo(other.getName());
-    }
+    }   
 }

@@ -4,8 +4,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
@@ -321,29 +319,17 @@ public class RoomManager {
         }
     }
 
-   public void count_all(){
-    HashMap<Room,Integer> bansao = new HashMap<>();
-    for (Room r : this.list_room){
-        bansao.put(r, r.dem_sl());
+      public void thong_ke(){
+        ArrayList<Room> bansao = this.list_room;
+
+        Collections.sort(bansao, (a, b) -> Float.compare(b.tong_doanh_thu(), a.tong_doanh_thu()));
+
+
+        for (Room room : bansao){
+            System.out.println(room.getName() + " : " + room.dem_sl() +" : " + room.tong_doanh_thu());
         }
-
-        List<Map.Entry<Room, Integer>> list_sort = new ArrayList<>(bansao.entrySet());
-        list_sort.sort(Map.Entry.comparingByValue()); 
-
-        for (Map.Entry<Room,Integer> c :list_sort ){
-            
-        }
-
-   }
-
-   
-
-
-   public void count_bydate(LocalDate begin, LocalDate end){
-        for (Room room : this.list_room){
-            
-        }
-   } 
+  }
+ 
   public static void main(String[] args) {
     Room r1 = new Vip_room("vip1", 1, 1, 1000000,1);
     Room r2 = new Standard_room("101", 1, 1, 100,1);
@@ -353,9 +339,9 @@ public class RoomManager {
     LocalDate d1 = LocalDate.of(2024, 12, 12);
     LocalDate d2 = LocalDate.of(2024, 01, 01);
 
-    Booking b1 = new Booking(1, d1, 0, cus1, null);
-    Booking b2 = new Booking(2, d1, 1, cus1, null);
-    Booking b3 = new Booking(3, d2, 2, cus1, null);
+    Booking b1 = new Booking(1, d1, 0, cus1, null);b1.setPrice(100);
+    Booking b2 = new Booking(2, d1, 1, cus1, null);b2.setPrice(200);
+    Booking b3 = new Booking(3, d2, 2, cus1, null);b3.setPrice(300);
     
     r1.add_booking(b1);
     r2.add_booking(b2);
@@ -381,12 +367,12 @@ public class RoomManager {
     // mng.setName_room();
 
     LocalDate d5 = LocalDate.of(2025, 01, 01);
-    Booking b4 = new Booking(4, d5, 2, cus1, null);
+    Booking b4 = new Booking(4, d5, 2, cus1, null);b4.setPrice(400);
     //  mng.history();
 
     b4.setRoom(r1);
     mng.add_booking(b4);
     mng.history();
-    // mng.count_all();
+    mng.thong_ke();
   }
 }
