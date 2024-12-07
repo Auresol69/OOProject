@@ -1,2 +1,1 @@
-thay doi cua long 
-thay doi cua long v2
+thay doi cua bao v69
