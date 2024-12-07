@@ -10,6 +10,15 @@ public class Booking extends IdManager {
     protected int session;
     protected LocalDate date;
     protected Room room;
+    protected float price;
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
 
     public Booking(int id, LocalDate date, int session, Customer cus, ArrayList<Service> selectedServices) {
         this.id = id;
