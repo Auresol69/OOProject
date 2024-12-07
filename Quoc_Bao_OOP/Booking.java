@@ -159,53 +159,70 @@ public class Booking extends IdManager {
             CustomerManager.addCustomer(cus);
         }
         // Danh sách dịch vụ
-        Scanner scanner = new Scanner(System.in);
-        System.out.println(" ╔═════════════════════════════════╗");
-        System.out.println(" ║   Which service do you want?    ║");
-        System.out.println(" ╠═════════════════════════════════╣");
-        System.out.println(" ║ 0. Tea & Coffee                 ║");
-        System.out.println(" ║ 1. Technical Support            ║");
-        System.out.println(" ║ 2. Wifi                         ║");
-        System.out.println(" ╚═════════════════════════════════╝");
-
-        System.out.print("Enter your choice: ");
         ArrayList<Service> services = ServiceManager.availableServices;
-        int choice = Integer.parseInt(scanner.nextLine());
-        if (choice < 0 || choice > 2) {
-            System.out.println("Invalid choice!");
-            return;
-        }
 
-        // Thêm dịch vụ đã chọn vào selectedServices
         boolean continueChoosing = true;
-
         do {
-            // Thêm dịch vụ đã chọn vào selectedServices
-            selectedServices.add(services.get(choice));
+            // Hiển thị menu dịch vụ
+            System.out.println(" ╔═════════════════════════════════╗");
+            System.out.println(" ║   What do you want to do?       ║");
+            System.out.println(" ╠═════════════════════════════════╣");
+            System.out.println(" ║ 0. Add Tea & Coffee             ║");
+            System.out.println(" ║ 1. Add Technical Support        ║");
+            System.out.println(" ║ 2. Add Wifi                     ║");
+            System.out.println(" ║ 3. Remove a service             ║");
+            System.out.println(" ║ 4. Exit                         ║");
+            System.out.println(" ╚═════════════════════════════════╝");
 
-            // Hỏi người dùng xem có muốn chọn thêm dịch vụ không
-            System.out.println("Service added: " + services.get(choice).getName());
-            System.out.print("Do you want to add another service? (yes/no): ");
-            String answer = scanner.nextLine();
+            System.out.print("Enter your choice: ");
+            int choice = Integer.parseInt(sc.nextLine());
 
-            if (answer.equalsIgnoreCase("no")) {
-                continueChoosing = false; // Nếu người dùng chọn không thì dừng lại
-            } else {
-                // Nếu muốn chọn dịch vụ khác, yêu cầu nhập lại
-                System.out.println(" ╔═════════════════════════════════╗");
-                System.out.println(" ║   Which service do you want?    ║");
-                System.out.println(" ╠═════════════════════════════════╣");
-                System.out.println(" ║ 0. Tea & Coffee                 ║");
-                System.out.println(" ║ 1. Technical Support            ║");
-                System.out.println(" ║ 2. Wifi                         ║");
-                System.out.println(" ╚═════════════════════════════════╝");
-                System.out.print("Enter your choice: ");
-                choice = Integer.parseInt(scanner.nextLine());
-                if (choice < 0 || choice > 2) {
-                    System.out.println("Invalid choice! Try again.");
-                }
+            switch (choice) {
+                case 0:
+                case 1:
+                case 2:
+                    // Thêm dịch vụ vào danh sách
+                    selectedServices.add(services.get(choice));
+                    System.out.println("Service added: " + services.get(choice).getName());
+                    double tmp;
+                    for (Service sv : selectedServices) {
+                        tmp += sv.getPricepersession() * getSession();
+                    }
+                    System.out.println("Total provisional service fee: " + tmp + "$");
+                    break;
+
+                case 3:
+                    // Hiển thị danh sách dịch vụ đã chọn
+                    if (selectedServices.isEmpty()) {
+                        System.out.println("No services to remove.");
+                        break;
+                    }
+
+                    System.out.println("Selected services:");
+                    for (int i = 0; i < selectedServices.size(); i++) {
+                        System.out.println(i + ". " + selectedServices.get(i).getName());
+                    }
+
+                    System.out.print("Enter the index of the service to remove: ");
+                    int removeIndex = Integer.parseInt(sc.nextLine());
+                    if (removeIndex >= 0 && removeIndex < selectedServices.size()) {
+                        Service removedService = selectedServices.remove(removeIndex);
+                        System.out.println("Service removed: " + removedService.getName());
+                    } else {
+                        System.out.println("Invalid index. No service removed.");
+                    }
+                    break;
+
+                case 4:
+                    // Thoát vòng lặp
+                    continueChoosing = false;
+                    System.out.println("Exiting...");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+                    break;
             }
-
         } while (continueChoosing);
         BookingManager.addBooking(this);
     }
