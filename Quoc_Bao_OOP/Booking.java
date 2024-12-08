@@ -1,31 +1,32 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class Booking extends IdManager {
     protected int id = 0;
     protected Customer cus;
     protected ArrayList<Service> selectedServices;
-    protected int session;
-    protected LocalDate date;
-    protected Room room;
-    protected float price;
+    protected TreeMap<LocalDate,TreeMap<Integer,ArrayList<Room>>> date;
+    protected double price;
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
-
-    public void setPrice(float price) {
+    
+    public void setPrice(double price) {
         this.price = price;
     }
 
-    public Booking(int id, LocalDate date, int session, Customer cus, ArrayList<Service> selectedServices) {
+    public Booking(int id,  Customer cus, ArrayList<Service> selectedServices ) {
         this.id = id;
         this.cus = cus;
         this.selectedServices = selectedServices;
-        this.date = date;
-        this.session = session;
+        date = new TreeMap<>();
+        price = 0;
+        
     }
 
     public Booking() {
@@ -33,6 +34,7 @@ public class Booking extends IdManager {
         this.cus = new Customer();
         this.selectedServices = new ArrayList<>();
         this.price = 0;
+        this.date = new TreeMap<>();
     }
 
     public int getId() {
@@ -72,22 +74,7 @@ public class Booking extends IdManager {
         selectedServices.add(service);
     }
 
-    public int getSession() {
-        return session;
-    }
-
-    public void setSession(int session) {
-        this.session = session;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
+    DateTimeFormatter form_time = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     public Customer findCustomerByPhone(String phoneNumber, ArrayList<Customer> customers) {
         if (customers == null || phoneNumber == null) {
             return null;
@@ -122,19 +109,16 @@ public class Booking extends IdManager {
         Scanner sc = new Scanner(System.in);
         System.out.println("Nhap ngay : ");
         String date = sc.nextLine();
-        this.setDate(date); // -> lcoaldate
+       
 
         System.out.println("nhap buoi : ");
         int session = sc.nextInt();
-        this.setSession(session);
 
         // nhap khach hang
         this.setCus(cus);
         // nhap thoi gian
-        this.setDate(date);
-        this.setSession(session);
-        // chon phong
-        this.setRoom(room);
+      
+
 
         // chon dich vu
 
@@ -178,7 +162,7 @@ public class Booking extends IdManager {
                     System.out.println("Service added: " + services.get(choice).getName());
                     double tmp = 0;
                     for (Service sv : selectedServices) {
-                        tmp += sv.getPricepersession() * getSession();
+                        // tmp += sv.getPricepersession() * getSession();
                     }
                     System.out.println("Total provisional service fee: " + tmp + "$");
                     break;
@@ -242,18 +226,100 @@ public class Booking extends IdManager {
         return sb.toString();
     }
 
-    public Room getRoom() {
-        return room;
+    
+
+    public boolean add_room(LocalDate date,int session,Room room) {
+        String str = session == 0 ? "sang" : session == 1? "trua" :"chieu";
+        if (room.check_calendar(date, session)){
+            
+            System.out.println("!!!!THEM KHONG THANH CONG !!!! : Phong " + room.getName() + " da co lich vao buoi " +str + " ngay " +date );
+            return false ;
+        }
+        if(!this.date.containsKey(date)){
+            this.date.put(date, new TreeMap<>());
+        }
+
+        if (!this.date.get(date).containsKey(session)){
+            this.date.get(date).put(session,new ArrayList<>());
+        }
+
+        if (this.date.get(date).get(session).contains(room)){
+            System.out.println("!!!!THEM KHONG THANH CONG !!!! : Ban da dat lich nay cho phong " + room.getName() + " vao buoi " +str + " ngay " +date );
+            return false; 
+        }
+        room.add_booking(date, session, this);
+        this.date.get(date).get(session).add(room);
+        System.out.println("Them thanh cong lich vao buoi " +str + " ngay " +date );
+        return true;
     }
 
-    public void setRoom(Room room) {
-        if (this.room !=null){        
-            this.room.getCalendar().get(this.getDate())[this.getSession()] = null;        
+    public boolean delete_session(LocalDate date , int session){
+        String str = session == 0 ? "sang" : session == 1? "trua" :"chieu";
+        if (!this.date.containsKey(date)){
+            System.out.println("Ban khong dat ngay " + date.format(form_time) + " cho lich");
+            return false ;
+        }
+        if (!this.date.get(date).containsKey(session)){
+            System.out.println("Ban khong dat buoi "+ str +" ngay " + date.format(form_time) + " cho lich ");
+            return false;
+        }   
+        
+        for (Room r : this.date.get(date).get(session)){
+            r.delete_booking(date, session);
         }
         
-        
-        this.room = room;
-        this.room.add_booking(this);
+        this.date.get(date).put(session, new ArrayList<>());
+        System.out.println("Lich nay vao buoi " + str + " ngay " + date.format(form_time) + " da duoc xoa tat ca");
+        return true;
     }
 
+    public boolean delete_room(LocalDate date, int session, Room room){
+        String str = session == 0 ? "sang" : session == 1? "trua" :"chieu";
+        room.delete_booking(date, session);
+        this.date.get(date).put(session, new ArrayList<>());
+        System.out.println("lich nay vao buoi " + str + " ngay " + date.format(form_time) + " da duoc xoa");
+        return true;
+    }
+
+
+    public static void main(String[] args) {
+
+        Service wf = new wifiService("wifi", 100) ;
+        Service staff = new technicalSupportService("staff",15);
+        ArrayList<Service> list_sv = new ArrayList<>();
+        list_sv.add(wf);
+        list_sv.add(staff);
+        Customer cus = new Customer("long", "0123", true);
+        Room room = new Vip_room("vip1", 1, 1, 10, 1);
+        
+       
+
+        LocalDate date1 = LocalDate.of(2024, 1, 1);
+        LocalDate date2 = LocalDate.of(2024, 1, 2);
+        LocalDate date3 = LocalDate.of(2024, 1, 3);
+        
+        Booking b1 = new Booking();b1.setId(1);
+        
+
+        b1.add_room(date1, 0, room);
+        b1.add_room(date1, 0, room);
+
+        b1.setSelectedServices(list_sv);
+
+        for (Map.Entry<LocalDate,Booking[]> c : room.getCalendar().entrySet()){
+            System.out.println(c.getKey() + " : ");
+            for (int i =0; i < 3 ; i++){
+                if (c.getValue()[i]!= null){
+                    for (Service sv :c.getValue()[i].getSelectedServices()){
+                        System.out.println(sv.getName());
+                    }
+                }
+            }
+        }
+
+
+        
+
+        
+    }
 }

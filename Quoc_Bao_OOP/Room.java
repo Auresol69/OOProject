@@ -1,5 +1,6 @@
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -60,33 +61,43 @@ public abstract class Room implements Comparable<Room> {
         this.calendar = calendar;
     }
 
-
-    public boolean check_calendar(Booking book){
-        if(this.calendar.containsKey(book.getDate())){
-            if (this.calendar.get(book.getDate())[book.getSession()] != null){
-                System.out.println("Lịch đã bị trùng, xin kiểm tra lại");
-                return true;
-            }
+    DateTimeFormatter form_time = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public boolean check_calendar(LocalDate date,int session){
+        try {
+            if(this.calendar.get(date)[session] != null);
+            return true ;
+        } catch (Exception e) {
         }
         return false;
+            
     }
-    public boolean add_booking(Booking book){
-        if (check_calendar(book)){
-            return false;
-        }
 
-        if (!this.calendar.containsKey(book.getDate())){
-            Booking books[] = new Booking[3];
-            books[book.getSession()] = book;
-            this.calendar.put(book.getDate(),books);
-
-        } else {
-            this.calendar.get(book.getDate())[book.getSession()] = book;
+    public boolean add_booking(LocalDate date , int session,Booking book){
+        String str = session == 0? "sang" : session == 1 ? "trua" : "toi";
+        if (this.check_calendar(date, session)){
+            System.out.println("Phong " + this.getName() +" da co lich vao buoi "+str);
+            return false; 
         }
+        if (!this.calendar.containsKey(date)){
+            this.calendar.put(date, new Booking[3]);
+        }
+        this.calendar.get(date)[session] = book;
+        System.out.println("Phong " + this.getName() + " da them thanh cong lich vao buoi " + str);
         return true;
-    }  
-    
-    
+    }
+
+    public boolean delete_booking(LocalDate date, int session){
+        String str = session == 0 ? "sang" : session == 1? "trua" :"chieu";
+        if (!check_calendar(date, session)){
+            System.out.println("Phong " + this.Name + " vao buoi " + str + " ngay " + date.format(form_time) + " khong co lich");
+            return false ;
+        }
+
+        this.calendar.get(date)[session] = null;
+        // System.out.println("lich vao buoi " + str + " ngay " + date.format(form_time) + " cua phong "+ this.getName() + " da duoc xoa thanh cong ");
+        return true;
+    }
+      
     public int dem_sl(){
         int d = 0;
         for (Map.Entry<LocalDate,Booking[]> c : this.calendar.entrySet()){

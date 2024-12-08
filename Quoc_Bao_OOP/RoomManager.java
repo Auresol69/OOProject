@@ -74,21 +74,6 @@ public class RoomManager {
 		return k.toString();
 	}
 
-    public String form_SO_red(Object c) {
-		StringBuilder k = new StringBuilder();
-		k.append("");
-		int space_b = (35-c.toString().length())/2 ;
-		int space_a = 35-c.toString().length()-space_b;
-		for (int i = 0; i < space_b ; i++) {
-			k.append(" ");
-		}
-		k.append(c.toString());
-		for (int i = 0; i< space_a ; i++) {
-			k.append(" ");
-		}
-		
-		return "\u001B[1;31m" +k.toString()+"\u001B[0m";
-	}
     public static String border(int a){
         StringBuilder b = new StringBuilder();
         for (int i =0 ; i < a; i++){
@@ -275,39 +260,6 @@ public class RoomManager {
         }
         } while (i<0 || i>2);
         return i;
-    }
-    
-    public boolean check(Booking booking){
-        try {
-            for (Room room : this.calendar.get(booking.getDate())){
-                if (room.getName() == booking.getRoom().getName()){
-                    if (room.getCalendar().get(booking.getDate())[booking.getSession()] != null){
-                        return true;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            return false;
-        }
-        return false;
-    }
-
-    public boolean add_booking(Booking book){
-
-        if (this.check(book) ){
-            System.out.println("Them that bai !!");
-            return false;
-        } 
-        book.getRoom().add_booking(book);
-        if (!this.calendar.containsKey(book.getDate())){
-            this.calendar.put(book.getDate(), new ArrayList<>());
-        }
-
-        if(!this.calendar.get(book.getDate()).contains(book.getRoom())){
-            this.calendar.get(book.getDate()).add(book.getRoom());
-            System.out.println("them thanh cong");
-        }
-        return true;
     }
 
     public void show (){
@@ -526,23 +478,9 @@ public void thong_ke_theo_nam(){
     Service wifi = new wifiService("wifi", 1);
     Service tn = new technicalSupportService("tn", 150);
     ArrayList<Service> c = new ArrayList<>();
+
     c.add(tn);
     c.add(wifi);
-
-
-    Booking b1 = new Booking(1, d1, 0, cus1, c);b1.setPrice(1);b1.setSelectedServices(c);
-    Booking b2 = new Booking(2, d1, 1, cus1, c);b2.setPrice(20);b2.setSelectedServices(c);
-    Booking b3 = new Booking(3, d2, 2, cus1, c);b3.setPrice(300);b3.setSelectedServices(c);
-    Booking bs = new Booking(1, d1, 2, cus1, c);bs.setPrice(1000);bs.setSelectedServices(c);
-
-    b1.setRoom(r1);
-    b2.setRoom(r2);
-    b3.setRoom(r1);
-    bs.setRoom(r1);
-    
-    
-
-    
 
     LocalDate b = LocalDate.of(2024, 12, 11);
     LocalDate e = LocalDate.of(2024, 12, 17);
@@ -565,13 +503,11 @@ public void thong_ke_theo_nam(){
     // mng.setName_room();
 
     LocalDate d5 = LocalDate.of(2025, 01, 01);
-    Booking b4 = new Booking(4, d5, 2, cus1, c);
     //  mng.history();
 
-    b4.setRoom(r1);
-    mng.add_booking(b4);
+    
     // mng.history();
-    // mng.thong_ke_theo_nam();
+    mng.thong_ke_theo_nam();
     mng.sosanh_cac_nam();
     
   }
