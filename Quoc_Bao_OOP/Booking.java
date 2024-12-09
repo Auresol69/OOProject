@@ -5,12 +5,13 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-public class Booking extends IdManager {
-    protected int id = 0;
+public class Booking extends BookingIdManager {
+    protected Integer id;
     protected Customer cus;
     protected ArrayList<Service> selectedServices;
     protected TreeMap<LocalDate, TreeMap<Integer, ArrayList<Room>>> date;
     protected double price;
+    protected Integer receiptid;
 
     public double getPrice() {
         return price;
@@ -20,8 +21,8 @@ public class Booking extends IdManager {
         this.price = price;
     }
 
-    public Booking(int id, Customer cus, ArrayList<Service> selectedServices) {
-        this.id = id;
+    public Booking(Customer cus, ArrayList<Service> selectedServices) {
+        this.id = BookingIdManager.getNextId();
         this.cus = cus;
         this.selectedServices = selectedServices;
         date = new TreeMap<>();
@@ -30,7 +31,7 @@ public class Booking extends IdManager {
     }
 
     public Booking() {
-        this.id = IdManager.getNextId();
+        this.id = BookingIdManager.getNextId();
         this.cus = new Customer();
         this.selectedServices = new ArrayList<>();
         this.price = 0;
@@ -47,6 +48,14 @@ public class Booking extends IdManager {
 
     public ArrayList<Service> getSelectedServices() {
         return this.selectedServices;
+    }
+
+    public Integer getReceiptid() {
+        return receiptid;
+    }
+
+    public void setReceiptid(Integer receiptid) {
+        this.receiptid = receiptid;
     }
 
     public void setSelectedServices(ArrayList<Service> selectedServices) {
@@ -112,26 +121,43 @@ public class Booking extends IdManager {
         String date = sc.nextLine();
 
         System.out.println("nhap buoi : ");
-        int session = sc.nextInt();
+        int session = Integer.parseInt(sc.nextLine());
 
         // nhap khach hang
-        this.setCus(cus);
         // nhap thoi gian
 
         // chon dich vu
 
-        this.cus.setInfo();
-
         // Tìm thông tin khách hàng trong danh sách
-        Customer foundCustomer = findCustomerByPhone(cus.getPhoneNumber(), CustomerManager.getCustomers());
-        if (foundCustomer != null) {
-            cus = foundCustomer;
-            // this.cus.CongDiemTichLuy();
-            System.out.println("Customer found: " + foundCustomer.getName());
-        } else {
-            System.out.println("Customer not found. Using new customer info.");
-            CustomerManager.addCustomer(cus);
+        while (true) {
+            this.cus.setInfo();
+            Customer foundCustomer = findCustomerByPhone(cus.getPhoneNumber(), CustomerManager.getCustomers());
+            if (foundCustomer != null) {
+                cus = foundCustomer;
+                System.out.println("Customer found: " + foundCustomer.getName());
+                break;
+            } else {
+                System.out.println("Customer not found.");
+                System.out.println("1. Nhap lai");
+                System.out.println("0. Them moi khach hang");
+                System.out.print("Nhap lua chon cua ban: ");
+
+                int option;
+                option = Integer.parseInt(sc.nextLine());
+                if (option == 0) {
+                    System.out.println("Dang them khach hang moi...");
+                    CustomerManager.addCustomer(cus); // Them khach hang moi
+                    break; // Thoat vong lap sau khi them khach hang moi
+                } else if (option == 1) {
+                    System.out.println("Vui long nhap lai thong tin khach hang.");
+                    // Tiep tuc vong lap de nhap lai thong tin khach hang
+                } else {
+                    System.out.println("Lua chon khong hop le. Vui long chon lai.");
+                    // Dua ra thong bao va tiep tuc vong lap neu lua chon khong hop le
+                }
+            }
         }
+
         // Danh sách dịch vụ
         ArrayList<Service> services = ServiceManager.availableServices;
 

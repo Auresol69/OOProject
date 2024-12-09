@@ -1,6 +1,7 @@
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class BookingManager {
     protected static ArrayList<Booking> bookings;
@@ -70,7 +71,7 @@ public class BookingManager {
                     int id_remove;
                     try {
                         id_remove = Integer.parseInt(sc.nextLine());
-                        if (BookingManager.removeBooking(id_remove - 1)) {
+                        if (BookingManager.removeBooking(id_remove)) {
                             System.out.println("Đã xóa đặt chỗ thành công!");
                         } else {
                             System.out.println("Không tìm thấy đặt chỗ với ID này.");
@@ -118,4 +119,66 @@ public class BookingManager {
         }
     }
 
+    public static void thanhToan() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Nhap so dien thoai nguoi dung de thanh toan: ");
+        String phone_cus = sc.nextLine();
+        // Loc booking theo sdtn
+        List<Booking> filteredBookings = bookings.stream()
+                .filter(booking -> booking.getCus().getPhoneNumber().equals(phone_cus)).collect(Collectors.toList());
+        if (filteredBookings == null) {
+            System.out.println("Khong tim thay Booking nao cho so dien thoai nay.");
+            return;
+        }
+        // Hien thi Bookings
+        filteredBookings
+                .forEach(booking -> System.out.println("Id: " + booking.getId() + ", total: " + booking.getPrice()
+                        + ", ReceiptID: " + booking.getReceiptid()));
+        ArrayList<Booking> bookingList = new ArrayList<>();
+        while (true) {
+            try {
+                System.out.print("Chon ID booking de thanh toan: ");
+                int id_thanhtoan = Integer.parseInt(sc.nextLine());
+                Booking bookingToPay = filteredBookings.stream().filter(booking -> booking.getId() == id_thanhtoan)
+                        .findFirst().orElse(null);
+                if (bookingToPay == null) {
+                    System.out.println("Khong tim thay Booking voi ID nay.");
+                    continue;
+                }
+                if (bookingList.contains(bookingToPay)) {
+                    System.out.println("Booking nay da duoc them vao danh sach thanh toan.");
+                } else {
+                    bookingList.add(bookingToPay);
+                    System.out.println("Da them Booking voi ID " + id_thanhtoan + " vao danh sach thanh toan.");
+                }
+                System.out.print("Ban co muon them ID booking khac khong? (1 = co, 0 = khong): ");
+                int option = Integer.parseInt(sc.nextLine());
+                if (option == 0) {
+                    break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Loi: Vui long nhap so nguyen hop le.");
+            }
+        }
+        if (!bookingList.isEmpty()) {
+            Customer cus = CustomerManager.getCustomers().stream()
+                    .filter(customer -> customer.getPhoneNumber().equals(phone_cus))
+                    .findFirst().orElse(null);
+
+            if (cus != null) {
+                Receipt rc = new Receipt(cus, bookingList);
+                ReceiptManager.receipts.add(rc);
+                for (Booking booking : bookingList) {
+                    booking.setReceiptid(rc.getId());
+                }
+                System.out.println("Thanh toan thanh cong. Receipt ID: " + rc.getId());
+                System.out.println("So hoa don cua ban la: " + rc.getId());
+            } else {
+                System.out.println("Khong tim thay khach hang voi so dien thoai: " + phone_cus);
+            }
+        } else {
+            System.out.println("Khong co Booking nao duoc thanh toan.");
+        }
+        ReceiptManager.showReceipt1Cus();
+    }
 }

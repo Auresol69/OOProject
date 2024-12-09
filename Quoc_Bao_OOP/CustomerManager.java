@@ -3,6 +3,10 @@ import java.util.ArrayList;
 public class CustomerManager {
     protected static ArrayList<Customer> customers;
 
+    static {
+        customers = new ArrayList<>();
+    }
+
     public static void addCustomer(Customer customer) {
         customers.add(customer);
     }
