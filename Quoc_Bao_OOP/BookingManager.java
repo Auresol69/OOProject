@@ -166,7 +166,40 @@ public class BookingManager {
                     .findFirst().orElse(null);
 
             if (cus != null) {
-                Receipt rc = new Receipt(cus, bookingList);
+                PaymentMethod paymentmethod = null;
+                while (paymentmethod == null) {
+                    System.out.println("Chon phuong thuc thanh toan:");
+                    System.out.println("1. Tien mat");
+                    System.out.println("2. Momo");
+                    System.out.println("3. ATM");
+                    System.out.print("Lua chon: ");
+                    int option = Integer.parseInt(sc.nextLine());
+                    switch (option) {
+                        case 1:
+                            paymentmethod = new Cash();
+                            break;
+                        case 2:
+                            System.out.print("Nhap Momo PIN: ");
+                            String momoPin = sc.nextLine();
+                            System.out.print("Nhap Momo phone: ");
+                            String momoPhone = sc.nextLine();
+                            paymentmethod = new Momo(momoPin, momoPhone);
+                            break;
+                        case 3:
+                            System.out.print("Nhap so the ATM: ");
+                            String cardNumber = sc.nextLine();
+                            System.out.print("Nhap ATM PIN: ");
+                            String atmPin = sc.nextLine();
+                            paymentmethod = new ATM(cardNumber, atmPin);
+                            break;
+                        default:
+                            System.out.println("Lua chon khong hop le!");
+                            return;
+                    }
+                    paymentmethod.ProcessPayment(0); // de tam la 0 vi chua lay dc price
+                }
+
+                Receipt rc = new Receipt(cus, paymentmethod, bookingList);
                 ReceiptManager.receipts.add(rc);
                 for (Booking booking : bookingList) {
                     booking.setReceiptid(rc.getId());
