@@ -1,8 +1,11 @@
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
@@ -14,32 +17,57 @@ public class RoomManager {
     
     public TreeMap<LocalDate,ArrayList<Room>> calendar;
     public RoomManager (){
-        this.list_room = new ArrayList<>();
-        for (int i = 0; i< 3 ;i++){
-            Room st = new Standard_room("" +(101+i), i+1, 1, i+2, i+1);
-            Room v = new Vip_room("Vip" + (101+i), i+1, 1, i+10, i+1);
-            this.list_room.add(st);
-            this.list_room.add(v);
+
+        ArrayList<Room> list = new ArrayList<>();
+
+        try (BufferedReader br  = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/Roommanager.txt"))){
+            String line ;
+            while((line = br.readLine())!=null){
+            String[] str = line.split("#");
+            String name = str[0];
+            int size = Integer.parseInt(str[1]) ;
+            int status = Integer.parseInt(str[2]) ;
+            double price = Double.parseDouble(str[3]) ;
+            int tang = Integer.parseInt(str[4]) ;
+            Room room;
+            if (name.contains("Vip")){
+                room = new Vip_room(name, size, status, price, tang);
+            } else {
+                room = new Standard_room(name, size, status, price, tang);
+            }
+            list.add(room);
+    
         }
-      
+       } catch (Exception e) {
+        // TODO: handle exception
+       }
+
+       Collections.sort(list, (a,b) -> a.getName().compareTo(b.getName()));
+       
+       this.list_room = list;
+       
+       
        this.calendar = new TreeMap<>();
     }
-    public RoomManager(ArrayList<Room> list) {
-        this.list_room = list;
-        this.calendar = new TreeMap<>(Comparator.reverseOrder());
 
-        for(Room r : list ){
-            if (!r.getCalendar().isEmpty()){
-                for(Map.Entry<LocalDate,Booking[]> c : r.getCalendar().entrySet()){
-                    if(!this.calendar.containsKey(c.getKey())){
-                        this.calendar.put(c.getKey(), new ArrayList<>());
-                    }
-                    this.calendar.get(c.getKey()).add(r);
-                    Collections.sort(this.calendar.get(c.getKey()) , (a,b) -> a.getName().compareTo(b.getName()) );
+
+
+    public static boolean check_room(String name){
+        try (BufferedReader br  = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/Roommanager.txt"))){
+            String line ;
+            while((line = br.readLine())!=null){
+                String[] str = line.split("#");
+                if (str[0].equalsIgnoreCase(name)){
+                    return true;
                 }
+            
             }
-        }
+        }catch (Exception e) {
+            // TODO: handle exception
+           }
+        return false;
     }
+    
     public ArrayList<Room> getList_room() {
         return list_room;
     }
@@ -58,6 +86,10 @@ public class RoomManager {
                 }
             }
         }
+    }
+
+    public void add_room(Room room){
+        this.list_room.add(room);
     }
     
     DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -110,42 +142,54 @@ public class RoomManager {
         return b.toString();
     }
 
-    public void show_carlendar(LocalDate begin, LocalDate end){
+    public void show_calendar(LocalDate begin, LocalDate end,int size){
+        boolean kt = false;
         TreeMap<LocalDate,ArrayList<Room> > bansao = new TreeMap<>();
         for (LocalDate date = begin; !date.isAfter(end);date= date.plusDays(1)){
                 bansao.put(date,list_room); 
         }
 
-
-
+        
         for (Map.Entry<LocalDate,ArrayList<Room> > lich : bansao.entrySet()){
         int dem = 0;
-          System.out.println(lich.getKey().format(f_out));
-          System.out.println("╔"+border(143)+"╗");
-          System.out.println("║"+ form_SO("ten phong") + "║" + form_SO("sang") + "║" + form_SO("trua") + "║" + form_SO("chieu") + "║");
+        String mau ;
+        if (lich.getKey().getDayOfMonth()%2==0){ mau ="\u001B[33m";} else { mau ="\u001B[35m"; }
+            System.out.println(mau+"╔"+border(143)+"╗"+"\u001B[0m");
+          System.out.println(mau+"║"+"\u001B[0m"+"\u001B[1m"+form_SO(lich.getKey().format(f_out),143)+"\u001B[0m"+mau+"║"+"\u001B[0m");
+          System.out.println(mau+"╠"+border(143)+"╣"+"\u001B[0m");
+          System.out.println(mau+"║"+"\u001B[0m"+ form_SO("ten phong") + mau+"║"+"\u001B[0m" + form_SO("sang") +mau+"║"+"\u001B[0m" + form_SO("trua") + mau+"║"+"\u001B[0m" + form_SO("chieu") + mau+"║"+"\u001B[0m");
           for (Room room : lich.getValue()){
-            if (dem == 0){
-                System.out.println("╠" + border(143) +"╣");
-                dem++;
-            } else {
-                System.out.println("║" +border_thuong(143)+"║");
+            kt = false;
+            if (room.getSize() == size+1 || room.getSize() == size){
+                kt = true;
             }
+            String mota = room.getSize() == 0 ? "  (10-15)  " : room.getSize() == 1 ? "  (15-25)  " : "  (25-40) ";
             StringBuilder str = new StringBuilder();
-            str.append("║" + form_SO(room.getName()) + "║");
+            str.append(mau+"║"+"\u001B[0m" + form_SO(room.getName()+mota) + mau+"║"+"\u001B[0m");
             if (!room.getCalendar().containsKey(lich.getKey())){
-                str.append(form_SO("") + "║" +form_SO("") + "║" +form_SO("") + "║");
+                str.append(form_SO("") + mau+"║"+"\u001B[0m" +form_SO("") + mau+"║"+"\u001B[0m" +form_SO("") +mau+ "║"+"\u001B[0m");
             } else {
                 for (int i = 0; i< 3; i++){
                     if(room.getCalendar().get(lich.getKey())[i] == null){
-                        str.append(form_SO("")+ "║");
+                        str.append(form_SO("")+ mau+"║"+"\u001B[0m");
                     } else {
-                        str.append(form_SO(room.getCalendar().get(lich.getKey())[i].getCus().getName() +  room.getCalendar().get(lich.getKey())[i].getCus().getPhoneNumber())+"║");
+                        str.append(form_SO(room.getCalendar().get(lich.getKey())[i].getCus().getName() +  room.getCalendar().get(lich.getKey())[i].getCus().getPhoneNumber())+mau+"║"+"\u001B[0m");
                     }
                 }
-            }           
-            System.out.println(str);
+            } 
+            if (dem == 0){
+                System.out.println(mau+"╠" + border(143) +"╣"+"\u001B[0m");
+                System.out.println(str);
+                dem++;
+            } else if(kt) {
+                System.out.println(mau+"║" +border_thuong(143)+"║"+"\u001B[0m");
+                System.out.println(str);
+                dem++;
+            }
+           
+            
           }
-          System.out.println("╚" + border(143) + "╝");
+          System.out.println(mau+"╚" + border(143) + "╝"+"\u001B[0m");
         }
     }
 
@@ -506,5 +550,7 @@ public static ArrayList<Room> ds_test(){
         }
         return null ;
     }
+
+    
 
 }

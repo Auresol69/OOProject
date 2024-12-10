@@ -8,11 +8,11 @@ public abstract class Room implements Comparable<Room> {
     protected String Name;
     protected int Size;
     protected int Status;
-    protected double Price;
+    protected double  Price;
     protected int tang;
     protected TreeMap<LocalDate,Booking[]> calendar;
 
-    public Room(String name, int size, int status,double price,int tang ){
+    public Room(String name, int size, int status,double  price,int tang ){
         this.Name = name;
         this.Size = size;
         this.Status = status;
@@ -212,4 +212,17 @@ public abstract class Room implements Comparable<Room> {
     public int compareTo(Room other) {
         return this.getName().compareTo(other.getName());
     }   
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Room{");
+        sb.append("Name=").append(Name);
+        sb.append(", Size=").append(Size);
+        sb.append(", Status=").append(Status);
+        sb.append(", Price=").append(Price);
+        sb.append(", tang=").append(tang);
+        sb.append('}');
+        return sb.toString();
+    }
 }

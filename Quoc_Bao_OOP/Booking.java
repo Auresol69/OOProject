@@ -1,9 +1,13 @@
 
+import java.lang.classfile.instruction.ThrowInstruction;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
+import java.time.chrono.MinguoChronology;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.TreeMap;
+import java.util.random.RandomGenerator;
 
 public class Booking extends BookingIdManager {
     protected Integer id;
@@ -29,9 +33,8 @@ public class Booking extends BookingIdManager {
         this.date = date;
     }
 
-    
-    public Booking(Customer cus, ArrayList<Service> selectedServices) {
-        this.id = BookingIdManager.getNextId();
+    public Booking(int id,  Customer cus, ArrayList<Service> selectedServices ) {
+        this.id = id;
         this.cus = cus;
         this.selectedServices = selectedServices;
         date = new TreeMap<>();
@@ -317,95 +320,108 @@ public class Booking extends BookingIdManager {
     public LocalDate getfirtdate(){
         return this.date.isEmpty()? null : this.date.lastKey();
     }
-    public static void main(String[] args) {
-        RoomManager roomManager = new RoomManager(RoomManager.ds_test());
-
-        Service wf = new wifiService("wifi", 100) ;
-        Service staff = new technicalSupportService("staff",15);
-        ArrayList<Service> list_sv = new ArrayList<>();
-        list_sv.add(wf);
-        list_sv.add(staff);
-        Customer cus = new Customer("long", "0123", true);
-        LocalDate date1 = LocalDate.of(2024, 1, 1);
-        LocalDate date2 = LocalDate.of(2024, 1, 2);
-        LocalDate date3 = LocalDate.of(2024, 1, 3);
-        
-        Booking b1 = new Booking();b1.setId(1);
-        
-        DateTimeFormatter f_date = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        // list staff : list sv
-        // custommer : cus 
-        // thoi gian : date1 , date2 , date3 
-        // roomanager : roomManager
-        int i = 1;
+   
+    
+    public static void set_calendar(RoomManager rmng){
+        TreeMap<LocalDate,TreeMap<Integer,ArrayList<Room>>> c = new TreeMap<>();
+        String luachon = null; 
+        DateTimeFormatter form_time = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        Scanner sc = new Scanner(System.in);
         LocalDate date = null;
-        LocalDate date_e = null;
+
+        // date = nhapngay();
+    
+        // if(c.containsKey(date)){
+        //     c.put(date, new TreeMap<>());
+        // }
+
+        // int session  = -1;
+        // session = nhap_buoi();
+
+        // if(c.get(date).containsKey(session)){
+        //     c.get(date).put(session,new ArrayList<>());
+        // }
         Room room = null;
-        Scanner sc = new Scanner(System.in);
-        // do{
-        //     System.out.println("ngay bat dau ");
-        //     String beign = sc.nextLine();
-        //     try {
-        //         date = LocalDate.parse(beign, f_date);
-        //      } catch (Exception e) {
-        //         System.out.println("loi dinh dang");
-        //      }
-        // }while(date == null);
+        String roomname = null;
+        boolean kt = true;
+        date = LocalDate.now();
+        int session = 1;
+        c.put(date, new TreeMap<>());
+        c.get(date).put(session, new ArrayList<>());
+       do { 
+           
+           System.out.println("nhap ten phong ");
+           roomname = sc.nextLine();
+           if (!RoomManager.check_room(roomname)){
+               System.out.println("phong '" + roomname + "' khong ton tai");
+           } else {
+            room = rmng.get_room(roomname);
+            if(room.check_calendar(date,session)){
+                System.out.println("bi trung lich chon phong khac");
+            } else {
+                if (c.get(date).get(session).contains(room)){
+                    System.out.println("Phong " + roomname + " da co trong lich, nhap lai ");
+                } else {
+                    c.get(date).get(session).add(room);
+                    System.out.println("Da them phong vao lich");
+                }
+            }
+           }
+        
+
+        } while (kt);
+
+
+
        
-        // do {
-        //     System.out.println("ngay bat dau ");
-        //     String beign = sc.nextLine();
-        //          try {
-        //             date_e = LocalDate.parse(beign, f_date);
-        //          } catch (Exception e) {
-        //             System.out.println("loi dinh dang");
-        //          }
-        // }while (date_e==null);
-
-        roomManager.show_carlendar(LocalDate.of(2024, 12, 1), LocalDate.of(2024, 12, 5));
-        
-        System.out.println("nhap thong tin ");
+     
         
         
-
-        date = null;
-            do {
-                System.out.print("nhap ngay (dd/MM/yyyy) : ");
-                String date_in = sc.nextLine();
-                try {
-                    date = LocalDate.parse(date_in, f_date);
-                } catch (Exception e) {
-                System.out.println("Loi dinh dang ngay, vui long nhap lai !!!");
-                }
-            } while (date == null);
-
-            int session = 4;
-            System.out.println("0. Sang");
-            System.out.println("1. Trua");
-            System.out.println("2. Chieu");
-            do{
-            
-            System.out.print("nhap buoi trong ngay " + date.format(f_date) + " : " );
-
-            session = sc.nextInt();
-            } while (session <0 && session > 2);
-
-            do { 
-                System.out.println("nhap ten phong");
-                String room_name = sc.nextLine();
-                room = roomManager.get_room(room_name);
-                if (room == null){
-                    System.out.println("phong nay khong ton tai");
-                }
-            } while (room == null);
-            String buoi = session == 0 ? "sang" : session ==1? "trua" : "chieu";
-            System.out.println(" phong " + room.getName());
+        
     }
-    public void set_date_time(){
+
+    public LocalDate nhapngay(){
+        DateTimeFormatter form_time = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         Scanner sc = new Scanner(System.in);
-        System.out.println("Nhap ngay bat dau : ");
-        LocalDate begin = null;
-        LocalDate end = null;
-        
+        LocalDate date = null;
+        do { 
+            System.out.print("Nhap ngay (dd/MM/yyyy) : ");
+            String date_b = sc.nextLine();
+            try {
+                date = LocalDate.parse(date_b, form_time);
+            } catch (Exception e) {
+                System.out.println("Loi dinh dang, Vui long nhap ngay theo form dd/MM/yyyy");
+            }
+        } while (date == null);
+        sc.close();
+        return date;
+    }
+    public int nhap_buoi(){
+        int i = -1;
+        Scanner sc = new Scanner(System.in);
+        do {  
+            System.out.print("0:Sang     1:trua     2:chieu :     ");
+            i = sc.nextInt();
+            String str = (i <0 || i >2) ? "Loi" :"";
+            System.out.println(str);
+        } while (i<0 || i >2);
+        sc.close();
+        return i;
+    }
+
+    
+
+    public static void main(String[] args) {
+        RoomManager rmng = new RoomManager();
+        set_calendar(rmng);
+    //     Room vip = new Vip_room("longlonglong", 0, nextId, 500, nextId);
+    //    rmng.add_room(vip);
+    //    rmng.show_calendar(LocalDate.now(), LocalDate.now(), 0);
+    //    Customer cus = new Customer("ksdliahd", "123", false);
+    //    Booking b = new Booking(10, cus, null);
+    //    b.add_room(LocalDate.now(), 0, vip);
+    //    rmng.show_calendar(LocalDate.now(), LocalDate.now(), 0);
+       
+
     }
 }
