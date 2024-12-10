@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class BookingManager {
@@ -7,6 +8,7 @@ public class BookingManager {
 
     static {
         bookings = new ArrayList<>();
+        Collections.sort(bookings, (a,b) -> b.getfirtdate().compareTo(a.getfirtdate()));
     }
 
     public static void addBooking(Booking booking) {
@@ -117,5 +119,4 @@ public class BookingManager {
             System.out.println("No booking found with the phone number: " + phonenumber);
         }
     }
-
 }

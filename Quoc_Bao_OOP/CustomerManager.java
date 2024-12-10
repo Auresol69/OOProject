@@ -22,4 +22,5 @@ public class CustomerManager {
     public static void setCustomers(ArrayList<Customer> customers) {
         CustomerManager.customers = customers;
     }
+    
 }
