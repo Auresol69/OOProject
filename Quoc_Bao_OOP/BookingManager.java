@@ -168,10 +168,14 @@ public class BookingManager {
             if (cus != null) {
                 PaymentMethod paymentmethod = null;
                 while (paymentmethod == null) {
-                    System.out.println("Chon phuong thuc thanh toan:");
-                    System.out.println("1. Tien mat");
-                    System.out.println("2. Momo");
-                    System.out.println("3. ATM");
+                    System.out.println(" ╔═══════════════════════════════════╗");
+                    System.out.println(" ║    CHON PHUONG THUC THANH TOAN    ║");
+                    System.out.println(" ╠═══════════════════════════════════╣");
+                    System.out.println(" ║  1. Cash                          ║");
+                    System.out.println(" ║  2. Momo                          ║");
+                    System.out.println(" ║  3. ATM                           ║");
+                    System.out.println(" ╚═══════════════════════════════════╝");
+                    System.out.print(" Nhập lựa chọn của bạn: ");
                     System.out.print("Lua chon: ");
                     int option = Integer.parseInt(sc.nextLine());
                     switch (option) {
