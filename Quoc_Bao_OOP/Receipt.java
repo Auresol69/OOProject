@@ -1,19 +1,28 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Receipt {
+public class Receipt extends ReceiptIdManager {
+    protected Integer id;
+    protected Customer cus;
     protected ArrayList<Booking> bookings_choosed;
+    protected PaymentMethod paymentmethod;
     protected LocalDateTime dateTime;
     protected double totalCost = 0;
 
     public Receipt() {
+        this.cus = new Customer();
+        this.id = ReceiptIdManager.getNextId();
         this.bookings_choosed = new ArrayList<>();
         this.dateTime = LocalDateTime.now();
         this.totalCost = 0;
     }
 
-    public Receipt(ArrayList<Booking> bookings_choosed, LocalDateTime dateTime) {
+    public Receipt(Customer cus, ArrayList<Booking> bookings_choosed, PaymentMethod paymentmethod,
+            LocalDateTime dateTime) {
+        this.id = ReceiptIdManager.getNextId();
+        this.cus = cus;
         this.bookings_choosed = (bookings_choosed != null) ? bookings_choosed : new ArrayList<>();
+        this.paymentmethod = paymentmethod;
         this.dateTime = dateTime;
         this.totalCost = this.bookings_choosed.stream()
                 .filter(booking -> booking != null)
@@ -21,13 +30,24 @@ public class Receipt {
                 .sum();
     }
 
-    public Receipt(ArrayList<Booking> bookings_choosed, double totalCost) {
+    public Receipt(Customer cus, PaymentMethod paymentmethod, ArrayList<Booking> bookings_choosed) {
+        this.id = ReceiptIdManager.getNextId();
+        this.cus = cus;
         this.bookings_choosed = (bookings_choosed != null) ? bookings_choosed : new ArrayList<>();
+        this.paymentmethod = paymentmethod;
         this.dateTime = LocalDateTime.now();
         this.totalCost = this.bookings_choosed.stream()
                 .filter(booking -> booking != null)
                 .mapToDouble(Booking::getPrice) // Lamda API Stream
                 .sum();
+    }
+
+    public Customer getCus() {
+        return cus;
+    }
+
+    public void setCus(Customer cus) {
+        this.cus = cus;
     }
 
     public ArrayList<Booking> getBookings_choosed() {
@@ -52,5 +72,13 @@ public class Receipt {
 
     public void setTotalCost(double totalCost) {
         this.totalCost = totalCost;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

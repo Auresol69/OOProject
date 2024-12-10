@@ -4,6 +4,6 @@ public class Main {
         Booking cus2 = new Booking();
         cus1.setInfo();
         cus2.setInfo();
-        BookingManager.findBookingByPhoneNumber("123");
+        BookingManager.thanhToan();
     }
 }
