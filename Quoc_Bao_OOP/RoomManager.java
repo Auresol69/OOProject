@@ -5,9 +5,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
@@ -270,7 +268,7 @@ public class RoomManager {
     
     public LocalDate setDate(LocalDate begin , LocalDate end){
         Scanner sc = new Scanner(System.in);
-        show_carlendar(begin, end);
+        show_calendar(begin, end,1);
         
         LocalDate date = null;
         
