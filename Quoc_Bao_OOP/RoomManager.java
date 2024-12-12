@@ -50,22 +50,30 @@ public class RoomManager {
 
 
 
-    public static boolean check_room(String name){
-        try (BufferedReader br  = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/Roommanager.txt"))){
-            String line ;
-            while((line = br.readLine())!=null){
-                String[] str = line.split("#");
-                if (str[0].equalsIgnoreCase(name)){
-                    return true;
-                }
+    // public static boolean check_room(String name){
+    //     try (BufferedReader br  = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/Roommanager.txt"))){
+    //         String line ;
+    //         while((line = br.readLine())!=null){
+    //             String[] str = line.split("#");
+    //             if (str[0].equalsIgnoreCase(name)){
+    //                 return true;
+    //             }
             
+    //         }
+    //     }catch (Exception e) {
+    //         // TODO: handle exception
+    //        }
+    //     return false;
+    // }
+    
+    public boolean check_room(String roomname){
+        for (Room room : this.list_room){
+            if (room.getName().equalsIgnoreCase(roomname)){
+                return true;
             }
-        }catch (Exception e) {
-            // TODO: handle exception
-           }
+        }
         return false;
     }
-    
     public ArrayList<Room> getList_room() {
         return list_room;
     }
@@ -93,7 +101,7 @@ public class RoomManager {
     DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     DateTimeFormatter f_out = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     DecimalFormat form_tien = new DecimalFormat("#,###.00");
-    public String form_SO(Object c) {
+    public static String form_SO(Object c) {
 		StringBuilder k = new StringBuilder();
 		k.append("");
 		int space_b = (35-c.toString().length())/2 ;
@@ -108,9 +116,8 @@ public class RoomManager {
 		
 		return k.toString();
 	}
-    public String form_SO(Object c,int n) {
+    public static String form_SO(Object c,int n) {
 		StringBuilder k = new StringBuilder();
-		k.append("");
 		int space_b = (n-c.toString().length())/2 ;
 		int space_a = n-c.toString().length()-space_b;
 		for (int i = 0; i < space_b ; i++) {
@@ -138,6 +145,18 @@ public class RoomManager {
             b.append("-");
         }
         return b.toString();
+    }
+    public static String form_option(Object b , int m){
+        StringBuilder str  = new StringBuilder();
+        for (int i = 0 ; i< 5 ; i++){
+            str.append(" ");
+        } 
+        str.append(b);
+        int j = m - b.toString().length() - 5;
+        for (int i =0 ; i < j;i++){
+            str.append(" ");
+        }
+        return str.toString();
     }
 
     public void show_calendar(LocalDate begin, LocalDate end,int size){
