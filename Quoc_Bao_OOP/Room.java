@@ -10,6 +10,7 @@ public abstract class Room implements Comparable<Room> {
     protected int Status;
     protected double  Price;
     protected int tang;
+    protected LocalDate ngaycapnhatgannhat;
     protected TreeMap<LocalDate,Booking[]> calendar;
 
     public Room(String name, int size, int status,double  price,int tang ){
@@ -224,5 +225,13 @@ public abstract class Room implements Comparable<Room> {
         sb.append(", tang=").append(tang);
         sb.append('}');
         return sb.toString();
+    }
+
+    public LocalDate getNgaycapnhatgannhat() {
+        return ngaycapnhatgannhat;
+    }
+
+    public void setNgaycapnhatgannhat(LocalDate ngaycapnhatgannhat) {
+        this.ngaycapnhatgannhat = ngaycapnhatgannhat;
     }
 }

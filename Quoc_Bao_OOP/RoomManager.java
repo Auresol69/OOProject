@@ -39,8 +39,8 @@ public class RoomManager {
        } catch (Exception e) {
         // TODO: handle exception
        }
-
        Collections.sort(list, (a,b) -> a.getName().compareTo(b.getName()));
+       Collections.sort(list, (a,b) -> a.getTang() - b.getTang());
        
        this.list_room = list;
        
@@ -50,21 +50,6 @@ public class RoomManager {
 
 
 
-    // public static boolean check_room(String name){
-    //     try (BufferedReader br  = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/Roommanager.txt"))){
-    //         String line ;
-    //         while((line = br.readLine())!=null){
-    //             String[] str = line.split("#");
-    //             if (str[0].equalsIgnoreCase(name)){
-    //                 return true;
-    //             }
-            
-    //         }
-    //     }catch (Exception e) {
-    //         // TODO: handle exception
-    //        }
-    //     return false;
-    // }
     
     public boolean check_room(String roomname){
         for (Room room : this.list_room){
@@ -620,7 +605,7 @@ public void thong_ke_theo_nam(){
   
 
 
- 
+
 
     public Room get_room(String room_name){
         for (Room room : this.list_room){
@@ -630,6 +615,51 @@ public void thong_ke_theo_nam(){
         }
         return null ;
     }
+
+    public void show_list_room(){
+        int bor = 0;
+        System.out.println("╔" + border(20) +"╦"+ border(10) +"╦"+ border(10) +"╦"+ border(20) +"╦"+ border(20) +"╦"+ border(20)  + "╗");      
+        System.out.print("║" + form_SO("Room name", 20));
+        System.out.print("║" + form_SO("Size",10 ));
+        System.out.print("║" + form_SO("Tang", 10));           
+        System.out.print("║" + form_SO("Status ",20 ));
+        System.out.print("║" + form_SO("Price",20 ));
+        System.out.println("║" + form_SO("Last update",20 )+"║");
+        
+        for (Room room : this.list_room){
+            if (bor == 0){
+                System.out.println("╠" + border(20) +"╩"+ border(10) +"╩"+ border(10) +"╩"+ border(20) +"╩"+ border(20) +"╩"+ border(20)  + "╣");
+                bor++;
+            } 
+            else {
+                System.out.println("║" + border_thuong(20) +"+"+ border_thuong(10) +"+"+ border_thuong(10) +"+"+ border_thuong(20) +"+"+ border_thuong(20) +"+"+ border_thuong(20)  + "║");
+            }
+            StringBuilder str = new StringBuilder();  
+            str.append("║" + form_SO(room.getName(), 20));
+            str.append("|" + form_SO(room.getSize(),10 ));
+            str.append("|" + form_SO(room.getTang(), 10));
+            String trangthai = room.getStatus() == 0 ? "Tam dung" : "Dang hoat dong";
+            str.append("|" + form_SO(trangthai,20 ));
+            str.append("|" + form_SO(form_tien.format(room.getPrice())+" vnd ",20 ));
+            String date = room.getNgaycapnhatgannhat() == null ? "######" : room.getNgaycapnhatgannhat().format(f_out);
+            str.append("|" + form_SO(date,20 )+"║");
+               System.out.println(str);
+        }
+       System.out.println("╚"+border(105)+"╝");
+    }
+
+    public void chinh_sua_phong(){
+        this.show_list_room();
+        System.out.println("╔"+RoomManager.border(70)+"╗");
+        System.out.println("║" +RoomManager.form_SO("OPTION", 70)+"║");
+        System.out.println("╠"+RoomManager.border(70)+"╣");
+        System.out.println("║"+RoomManager.form_option("0.Sua ten phong", 70)+"║");
+        System.out.println("║"+RoomManager.form_option("1.Chinh sua kich thuoc", 70)+"║");
+        System.out.println("║"+RoomManager.form_option("2.Thay doi trang thai", 70)+"║");
+        System.out.println("║"+RoomManager.form_option("3.hoang thanh", 70)+"║");
+        System.out.println("╚" + RoomManager.border(70) + "╝");      
+    }
+
 
     public static void main(String[] args) {
         RoomManager rmng = new RoomManager();
@@ -647,7 +677,8 @@ public void thong_ke_theo_nam(){
         book.add_room(LocalDate.of(2024, 12, 12), 0, rmng.get_room("Vip101"));
         book.add_room(LocalDate.of(2022, 12, 1), 0, rmng.get_room("101"));
 
-        rmng.sosanh_cac_nam();
+        // rmng.sosanh_cac_nam();
+        rmng.chinh_sua_phong();
     }
 
 }

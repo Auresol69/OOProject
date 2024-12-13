@@ -1,17 +1,9 @@
-
-import java.lang.classfile.ClassFile;
-import java.lang.classfile.instruction.ThrowInstruction;
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
-import javax.swing.border.Border;
-import jdk.swing.interop.LightweightContentWrapper;
-
 public class Booking extends BookingIdManager {
     protected Integer id;
     protected Customer cus;
@@ -368,11 +360,15 @@ public class Booking extends BookingIdManager {
                         do { 
                             System.out.print("nhap phong : ");
                             String roomname = sc.nextLine();
+                            
                             if (!rmng.check_room(roomname)){
                                 System.out.println("phong '" + roomname + "' khong ton tai, Nhap lai !!");
                             } else {
                                 room = rmng.get_room(roomname);
                                 kt = false;
+                            }
+                            if (room == null){
+                                kt = true;
                             }
                         } while (kt);
                         kt = true;
