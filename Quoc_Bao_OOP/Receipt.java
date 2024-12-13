@@ -1,7 +1,10 @@
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Receipt extends ReceiptIdManager {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     protected Integer id;
     protected Customer cus;
     protected ArrayList<Booking> bookings_choosed;
@@ -120,7 +123,7 @@ public class Receipt extends ReceiptIdManager {
         return b.toString();
     }
 
-    public static void showReceipt() {
+    public void showReceipt() {
         // System.out.println("ID: " + this.id);
         // System.out.println("Customer Name: " + this.cus.getName());
         // System.out.println("DateTime: " + this.dateTime);
@@ -130,13 +133,24 @@ public class Receipt extends ReceiptIdManager {
         // for (Booking booking : this.bookings_choosed) {
         // booking.showBooking();
         // }
+        String formattedDate = this.getDateTime().format(formatter);
         System.out.print("╔" + border(39) + "╗" + "\n");
         System.out.print("║" + form_SO("RECEIPT") + "║" + "\n");
-        System.out.print("╚" + border(39) + "╝" + "\n");
+        System.out.print("╠" + border(39) + "╣" + "\n");
+        System.out.print("║" + form_SO("Date: " + formattedDate) + "║" + "\n");
+        System.out.print("║" + form_SO("BookingID:", 20) + form_SO("Price:", 19) + "║" + "\n");
 
+        if (this.bookings_choosed != null)
+            for (Booking booking : this.bookings_choosed) {
+                System.out
+                        .print("║" + form_SO(booking.getId(), 20) + form_SO(booking.getPrice(), 19) + "║" + "\n");
+            }
+        System.out.print("║" + form_SO("Total Cost: " + this.getTotalCost()) + "║" + "\n");
+        System.out.println("╚" + border(39) + "╝");
     }
 
     public static void main(String[] args) {
-        Receipt.showReceipt();
+        Receipt r = new Receipt();
+        r.showReceipt();
     }
 }
