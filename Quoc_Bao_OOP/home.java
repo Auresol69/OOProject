@@ -5,6 +5,12 @@ import java.util.Scanner;
 
 public class home {
 
+    public static final String RESET = "\033[0m"; // Reset màu
+    public static final String RED = "\033[0;31m"; // Đỏ
+    public static final String GREEN = "\033[0;32m"; // Xanh lá
+    public static final String YELLOW = "\033[0;33m"; // Vàng
+    public static final String BLUE = "\033[0;34m"; // Xanh dương
+
     public home() {
         RoomManager rm = new RoomManager();
         StaffManager sm = new StaffManager();
@@ -39,20 +45,21 @@ public class home {
 
                     if (account != null) {
                         if (account.getStaff() instanceof Admin) {
-                            System.out.println("Welcome " + account.getStaff().getName());
+                            System.out.println(GREEN + "Welcome " + account.getStaff().getName() + RESET);
                             LocalDateTime now = LocalDateTime.now();
                             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                             String formattedDate = now.format(formatter);
 
-                            System.out.println("Current time: " + formattedDate);
+                            System.out.println(GREEN + "Current time: " + formattedDate + RESET);
 
                             do {
                                 System.out.println("1. Dang ky them nhan vien");
                                 System.out.println("2. Quan ly nhan vien");
                                 System.out.println("3. Quan ly khach hang");
                                 System.out.println("4. Quan ly phong");
-                                System.out.println("5. Dang xuat");
-                                System.out.println("6. Thoat");
+                                System.out.println("5. Quan ly dat phong");
+                                System.out.println("6. Dang xuat");
+                                System.out.println("7. Thoat");
 
                                 boolean level3 = true;
                                 int option2 = Integer.parseInt(sc.nextLine());
@@ -171,6 +178,9 @@ public class home {
                                         } while (level3);
                                         break;
                                     case 5:
+                                        BookingManager.terminal();
+                                        break;
+                                    case 6:
                                         account = null;
                                         level2 = false;
                                         break;
@@ -182,12 +192,36 @@ public class home {
                                 }
                             } while (level2);
                         } else {
-                            System.out.println("Welcome " + account.getStaff().getName());
+                            System.out.println(GREEN + "Welcome " + account.getStaff().getName() + RESET);
                             LocalDateTime now = LocalDateTime.now();
                             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                             String formattedDate = now.format(formatter);
 
-                            System.out.println("Current time: " + formattedDate);
+                            System.out.println(GREEN + "Current time: " + formattedDate + RESET);
+                            do {
+                                System.out.println("1. Thong tin cua minh");
+                                System.out.println("2. Quan ly dat phong");
+                                System.out.println("3. Dang xuat");
+                                System.out.println("4. Thoat");
+                                int option2 = Integer.parseInt(sc.nextLine());
+                                switch (option2) {
+                                    case 1:
+                                        account.getStaff().XuatThongTin();
+                                        break;
+                                    case 2:
+                                        BookingManager.terminal();
+                                        break;
+                                    case 3:
+                                        account = null;
+                                        level2 = false;
+                                        break;
+                                    default:
+                                        account = null;
+                                        level2 = false;
+                                        level1 = false;
+                                        break;
+                                }
+                            } while (level2);
                         }
                     }
                     break;

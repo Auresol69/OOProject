@@ -90,6 +90,8 @@ public class StaffAccount {
         // Liên kết tài khoản với nhân viên
         staff.setStaffAccount(this);
         this.setStaff(staff);
+        this.setPassword(password);
+
         System.out.println("Đăng ký tài khoản thành công!");
 
         return true;
