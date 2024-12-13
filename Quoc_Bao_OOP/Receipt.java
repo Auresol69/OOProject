@@ -81,4 +81,62 @@ public class Receipt extends ReceiptIdManager {
     public void setId(int id) {
         this.id = id;
     }
+
+    public static String form_SO(Object c) {
+        StringBuilder tmp = new StringBuilder();
+        int totalSpace = (39 - c.toString().length());
+        int space_left = totalSpace / 2;
+        int space_right = totalSpace - space_left;
+        for (int i = 0; i < space_left; i++) {
+            tmp.append(" ");
+        }
+        tmp.append(c.toString());
+        for (int i = 0; i < space_right; i++) {
+            tmp.append(" ");
+        }
+        return tmp.toString();
+    }
+
+    public static String form_SO(Object c, int space) {
+        StringBuilder tmp = new StringBuilder();
+        int totalSpace = (space - c.toString().length());
+        int space_left = totalSpace / 2;
+        int space_right = totalSpace - space_left;
+        for (int i = 0; i < space_left; i++) {
+            tmp.append(" ");
+        }
+        tmp.append(c.toString());
+        for (int i = 0; i < space_right; i++) {
+            tmp.append(" ");
+        }
+        return tmp.toString();
+    }
+
+    public static String border(int a) {
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < a; i++) {
+            b.append("═");
+        }
+        return b.toString();
+    }
+
+    public static void showReceipt() {
+        // System.out.println("ID: " + this.id);
+        // System.out.println("Customer Name: " + this.cus.getName());
+        // System.out.println("DateTime: " + this.dateTime);
+        // System.out.println("Total Cost: " + this.totalCost);
+        // System.out.println("Payment Method: " + this.paymentmethod.getMethodName());
+        // System.out.println("Bookings: ");
+        // for (Booking booking : this.bookings_choosed) {
+        // booking.showBooking();
+        // }
+        System.out.print("╔" + border(39) + "╗" + "\n");
+        System.out.print("║" + form_SO("RECEIPT") + "║" + "\n");
+        System.out.print("╚" + border(39) + "╝" + "\n");
+
+    }
+
+    public static void main(String[] args) {
+        Receipt.showReceipt();
+    }
 }

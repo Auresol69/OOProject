@@ -20,4 +20,13 @@ public class Customer extends Person {
     public int getDiemTichLuy() {
         return DiemTichLuy;
     }
+
+    public String toString() {
+        return "Customer{" +
+                "DiemTichLuy=" + DiemTichLuy +
+                ", Name='" + Name + '\'' +
+                ", PhoneNumber='" + PhoneNumber + '\'' +
+                ", Sex=" + Sex +
+                '}';
+    }
 }

@@ -77,9 +77,9 @@ public class StaffAccount {
         }
 
         // Nếu không có lỗi, tiếp tục thêm nhân viên vào hệ thống
-
-        if (!StaffManager.staffs.contains(staff)) {
-            StaffManager.staffs.add(staff);
+        StaffManager sm = new StaffManager();
+        if (!sm.getStaffs().contains(staff)) {
+            sm.getStaffs().add(staff);
             System.out.println("Nhan vien chua co trong he thong, da them vao danh sach.");
         } else {
             System.out.println("Nhân viên đã có trong danh sách.");
