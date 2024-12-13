@@ -1,10 +1,14 @@
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class Booking extends BookingIdManager {
     protected Integer id;
@@ -124,18 +128,54 @@ public class Booking extends BookingIdManager {
         }
     }
 
+    public void tinhPrice() {
+        double phidichvu = 0, sum = 0;
+        for (Service sv : selectedServices) {
+            phidichvu += sv.getPricepersession();
+        }
+
+        for (Map.Entry<LocalDate, TreeMap<Integer, ArrayList<Room>>> entry : date.entrySet()) {
+            for (Map.Entry<Integer, ArrayList<Room>> entry2 : entry.getValue().entrySet()) {
+                for (Room room : entry2.getValue()) {
+                    if (room instanceof Vip_room) {
+                        sum += phidichvu * 1.5 + room.getPrice();
+                    } else {
+                        sum += phidichvu + room.getPrice();
+                    }
+                }
+            }
+        }
+        this.setPrice(sum);
+    }
+
+    // protected Integer id;
+    // protected Customer cus;
+    // protected ArrayList<Service> selectedServices;
+    // protected TreeMap<LocalDate, TreeMap<Integer, ArrayList<Room>>> date;
+    // protected double price;
+    // protected Integer receiptid;
+
+    public void xuatFileBooking() {
+        try {
+            FileWriter fw = new FileWriter("./Quoc_Bao_OOP/data/Bookingmanager.txt");
+            for (Booking booking : BookingManager.bookings) {
+                String services = booking.getSelectedServices().stream().map(Service::toString)
+                        .collect(Collectors.joining("|"));
+                String dates = booking.getDate().entrySet().stream()
+                        .map(entry -> entry.getKey() + ":" + entry.getValue()).collect(Collectors.joining(";"));
+                fw.append(
+                        booking.getId() + "#" + booking.getCus().getPhoneNumber() + "#" + services + "#" + dates + "#"
+                                + booking.getPrice() + "#" + booking.getReceiptid() + "\n");
+            }
+            fw.close();
+            System.out.println("Ghi dữ liệu thành công!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setInfo() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Nhap ngay : ");
-        String date = sc.nextLine();
-
-        System.out.println("nhap buoi : ");
-        int session = Integer.parseInt(sc.nextLine());
-
-        // nhap khach hang
-        // nhap thoi gian
-
-        // chon dich vu
 
         // Tìm thông tin khách hàng trong danh sách
         while (true) {
@@ -185,19 +225,32 @@ public class Booking extends BookingIdManager {
 
             System.out.print("Enter your choice: ");
             int choice = Integer.parseInt(sc.nextLine());
-
             switch (choice) {
                 case 0:
                 case 1:
                 case 2:
                     // Thêm dịch vụ vào danh sách
+                    double phidichvu = 0;
+                    double sum = 0;
+
                     selectedServices.add(services.get(choice));
                     System.out.println("Service added: " + services.get(choice).getName());
-                    double tmp = 0;
+
                     for (Service sv : selectedServices) {
-                        // tmp += sv.getPricepersession() * getSession();
+                        phidichvu += sv.getPricepersession();
                     }
-                    System.out.println("Total provisional service fee: " + tmp + "$");
+                    for (Map.Entry<LocalDate, TreeMap<Integer, ArrayList<Room>>> entry : date.entrySet()) {
+                        for (Map.Entry<Integer, ArrayList<Room>> entry2 : entry.getValue().entrySet()) {
+                            for (Room room : entry2.getValue()) {
+                                if (room instanceof Vip_room) {
+                                    sum += phidichvu * 1.5;
+                                } else {
+                                    sum += phidichvu;
+                                }
+                            }
+                        }
+                    }
+                    System.out.println("Total provisional service fee: " + sum + "$");
                     break;
 
                 case 3:
@@ -233,6 +286,7 @@ public class Booking extends BookingIdManager {
                     break;
             }
         } while (continueChoosing);
+        tinhPrice();
         BookingManager.addBooking(this);
     }
 
@@ -240,10 +294,6 @@ public class Booking extends BookingIdManager {
         for (Service service : selectedServices) {
             System.out.println(service.getName());
         }
-    }
-
-    public double calculateTotalCost() {
-        return 0.0;
     }
 
     @Override
