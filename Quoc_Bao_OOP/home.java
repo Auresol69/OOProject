@@ -206,7 +206,7 @@ public class home {
                                 int option2 = Integer.parseInt(sc.nextLine());
                                 switch (option2) {
                                     case 1:
-                                        account.getStaff().XuatThongTin();
+                                        System.out.println(account.getStaff().XuatThongTin());
                                         break;
                                     case 2:
                                         BookingManager.terminal();
