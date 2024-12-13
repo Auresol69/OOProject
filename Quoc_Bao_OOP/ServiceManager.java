@@ -1,15 +1,31 @@
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ServiceManager {
     protected static ArrayList<Service> availableServices;
 
     static {
-        // Khởi tạo danh sách dịch vụ sẵn có khi lớp ServiceManager được tải lên
         availableServices = new ArrayList<>();
-        availableServices.add(new coffeenteaService("CoffeenTea", 9.99));
-        availableServices.add(new technicalSupportService("SoundnProjector", 20.6));
-        availableServices.add(new wifiService("Wifi 5G", 4.99));
+        try (BufferedReader br = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/Service.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] str = line.split("#");
+                String name = str[0];
+                double price = Double.parseDouble(str[1]);
+                Service sv = new Service(name, price);
+                availableServices.add(sv);
+            }
+        } catch (IOException e) {
+            System.out.println("Đã xảy ra lỗi khi đọc tệp: " + e.getMessage());
+        }
+        // Khởi tạo danh sách dịch vụ sẵn có khi lớp ServiceManager được tải lên
+        
+        
+       
+        
     }
 
     public ArrayList<Service> getavailableServices() {

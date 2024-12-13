@@ -6,6 +6,6 @@ public class Cash extends PaymentMethod {
     @Override
     public void ProcessPayment(double amount) {
         System.out.println("Processing cash payment of $" + amount);
-            System.out.println();
+        System.out.println();
     }
 }

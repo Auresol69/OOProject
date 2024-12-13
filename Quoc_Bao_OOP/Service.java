@@ -1,10 +1,7 @@
 
-public abstract class Service {
+public class Service implements Comparable<Service> {
     protected String name;
     protected double pricepersession;
-
-    public Service() {
-    }
 
     public Service(String name, double pricepersession) {
         this.name = name;
@@ -27,6 +24,10 @@ public abstract class Service {
         this.pricepersession = pricepersession;
     }
 
-    public abstract double calculateCost(int hours);
+    @Override
+    public int compareTo(Service other) {
+        return Double.compare(this.pricepersession, other.pricepersession); // So sánh theo tuổi
+    }
+   
 
 }
