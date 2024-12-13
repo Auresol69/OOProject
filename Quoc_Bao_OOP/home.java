@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -8,6 +9,8 @@ public class home {
         RoomManager rm = new RoomManager();
         StaffManager sm = new StaffManager();
         CustomerManager cm = new CustomerManager();
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
         Staff mode = new Admin("bao", "123", true);
         sm.getStaffs().add(mode);
         StaffAccount modeAccount = new StaffAccount("wuocpao", "123", mode);
@@ -48,9 +51,8 @@ public class home {
                                 System.out.println("2. Quan ly nhan vien");
                                 System.out.println("3. Quan ly khach hang");
                                 System.out.println("4. Quan ly phong");
-                                System.out.println("5. Thong ke");
-                                System.out.println("6. Dang xuat");
-                                System.out.println("7. Thoat");
+                                System.out.println("5. Dang xuat");
+                                System.out.println("6. Thoat");
 
                                 boolean level3 = true;
                                 int option2 = Integer.parseInt(sc.nextLine());
@@ -67,7 +69,7 @@ public class home {
                                             int option3 = Integer.parseInt(sc.nextLine());
                                             switch (option3) {
                                                 case 1:
-                                                    System.out.print("Nhap sdt cua nhan vien muon chinh sua:");
+                                                    System.out.print("Nhap sdt cua nhan vien muon chinh sua: ");
                                                     String sdt = sc.nextLine();
                                                     sm.switchStaffStatus(sdt);
                                                     break;
@@ -87,15 +89,95 @@ public class home {
                                         cm.xuatInfoTatCaCustomer();
                                         break;
                                     case 4:
-                                    case 6:
+                                        do {
+                                            System.out.println("1. Lich su");
+                                            System.out.println("2. Thong ke");
+                                            System.out.println("3. Lich theo ngay");
+                                            System.out.println("4. Quay lai");
+                                            System.out.println("5. Thoat");
+                                            int option3 = Integer.parseInt(sc.nextLine());
+                                            switch (option3) {
+                                                case 1:
+                                                    System.out.println("Nhap ngay bat dau va ket thuc");
+
+                                                    System.out.print("Start date: ");
+                                                    String startDate1 = sc.nextLine();
+                                                    LocalDate sd1 = LocalDate.parse(startDate1, f);
+
+                                                    System.out.print("End date: ");
+                                                    String endDate1 = sc.nextLine();
+                                                    LocalDate ed1 = LocalDate.parse(endDate1, f);
+
+                                                    rm.history_by_date(sd1, ed1);
+                                                    break;
+                                                case 2:
+                                                    System.out.println("1. Thong ke theo nam");
+                                                    System.out.println("2. Thong ke theo thoi gian");
+                                                    System.out.println("3. Thong ke theo quy");
+                                                    System.out.println("4. Quay lai");
+                                                    System.out.println("5. Thoat");
+                                                    int option4 = Integer.parseInt(sc.nextLine());
+                                                    switch (option4) {
+                                                        case 1:
+                                                            rm.thong_ke_theo_nam();
+                                                            break;
+                                                        case 2:
+                                                            System.out.println();
+                                                            System.out.println("Nhap ngay bat dau va ket thuc");
+
+                                                            System.out.print("Start date: ");
+                                                            String startDate2 = sc.nextLine();
+                                                            LocalDate sd2 = LocalDate.parse(startDate2, f);
+
+                                                            System.out.print("End date: ");
+                                                            String endDate2 = sc.nextLine();
+                                                            LocalDate ed2 = LocalDate.parse(endDate2, f);
+                                                            rm.thong_ke_bydate(sd2, ed2);
+                                                            break;
+                                                        case 3:
+                                                            rm.thong_ke_theo_quy(option4);
+                                                            break;
+                                                        case 4:
+                                                            break;
+                                                        default:
+                                                            break;
+                                                    }
+                                                    break;
+                                                case 3:
+                                                    System.out.println("Nhap ngay bat dau va ket thuc");
+
+                                                    System.out.print("Start date: ");
+                                                    String startDate2 = sc.nextLine();
+                                                    LocalDate sd2 = LocalDate.parse(startDate2, f);
+
+                                                    System.out.print("End date: ");
+                                                    String endDate2 = sc.nextLine();
+                                                    LocalDate ed2 = LocalDate.parse(endDate2, f);
+
+                                                    System.out.print("Size: ");
+                                                    int size = Integer.parseInt(sc.nextLine());
+                                                    rm.show_calendar(sd2, ed2, size);
+                                                    break;
+                                                case 4:
+                                                    level3 = false;
+                                                    break;
+                                                default:
+                                                    account = null;
+                                                    level1 = false;
+                                                    level2 = false;
+                                                    level3 = false;
+                                                    break;
+                                            }
+                                        } while (level3);
+                                        break;
+                                    case 5:
                                         account = null;
                                         level2 = false;
                                         break;
-                                    case 7:
+                                    default:
                                         account = null;
                                         level1 = false;
                                         level2 = false;
-                                    default:
                                         break;
                                 }
                             } while (level2);
@@ -109,11 +191,9 @@ public class home {
                         }
                     }
                     break;
-                case 2:
+                default:
                     account = null;
                     level1 = false;
-                    break;
-                default:
                     break;
             }
 
