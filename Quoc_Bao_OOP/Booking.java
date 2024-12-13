@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Booking extends BookingIdManager {
@@ -148,13 +147,6 @@ public class Booking extends BookingIdManager {
         this.setPrice(sum);
     }
 
-    // protected Integer id;
-    // protected Customer cus;
-    // protected ArrayList<Service> selectedServices;
-    // protected TreeMap<LocalDate, TreeMap<Integer, ArrayList<Room>>> date;
-    // protected double price;
-    // protected Integer receiptid;
-
     public void xuatFileBooking() {
         try {
             FileWriter fw = new FileWriter("./Quoc_Bao_OOP/data/Bookingmanager.txt");
@@ -176,11 +168,11 @@ public class Booking extends BookingIdManager {
 
     public void setInfo() {
         Scanner sc = new Scanner(System.in);
-
+        CustomerManager cm = new CustomerManager();
         // Tìm thông tin khách hàng trong danh sách
         while (true) {
             // this.cus.setInfo();
-            Customer foundCustomer = findCustomerByPhone(cus.getPhoneNumber(), CustomerManager.getCustomers());
+            Customer foundCustomer = findCustomerByPhone(cus.getPhoneNumber(), cm.getCustomers());
             if (foundCustomer != null) {
                 cus = foundCustomer;
                 System.out.println("Customer found: " + foundCustomer.getName());
@@ -195,7 +187,7 @@ public class Booking extends BookingIdManager {
                 option = Integer.parseInt(sc.nextLine());
                 if (option == 0) {
                     System.out.println("Dang them khach hang moi...");
-                    CustomerManager.addCustomer(cus); // Them khach hang moi
+                    cm.addCustomer(cus); // Them khach hang moi
                     break; // Thoat vong lap sau khi them khach hang moi
                 } else if (option == 1) {
                     System.out.println("Vui long nhap lai thong tin khach hang.");

@@ -120,6 +120,7 @@ public class BookingManager {
     }
 
     public static void thanhToan() {
+        CustomerManager cm = new CustomerManager();
         Scanner sc = new Scanner(System.in);
         System.out.print("Nhap so dien thoai nguoi dung de thanh toan: ");
         String phone_cus = sc.nextLine();
@@ -161,7 +162,7 @@ public class BookingManager {
             }
         }
         if (!bookingList.isEmpty()) {
-            Customer cus = CustomerManager.getCustomers().stream()
+            Customer cus = cm.getCustomers().stream()
                     .filter(customer -> customer.getPhoneNumber().equals(phone_cus))
                     .findFirst().orElse(null);
 

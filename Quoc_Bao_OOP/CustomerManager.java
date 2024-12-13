@@ -1,30 +1,35 @@
 import java.util.ArrayList;
 
 public class CustomerManager {
-    protected static ArrayList<Customer> customers;
+    protected ArrayList<Customer> customers;
 
-    static {
+    public CustomerManager() {
         customers = new ArrayList<>();
     }
 
-    public static void addCustomer(Customer customer) {
+    public void addCustomer(Customer customer) {
         customers.add(customer);
     }
 
-    public static void removeCustomer(int index) {
+    public void removeCustomer(int index) {
         customers.remove(index);
     }
 
-    public static void clearCustomer() {
+    public void clearCustomer() {
         customers.clear();
     }
 
-    public static ArrayList<Customer> getCustomers() {
+    public ArrayList<Customer> getCustomers() {
         return customers;
     }
 
-    public static void setCustomers(ArrayList<Customer> customers) {
-        CustomerManager.customers = customers;
+    public void setCustomers(ArrayList<Customer> customers) {
+        this.customers = customers;
     }
-    
+
+    public void xuatInfoTatCaCustomer() {
+        for (Customer customer : customers) {
+            System.out.println(customer.toString());
+        }
+    }
 }

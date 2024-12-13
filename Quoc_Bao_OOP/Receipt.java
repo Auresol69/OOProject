@@ -133,6 +133,7 @@ public class Receipt extends ReceiptIdManager {
         System.out.print("╔" + border(39) + "╗" + "\n");
         System.out.print("║" + form_SO("RECEIPT") + "║" + "\n");
         System.out.print("╚" + border(39) + "╝" + "\n");
+
     }
 
     public static void main(String[] args) {

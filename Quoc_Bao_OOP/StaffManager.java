@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -5,11 +7,19 @@ import java.util.Set;
 import java.util.Scanner;
 
 public class StaffManager {
-    protected static ArrayList<Staff> staffs;
+    protected ArrayList<Staff> staffs;
     protected int MaxFloor = 3;
 
-    static {
+    public StaffManager() {
         staffs = new ArrayList<>();
+    }
+
+    public ArrayList<Staff> getStaffs() {
+        return staffs;
+    }
+
+    public void setStaffs(ArrayList<Staff> staffs) {
+        this.staffs = staffs;
     }
 
     public String spacing(Object c) {
@@ -98,6 +108,55 @@ public class StaffManager {
             }
         }
         return tangChuaCoNhanVienPhucVu;
+    }
+
+    public void themNhanVienTuFile(File name) {
+        if (staffs == null) {
+            staffs = new ArrayList<>();
+        }
+
+        try (Scanner sc = new Scanner(name)) {
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine();
+                String[] arrStrings = line.split("#");
+
+                if (arrStrings.length < 7) {
+                    System.out.println("Dòng dữ liệu không hợp lệ: " + line);
+                    continue;
+                }
+
+                Staff a = null;
+
+                try {
+                    if (arrStrings[5].equals("0")) {
+                        a = new Admin();
+                        ((Admin) a).setSoGioLam(Integer.parseInt(arrStrings[6]));
+                    } else if (arrStrings[5].equals("1")) {
+                        a = new ServiceTeamMember();
+                        ((ServiceTeamMember) a).setSoGioLam(Integer.parseInt(arrStrings[6]));
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Lỗi định dạng số ở dòng: " + line);
+                    continue;
+                }
+
+                if (a != null) {
+                    a.setName(arrStrings[0]);
+                    a.setPhoneNumber(arrStrings[1]);
+                    a.setSex(Boolean.parseBoolean(arrStrings[2]));
+                    a.setStatus(Boolean.parseBoolean(arrStrings[3]));
+                    a.setFloor(Integer.parseInt(arrStrings[4]));
+
+                    staffs.add(a); // Thêm vào danh sách staffs
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Lỗi: File không tồn tại - " + e.getLocalizedMessage());
+        }
+
+        for (Staff a : staffs) {
+            System.out.println(a.XuatThongTin());
+        }
     }
 
     public void themNhanvien() {
@@ -228,6 +287,60 @@ public class StaffManager {
         k.append("║" + spacing("Không tìm thấy nhân viên: " + name, 80) + "║\n");
         k.append("╚═" + createBorderLine(80) + "═╝\n");
         System.out.println(k);
+    }
+
+    public Staff timNhanVien(String PhoneNumber) {
+        for (Staff staff : staffs) {
+            if (staff.getPhoneNumber().equals(PhoneNumber)) {
+                return staff; // Trả về staff tìm được
+            }
+        }
+        return null; // Không tìm thấy
+    }
+
+    public void switchStaffStatus(String PhoneNumber) {
+        Staff nv = timNhanVien(PhoneNumber);
+        if (nv == null) {
+            System.out.println("Không tìm thấy nhân viên");
+            return;
+        }
+        Scanner sc = new Scanner(System.in);
+        System.out.println("╔═" + createBorderLine(80) + "═╗");
+        System.out.println("║" + spacing("Bạn muốn đổi status thành gì?", 80) + "║");
+        System.out.println("║" + spacing("1:True", 80) + "║");
+        System.out.println("║" + spacing("2:False", 80) + "║");
+        System.out.println("╚═" + createBorderLine(80) + "═╝");
+        String input;
+
+        while (true) {
+            input = sc.nextLine().trim();
+
+            if (input.isEmpty()) {
+                System.out.println("Không được để trống.");
+                continue;
+            }
+
+            if (!input.matches("^[12]$")) { // \\ chỉ cho phép các ký tự từ '1' hoặc '2'
+                System.out.println("nhập sai, không chứa ký tự hoặc ký tự đặc biệt.");
+                continue;
+            }
+
+            break;
+        }
+
+        int chon = Integer.parseInt(input);
+        System.out.println("hợp lệ: " + chon);
+
+        switch (chon) {
+            case 1:
+                nv.setStatus(true);
+                break;
+
+            case 2:
+                nv.setStatus(false);
+                break;
+        }
+
     }
 
     public void xuatInfoTatCaStaff() {
