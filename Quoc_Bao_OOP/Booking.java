@@ -6,11 +6,11 @@ import java.util.Scanner;
 import java.util.TreeMap;
 public class Booking extends BookingIdManager {
     protected Integer id;
-    protected Customer cus;
-    protected ArrayList<Service> selectedServices;
-    protected TreeMap<LocalDate, TreeMap<Integer, ArrayList<Room>>> date;
+    protected Customer cus;   
     protected double price;
     protected Integer receiptid;
+    protected TreeMap<LocalDate, TreeMap<Integer,ArrayList<Room>>> date;
+    protected ArrayList<Service> selectedServices;
 
     public double getPrice() {
         return price;
@@ -28,7 +28,7 @@ public class Booking extends BookingIdManager {
         this.date = date;
     }
 
-    public Booking(int id,  Customer cus, ArrayList<Service> selectedServices ) {
+    public Booking(int id, Customer cus, ArrayList<Service> selectedServices) {
         this.id = id;
         this.cus = cus;
         this.selectedServices = selectedServices;
@@ -169,6 +169,7 @@ public class Booking extends BookingIdManager {
         ArrayList<Service> services = ServiceManager.availableServices;
 
         boolean continueChoosing = true;
+
         do {
             // Hiển thị menu dịch vụ
             System.out.println(" ╔═════════════════════════════════╗");
@@ -312,12 +313,18 @@ public class Booking extends BookingIdManager {
         return true;
     }
 
-    public LocalDate getfirtdate(){
-        return this.date.isEmpty()? null : this.date.lastKey();
+    public LocalDate getfirtdate() {
+        return this.date.isEmpty() ? null : this.date.lastKey();
     }
-   
-    
-    public void set_calendar(RoomManager rmng){
+
+
+    public void setcalendat(){
+        TreeMap<LocalDate,TreeMap<Integer,ArrayList<Room>>> c = new TreeMap<>();
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Nhap ngay : ");
+        
+    }
+    public TreeMap<LocalDate,TreeMap<Integer,ArrayList<Room>>> set_calendar(RoomManager rmng){
         TreeMap<LocalDate,TreeMap<Integer,ArrayList<Room>>> c = new TreeMap<>();
         int luachon =0 ; 
         DateTimeFormatter form_time = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -360,15 +367,11 @@ public class Booking extends BookingIdManager {
                         do { 
                             System.out.print("nhap phong : ");
                             String roomname = sc.nextLine();
-                            
                             if (!rmng.check_room(roomname)){
                                 System.out.println("phong '" + roomname + "' khong ton tai, Nhap lai !!");
                             } else {
                                 room = rmng.get_room(roomname);
                                 kt = false;
-                            }
-                            if (room == null){
-                                kt = true;
                             }
                         } while (kt);
                         kt = true;
@@ -619,70 +622,75 @@ public class Booking extends BookingIdManager {
                         }
                         if (luachon == 0){
                             show_booking_calendar(c);
-                        } 
-                        } while (luachon == 0);
-                    } while (luachon == 3);
-                } while (luachon == 2);
-            } while (luachon == 1);        
+                        }
+                    } while (luachon == 0);
+                } while (luachon == 3);
+            } while (luachon == 2);
+        } while (luachon == 1);        
        show_booking_calendar(c);
+    return c;
 }
 
-    public void show_booking_calendar(TreeMap<LocalDate,TreeMap<Integer,ArrayList<Room>>> d ){
-        System.out.println("╔"+RoomManager.border(20)+"╦" +RoomManager.border(30) + "╦" +RoomManager.border(30) +"╗");
-        System.out.println("║"+RoomManager.form_SO("ngay", +20)+"║" +RoomManager.form_SO("buoi", 30)+"║"+RoomManager.form_SO("phong", 30)+"║");
-        System.out.println("╠"+RoomManager.border(20)+"╬" +RoomManager.border(30) + "╬" +RoomManager.border(30) +"╣");
+    public void show_booking_calendar(TreeMap<LocalDate, TreeMap<Integer, ArrayList<Room>>> d) {
+        System.out.println(
+                "╔" + RoomManager.border(20) + "╦" + RoomManager.border(30) + "╦" + RoomManager.border(30) + "╗");
+        System.out.println("║" + RoomManager.form_SO("ngay", +20) + "║" + RoomManager.form_SO("buoi", 30) + "║"
+                + RoomManager.form_SO("phong", 30) + "║");
+        System.out.println(
+                "╠" + RoomManager.border(20) + "╬" + RoomManager.border(30) + "╬" + RoomManager.border(30) + "╣");
         LocalDate date_tam = null;
         int session_tam = -1;
-        
-      for (Map.Entry<LocalDate,TreeMap<Integer,ArrayList<Room>>> l : d.entrySet()){
-        Map.Entry<LocalDate,TreeMap<Integer,ArrayList<Room>>> last_day = d.lastEntry();
-            
-        for (Map.Entry<Integer,ArrayList<Room>> lo : l.getValue().entrySet()){
-            Map.Entry<Integer,ArrayList<Room>> last_session = l.getValue().lastEntry();
-           
-            for (Room loo : lo.getValue()){
-                StringBuilder ghi = new StringBuilder();
-                
-                if (date_tam == null){
-                    date_tam = l.getKey();
-                    ghi.append(RoomManager.form_SO(l.getKey(), 20) +"║");
-                } else if (date_tam.isEqual(l.getKey())){
-                    ghi.append(RoomManager.form_SO("", 20)+"║");
-                } else{
-                    ghi.append(RoomManager.form_SO(l.getKey(), 20)+"║");
-                    date_tam = l.getKey();
-                }
-            
 
-                if (session_tam == -1){
-                    session_tam = lo.getKey();
-                    String buoi = session_tam == 0 ? "sang" : session_tam == 1? "trua" : "toi";
-                    ghi.append(RoomManager.form_SO(buoi, 30)+"║");
+        for (Map.Entry<LocalDate, TreeMap<Integer, ArrayList<Room>>> l : d.entrySet()) {
+            Map.Entry<LocalDate, TreeMap<Integer, ArrayList<Room>>> last_day = d.lastEntry();
+
+            for (Map.Entry<Integer, ArrayList<Room>> lo : l.getValue().entrySet()) {
+                Map.Entry<Integer, ArrayList<Room>> last_session = l.getValue().lastEntry();
+
+                for (Room loo : lo.getValue()) {
+                    StringBuilder ghi = new StringBuilder();
+
+                    if (date_tam == null) {
+                        date_tam = l.getKey();
+                        ghi.append(RoomManager.form_SO(l.getKey(), 20) + "║");
+                    } else if (date_tam.isEqual(l.getKey())) {
+                        ghi.append(RoomManager.form_SO("", 20) + "║");
+                    } else {
+                        ghi.append(RoomManager.form_SO(l.getKey(), 20) + "║");
+                        date_tam = l.getKey();
+                    }
+
+                    if (session_tam == -1) {
+                        session_tam = lo.getKey();
+                        String buoi = session_tam == 0 ? "sang" : session_tam == 1 ? "trua" : "toi";
+                        ghi.append(RoomManager.form_SO(buoi, 30) + "║");
+                    } else if (lo.getKey() != session_tam) {
+                        session_tam = lo.getKey();
+                        String buoi = session_tam == 0 ? "sang" : session_tam == 1 ? "trua" : "toi";
+                        ghi.append(RoomManager.form_SO(buoi, 30) + "║");
+                    } else {
+                        String buoi = session_tam == 0 ? "sang" : session_tam == 1 ? "trua" : "toi";
+                        ghi.append(RoomManager.form_SO("", 30) + "║");
+                    }
+
+                    ghi.append(RoomManager.form_SO(loo.getName(), 30) + "║");
+                    System.out.println("║" + ghi);
+
                 }
-                 else if (lo.getKey() != session_tam){
-                    session_tam = lo.getKey(); 
-                    String buoi = session_tam == 0 ? "sang" : session_tam == 1? "trua" : "toi";
-                    ghi.append(RoomManager.form_SO(buoi, 30)+"║");
-                } else {
-                    String buoi = session_tam == 0 ? "sang" : session_tam == 1? "trua" : "toi";
-                    ghi.append(RoomManager.form_SO("", 30)+"║");
+                if (lo.getKey() != last_session.getKey()) {
+                    System.out.println("║" + RoomManager.form_SO(" ", 20) + "╠" + RoomManager.border(30) + "╬"
+                            + RoomManager.border(30) + "╣");
                 }
-                
-                ghi.append(RoomManager.form_SO(loo.getName(),30)+"║");
-                System.out.println("║"+ghi);
-                
             }
-         if (lo.getKey() != last_session.getKey()){
-            System.out.println("║"+RoomManager.form_SO(" ",20) + "╠" +RoomManager.border(30) +"╬"+ RoomManager.border(30) +"╣");
-         }  
-        }
 
-        if (l.getKey().isEqual(last_day.getKey())){
-            System.out.println("╚" + RoomManager.border(20) +"╩"+ RoomManager.border(30)+"╩"+ RoomManager.border(30)+"╝");
-        } else {
-            System.out.println("╠"+RoomManager.border(20)+"╬" +RoomManager.border(30) + "╬" +RoomManager.border(30) +"╣");
+            if (l.getKey().isEqual(last_day.getKey())) {
+                System.out.println("╚" + RoomManager.border(20) + "╩" + RoomManager.border(30) + "╩"
+                        + RoomManager.border(30) + "╝");
+            } else {
+                System.out.println("╠" + RoomManager.border(20) + "╬" + RoomManager.border(30) + "╬"
+                        + RoomManager.border(30) + "╣");
+            }
         }
-      } 
     }
 
     public static void main(String[] args) {
@@ -693,10 +701,10 @@ public class Booking extends BookingIdManager {
         LocalDate a = LocalDate.of(2024, 12, 12);
         LocalDate b = LocalDate.of(2024, 12, 11);
         LocalDate c = LocalDate.of(2024, 12, 10);
-        
-       TreeMap<LocalDate,TreeMap<Integer,ArrayList<String>>> d = new TreeMap<>();
+
+        TreeMap<LocalDate, TreeMap<Integer, ArrayList<String>>> d = new TreeMap<>();
 
         book.set_calendar(rmng);
-      
+
     }
 }

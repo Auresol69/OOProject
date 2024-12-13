@@ -649,15 +649,29 @@ public void thong_ke_theo_nam(){
     }
 
     public void chinh_sua_phong(){
-        this.show_list_room();
-        System.out.println("╔"+RoomManager.border(70)+"╗");
-        System.out.println("║" +RoomManager.form_SO("OPTION", 70)+"║");
-        System.out.println("╠"+RoomManager.border(70)+"╣");
-        System.out.println("║"+RoomManager.form_option("0.Sua ten phong", 70)+"║");
-        System.out.println("║"+RoomManager.form_option("1.Chinh sua kich thuoc", 70)+"║");
-        System.out.println("║"+RoomManager.form_option("2.Thay doi trang thai", 70)+"║");
-        System.out.println("║"+RoomManager.form_option("3.hoang thanh", 70)+"║");
-        System.out.println("╚" + RoomManager.border(70) + "╝");      
+        Scanner sc = new Scanner(System.in);
+        int luachon = 0;
+        do { 
+            this.show_list_room();
+            do { 
+            System.out.println("╔"+RoomManager.border(70)+"╗");
+            System.out.println("║" +RoomManager.form_SO("OPTION", 70)+"║");
+            System.out.println("╠"+RoomManager.border(70)+"╣");
+            System.out.println("║"+RoomManager.form_option("0.Show list room", 70)+"║");
+            System.out.println("║"+RoomManager.form_option("0.Sua ten phong", 70)+"║");
+            System.out.println("║"+RoomManager.form_option("1.Chinh sua kich thuoc", 70)+"║");
+            System.out.println("║"+RoomManager.form_option("2.Thay doi trang thai", 70)+"║");
+            System.out.println("║"+RoomManager.form_option("3.hoang thanh", 70)+"║");            
+            System.out.println("╚" + RoomManager.border(70) + "╝");   
+            System.out.println("Nhap lua chon : ");
+            
+            do { 
+                
+            } while (true);
+            
+            } while (true); 
+            
+        } while (luachon == 0);  
     }
 
 
@@ -678,7 +692,7 @@ public void thong_ke_theo_nam(){
         book.add_room(LocalDate.of(2022, 12, 1), 0, rmng.get_room("101"));
 
         // rmng.sosanh_cac_nam();
-        rmng.chinh_sua_phong();
+        rmng.show_list_room();
     }
 
 }
