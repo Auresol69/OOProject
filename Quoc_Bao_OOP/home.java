@@ -651,8 +651,9 @@ public class home {
                                 System.out.println("1. Thong tin cua minh");
                                 System.out.println("2. Quan ly dat phong");
                                 System.out.println("3. Quan ly khach hang");
-                                System.out.println("4. Dang xuat");
-                                System.out.println("5. Thoat");
+                                System.out.println("4. Thanh toan don dat phong");
+                                System.out.println("5. Dang xuat");
+                                System.out.println("6. Thoat");
 
                                 boolean level3 = true;
                                 int option2 = Integer.parseInt(sc.nextLine());
@@ -714,6 +715,9 @@ public class home {
                                         } while (level3);
                                         break;
                                     case 4:
+                                        BookingManager.thanhToan();
+                                        break;
+                                    case 5:
                                         account = null;
                                         level2 = false;
                                         break;
