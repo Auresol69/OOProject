@@ -1,69 +1,112 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
-import javax.script.ScriptEngineManager;
 
 public class BookingManager {
-    protected static ArrayList<Booking> bookings;
+    protected ArrayList<Booking> bookings;
 
-    static {
-        bookings = new ArrayList<>();
-    }
 
-    public static void addBooking(Booking booking) {
-        bookings.add(booking);
-    }
-
+    
+    DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     public BookingManager(RoomManager rmng, CustomerManager cmng, ServiceManager svmng) {
         ArrayList<Booking> list = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/booking.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] str = line.split("#");
-                int id = Integer.parseInt(str[0]);
-                double price = Double.parseDouble(str[1]);
-                int idreciep = Integer.parseInt(str[1]);
-                // Customer cus = Integer.parseInt(str[2]);
+                String[] linee = line.split("\\*");
+                for (int ss = 0; ss < linee.length; ss++){
+                    
+                
+                    String[] str = linee[ss].split("#");
+                    int id = Integer.parseInt(str[0]);
+                    double price = Double.parseDouble(str[1]);
+                    int idreciep = Integer.parseInt(str[2]);
+                    // Customer cus = Integer.parseInt(str[3]);
+                    
+                    
+                    Customer cus = cmng.get_cus(str[3]);
+                    if (cus == null){
+                        cus = new Customer("####", "####", false);   
+                    } 
 
-                String[] dichvu = str[3].split("$");
-                ArrayList<Service> list_sv = new ArrayList<>();
-                for (String t : dichvu) {
-                    // list_sv.add(svmng.getdichvu(t.trim()));
-                }
-                int tang = Integer.parseInt(str[4]);
-                Room room;
+                    ArrayList<Service> list_dv = new ArrayList<>();
+                    String[] dichvu = str[4].split("\\$"); 
+                    for (String dv : dichvu){
+                        Service sv = svmng.getdichvu(dv); 
+                        if(sv == null){
+                            sv = new Service("####", 0.0);                    
+                        }
+                        
 
-                // list.add(room);
 
+                    }
+
+                    
+                    TreeMap<LocalDate,TreeMap<Integer,ArrayList<Room>>> calendar = new TreeMap<>();
+                    String[] lich = str[5].split("\\?");
+                    for (int i = 0; i< lich.length; i++){
+                        String[] ngay = lich[i].split("\\$"); 
+                        calendar.put(LocalDate.parse(ngay[0], f), new TreeMap<>());
+                        String[] buoi = ngay[1].split("!");
+                        for (int j =0 ;j < buoi.length ; j++){
+                            String[] phong = buoi[j].split("\\^"); 
+                            for (int k = 0; k < phong.length ; k++){
+                               
+                                if (k == 0){
+                                    calendar.get(LocalDate.parse(ngay[0], f)).put(Integer.parseInt(phong[0]),new ArrayList<>());
+                                } else {
+                                    Room r = rmng.get_room(phong[k]);
+                                    calendar.get(LocalDate.parse(ngay[0], f)).get(Integer.parseInt(phong[0])).add(r);
+                                }
+                            }
+                        }                                            
+                    }
+                    
+                    Booking booking = new Booking(idreciep, price, id, cus, list_dv, calendar);
+                    list.add(booking);
+                    
+
+                    }
             }
+                
         } catch (Exception e) {
             // TODO: handle exception
         }
+        this.bookings = list;
     }
 
-    public static boolean removeBooking(int index) {
+
+
+    public  boolean removeBooking(int index) {
         if (index < 0 || index >= bookings.size())
             return false;
         bookings.remove(index);
         return true;
     }
 
-    public static void clearBooking() {
+    public  void clearBooking() {
         bookings.clear();
     }
 
-    public static ArrayList<Booking> getBookings() {
+    public  ArrayList<Booking> getBookings() {
         return bookings;
     }
 
-    public static void setBookings(ArrayList<Booking> bookings) {
-        BookingManager.bookings = bookings;
+    public  void setBookings(ArrayList<Booking> bookings) {
+        this.bookings = bookings;
     }
 
-    public static void printList() {
+    public  void printList() {
         for (Booking b : bookings) {
             System.out.println(b.getCus().XuatThongTin() + " " + "id: " + b.getId());
         }
@@ -71,7 +114,7 @@ public class BookingManager {
 
     // THAO TÁC
 
-    public static void terminal() {
+    public void terminal() {
 
         Scanner sc = new Scanner(System.in);
 
@@ -101,7 +144,7 @@ public class BookingManager {
                     int id_remove;
                     try {
                         id_remove = Integer.parseInt(sc.nextLine());
-                        if (BookingManager.removeBooking(id_remove)) {
+                        if (this.removeBooking(id_remove)) {
                             System.out.println("Đã xóa đặt chỗ thành công!");
                         } else {
                             System.out.println("Không tìm thấy đặt chỗ với ID này.");
@@ -111,15 +154,15 @@ public class BookingManager {
                     }
                     break;
                 case 3:
-                    BookingManager.clearBooking();
+                    this.clearBooking();
                     break;
                 case 4:
-                    BookingManager.printList();
+                    this.printList();
                     break;
                 case 5:
                     String num;
                     num = sc.nextLine();
-                    BookingManager.findBookingByPhoneNumber(num);
+                    this.findBookingByPhoneNumber(num);
                     break;
                 case 0:
                     break;
@@ -133,7 +176,7 @@ public class BookingManager {
         }
     }
 
-    public static void findBookingByPhoneNumber(String phonenumber) {
+    public  void findBookingByPhoneNumber(String phonenumber) {
         boolean found = false;
 
         for (Booking booking : bookings) {
@@ -149,7 +192,7 @@ public class BookingManager {
         }
     }
 
-    public static void thanhToan() {
+    public  void thanhToan() {
         CustomerManager cm = new CustomerManager();
         Scanner sc = new Scanner(System.in);
         System.out.print("Nhap so dien thoai nguoi dung de thanh toan: ");
@@ -249,4 +292,51 @@ public class BookingManager {
         }
         ReceiptManager.showReceipt1Cus();
     }
+
+    public void ket_thuc(){
+
+        StringBuilder str = new StringBuilder();
+        for (Booking book : this.bookings){
+            str.append(book.getId()+"#");
+            str.append(book.getPrice()+"#");
+            str.append(book.getReceiptid()+"#");
+            str.append(book.getCus().getPhoneNumber()+"#");
+            for (Service sv : book.getSelectedServices()){
+                int i =0;
+                if (i==0){
+                    str.append(sv.getName());
+                    i++;
+                } else {
+                    str.append("\\$"+sv.getName());
+                } 
+            }
+            str.append("#");
+
+            for (Map.Entry<LocalDate,TreeMap<Integer,ArrayList<Room>>> c : book.getDate().entrySet()){
+                str.append(c.getKey().format(f)+"$");
+                for (Map.Entry<Integer,ArrayList<Room>> c1 : c.getValue().entrySet()){
+                    str.append(c1.getKey()+"^");
+                    for (Room room : c1.getValue()){
+                        str.append(room.getName());
+                    }
+                    str.append("!");
+                }
+            }
+        }
+        String filePath = "./Quoc_Bao_OOP/data/output.txt"; // Đường dẫn tới file
+        String data = "Đây là một ví d";
+
+        // Sử dụng BufferedWriter để ghi dữ liệu
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write(data); // Ghi dữ liệu vào file
+            writer.write("Thêm một dòng khác.");
+        } catch (IOException e) {
+            System.err.println("Có lỗi xảy ra khi ghi vào file: " + e.getMessage());
+        }
+    }
+   public void add_booking(Booking b){
+    this.bookings.add(b);
+   }
+
+    
 }

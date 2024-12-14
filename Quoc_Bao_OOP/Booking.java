@@ -43,13 +43,29 @@ public class Booking extends BookingIdManager {
     public void setDate(TreeMap<LocalDate, TreeMap<Integer, ArrayList<Room>>> date) {
         this.date = date;
     }
-
     public Booking(int id, Customer cus, ArrayList<Service> selectedServices) {
         this.id = id;
         this.cus = cus;
         this.selectedServices = selectedServices;
         date = new TreeMap<>();
         price = 0;
+
+    }
+    public Booking (int id, double price,int receiptid,Customer cus, ArrayList<Service> selectedServices,TreeMap<LocalDate, TreeMap<Integer,ArrayList<Room>>> date){
+        this.id = id;
+        this.cus = cus;
+        this.price = price;
+        this.receiptid = receiptid;
+        this.selectedServices = selectedServices;
+        this.date = date;
+
+        for (Map.Entry<LocalDate,TreeMap<Integer,ArrayList<Room>>> c : this.date.entrySet()){
+            for (Map.Entry<Integer,ArrayList<Room>> c1 : c.getValue().entrySet()){
+                for (Room room : c1.getValue()){
+                    room.add_booking(c.getKey(), c1.getKey(), this);
+                }
+            }
+        }
 
     }
 
@@ -158,10 +174,10 @@ public class Booking extends BookingIdManager {
         this.setPrice(sum);
     }
 
-    public void xuatFileBooking() {
+    public void xuatFileBooking(BookingManager bmng) {
         try {
             FileWriter fw = new FileWriter("./Quoc_Bao_OOP/data/Bookingmanager.txt");
-            for (Booking booking : BookingManager.bookings) {
+            for (Booking booking : bmng.bookings) {
                 String services = booking.getSelectedServices().stream().map(Service::toString)
                         .collect(Collectors.joining("|"));
                 String dates = booking.getDate().entrySet().stream()
@@ -177,7 +193,7 @@ public class Booking extends BookingIdManager {
         }
     }
 
-    public void setInfo(RoomManager rmng, CustomerManager cmng) {
+    public void setInfo(RoomManager rmng, CustomerManager cmng,ServiceManager svmng) {
         Scanner sc = new Scanner(System.in);
         int choice = -1 ;
        do { 
@@ -235,7 +251,7 @@ public class Booking extends BookingIdManager {
         }
        } while (choice == 0);
         
-      if (!this.set_calendar(rmng)){
+      if (!this.set_calendar_and_service(rmng,svmng)){
         System.out.println("Huy bo dat lich ");
         return ;
       }
@@ -266,13 +282,10 @@ public class Booking extends BookingIdManager {
     }
 
     public boolean add_room(LocalDate date, int session, Room room) {
-        String str = session == 0 ? "sang" : session == 1 ? "trua" : "chieu";
-        if (room.check_calendar(date, session)) {
-
-            System.out.println("!!!!THEM KHONG THANH CONG !!!! : Phong " + room.getName() + " da co lich vao buoi "
-                    + str + " ngay " + date);
-            return false;
+        if (!room.add_booking(date, session, this)){            
+            return false ;
         }
+
         if (!this.date.containsKey(date)) {
             this.date.put(date, new TreeMap<>());
         }
@@ -280,15 +293,10 @@ public class Booking extends BookingIdManager {
         if (!this.date.get(date).containsKey(session)) {
             this.date.get(date).put(session, new ArrayList<>());
         }
+        
+        this.date.get(date).get(session).add(room);  
 
-        if (this.date.get(date).get(session).contains(room)) {
-            System.out.println("!!!!THEM KHONG THANH CONG !!!! : Ban da dat lich nay cho phong " + room.getName()
-                    + " vao buoi " + str + " ngay " + date);
-            return false;
-        }
-        room.add_booking(date, session, this);
-        this.date.get(date).get(session).add(room);
-        System.out.println("Them thanh cong lich vao buoi " + str + " ngay " + date);
+            
         return true;
     }
 
@@ -325,7 +333,7 @@ public class Booking extends BookingIdManager {
     }
 
 
-    public boolean set_calendar(RoomManager rmng){
+    public boolean set_calendar_and_service(RoomManager rmng,ServiceManager svmng){
         double price = 0;
         int sophongthuong = 0;
         int sophongvip = 0;
@@ -339,7 +347,7 @@ public class Booking extends BookingIdManager {
         int session = 0;   
         boolean continueChoosing = true;
         TreeMap<Integer,TreeMap<Service,Boolean>> service_list = new TreeMap<>();  
-        for (Service sv : ServiceManager.availableServices){
+        for (Service sv : svmng.availableServices){
             TreeMap<Service,Boolean> sos = new TreeMap<>();
             sos.put(sv, false);
             service_list.put(session, sos);
@@ -720,7 +728,7 @@ public class Booking extends BookingIdManager {
                                         System.out.println(yeelow("╔"+RoomManager.border(70)+"╗"));
                                         System.out.println(yeelow("║") +RoomManager.form_SO(" Ban muon dich vu gi?", 70)+yeelow("║"));
                                         System.out.println(yeelow("╠"+RoomManager.border(70)+"╣"));
-                                        ArrayList<Service> sv_list = ServiceManager.availableServices;                                        
+                                                                             
                                         int select = 0;
                                         for (Map.Entry<Integer,TreeMap<Service,Boolean>> bansao : service_list.entrySet()){
                                             for (Map.Entry<Service,Boolean> bansao1 : bansao.getValue().entrySet()){
@@ -854,6 +862,25 @@ public class Booking extends BookingIdManager {
         System.out.println(yeelow("║")+RoomManager.form_SO("Tong tien : " + form_tien.format((price)+(sophongthuong*price_dv) + (sophongvip*price_dv)*1.5), 70)+yeelow("║"));
         System.out.println("╚" + RoomManager.border(70) + "╝");
 
+
+        
+        // for (Map.Entry<LocalDate, TreeMap<Integer, ArrayList<Room>>> l : c.entrySet()){
+        //     for (Map.Entry<Integer,ArrayList<Room>> l1 : l.getValue().entrySet()){
+        //         for (Room r : l1.getValue()){
+        //             this.add_room(l.getKey(), l1.getKey(), room);
+        //         }
+        //     }
+        // }
+       
+        for (Map.Entry<LocalDate,TreeMap<Integer,ArrayList<Room>>> lich : c.entrySet()){
+           for (Map.Entry<Integer,ArrayList<Room>> lich11 : lich.getValue().entrySet()){
+                for (Room r : lich11.getValue() ){
+                    if (this.add_room(lich.getKey(), lich11.getKey(), room)){
+                        System.out.println("them khogn thanh cong");
+                    }
+                }
+           }
+        }
         for (Map.Entry<Integer,TreeMap<Service,Boolean>> bansao :service_list.entrySet() ){
             for (Map.Entry<Service,Boolean> bansao1 : bansao.getValue().entrySet()){
                 if (bansao1.getValue()){
@@ -862,7 +889,9 @@ public class Booking extends BookingIdManager {
             }
         }
         this.price =(price)+(sophongthuong*price_dv) + (sophongvip*price_dv)*1.5;
-        this.date = c;
+
+        
+        
     return true;
 }
 
@@ -962,7 +991,7 @@ public class Booking extends BookingIdManager {
         TreeMap<LocalDate, TreeMap<Integer, ArrayList<String>>> d = new TreeMap<>();
 
        Booking bookk = new Booking();
-       bookk.set_calendar(rmng);
+      
        
 
 

@@ -192,22 +192,28 @@ public class RoomManager {
     }
 
    public void history(){
-
+    TreeMap<LocalDate,ArrayList<Room>> bansao = new TreeMap<>();
+    // for (Room room : this.list_room){
+    //     for (Map.Entry<LocalDate,Booking[]> c : room.getCalendar().entrySet()){
+    //         if (bansao.containsKey(c.getKey())){
+    //             bansao.put(c.getKey(), new ArrayList<>());
+    //         }         
+    //        if (!bansao.get(c.getKey()).contains(room)){
+    //         bansao.get(c.getKey()).add(room);
+    //        }    
+    //     }
+    // }
+   for (Room r : this.list_room){
+    for (Map.Entry<LocalDate,Booking[]> c : r.getCalendar().entrySet()){
+            System.out.println(c.getKey());
+            
+    }
+   }
 
     int dem = 0;
         System.out.println("╔"+border(154) +'╗');
         System.out.println("║"+form_SO("BK ID",10) + "║" + form_SO("PHONG",10)+"║"  + form_SO("NGAY",15) + "║" +form_SO("buoi",10)+"║" +form_SO("SDT KH",15) +"║" +form_SO("TEN Khach Hang",25) +"║" + form_SO("ID MNG",10) +"║" +form_SO("SV_TEAM",10) +"║" +form_SO("DICH VU",20)+"║" + form_SO("Total price",20) +"║");
-    TreeMap<LocalDate,ArrayList<Room>> bansao = new TreeMap<>();
-        for (Room room : this.list_room){
-            for (Map.Entry<LocalDate,Booking[]> c : room.getCalendar().entrySet()){
-                if (bansao.containsKey(c.getKey())){
-                    bansao.put(c.getKey(), new ArrayList<>());
-                }         
-               if (!bansao.get(c.getKey()).contains(room)){
-                bansao.get(c.getKey()).add(room);
-               }    
-            }
-        }
+    
 
         if(bansao.isEmpty()){
             System.out.println( "╠"+border(10) + "╩" + border(10)+"╩"  + border(15) + "╩" +border(10)+"╩" +border(15) +"╩" +border(25) +"╩" + border(10) +"╩" +border(10) +"╩" +border(20)+"╩" + border(20) +"╣");

@@ -1,31 +1,25 @@
 
-import java.text.DecimalFormat;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.ArrayList;
 
 public class clm {
-
+    protected static ArrayList<Integer> so ;
+    static {
+        so = new ArrayList<>();
+        so.add(10);
+        so.add(20);
+        so.add(30);
+        so.add(40);
+        so.add(50);
+        so.add(60);
+    }
     public static void main(String[] args) {
-        DecimalFormat form_tien = new DecimalFormat("#,###.00");
-        TreeMap<Integer,TreeMap<Service,Boolean>> service_list = new TreeMap<>();  
-        int session = 0;
-        for (Service sv : ServiceManager.availableServices){
-            TreeMap<Service,Boolean> sos = new TreeMap<>();
-            sos.put(sv, true);
-            service_list.put(session, sos);
-            session++;            
-        }
+        System.out.println("hello word");
+        System.out.println(clm.so);
+        int i = 50;
+        so.remove(1);
+        System.out.println(clm.so); 
        
-        for (Map.Entry<Integer,TreeMap<Service,Boolean>> bansao : service_list.entrySet()){
-            for (Map.Entry<Service,Boolean> bansao1 : bansao.getValue().entrySet()){
-                if (bansao1.getValue()){
-                    System.out.println("║"+RoomManager.form_option(bansao.getKey() + ". "+bansao1.getKey().getName() + "  " +form_tien.format(bansao1.getKey().getPricepersession()) + "  "+"V", 70)+"║");
-                }else {
-                    System.out.println("║"+RoomManager.form_option(bansao.getKey() + ". "+bansao1.getKey().getName() + "  " +form_tien.format(bansao1.getKey().getPricepersession()), 70)+"║");
-                }
-                
-            }
-        }
+        
         
     }
     
