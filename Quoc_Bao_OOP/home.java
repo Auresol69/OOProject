@@ -14,69 +14,67 @@ public class home {
     public static final String YELLOW = "\033[0;33m"; // Vàng
     public static final String BLUE = "\033[0;34m"; // Xanh dương
 
-    public home(String t){
+    public home(String t) {
         int choice = 0;
         Scanner sc = new Scanner(System.in);
         boolean kt = true;
         account account = null;
         ArrayList<account> list = new ArrayList<>();
-        try (BufferedReader br  = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/account.txt"))){
-            String line ;
-            while((line = br.readLine())!=null){
-            String[] str = line.split("#");
-            String username = str[0];
-            String password = str[1] ;
-            int quyen = Integer.parseInt(str[2]) ;
-            
-            account ac = new account(username, password, quyen);
-            System.out.println(ac.toString());
-            list.add(ac);
-    
+        try (BufferedReader br = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/account.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] str = line.split("#");
+                String username = str[0];
+                String password = str[1];
+                int quyen = Integer.parseInt(str[2]);
+
+                account ac = new account(username, password, quyen);
+                System.out.println(ac.toString());
+                list.add(ac);
+
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
         }
-       } catch (Exception e) {
-        // TODO: handle exception
-       }
 
-
-        do { 
-            do { 
+        do {
+            do {
                 System.out.println("0. Dang nhap");
                 System.out.println("1. Thoat");
 
-                do { 
+                do {
                     System.out.print("Nhap lua chon : ");
-                    choice = sc.nextInt();sc.nextLine();
-                    if(!(choice >= 0 && choice <= 1)){
+                    choice = sc.nextInt();
+                    sc.nextLine();
+                    if (!(choice >= 0 && choice <= 1)) {
                         System.out.println("Loi, Nhap lai");
-                    }                        
+                    }
                 } while (!(choice >= 0 && choice <= 1));
 
-                if(choice == 1 ){
+                if (choice == 1) {
                     return;
                 } else {
-    
+
                     System.out.print("User name   : ");
                     String username = sc.nextLine();
                     System.out.print("password   : ");
                     String password = sc.nextLine();
-    
-                    for (account acc : list){
-                        if (username.trim().equals(acc.getUsername()) && password.trim().equals(acc.getPassword())){
+
+                    for (account acc : list) {
+                        if (username.trim().equals(acc.getUsername()) && password.trim().equals(acc.getPassword())) {
                             kt = false;
                             account = acc;
                         }
                     }
                 }
             } while (kt);
-            
+
             RoomManager rmng = new RoomManager();
             StaffManager smng = new StaffManager();
             CustomerManager cmng = new CustomerManager();
             ServiceManager svmng = new ServiceManager();
 
-    
-    
-            if (account.getQuyen() == 0){
+            if (account.getQuyen() == 0) {
                 int luachon = 0;
                 kt = true;
                 boolean ktt = true;
@@ -86,300 +84,301 @@ public class home {
                     System.out.println("2. Xoa");
                     System.out.println("3. thong ke");
                     System.out.println("4. Dang xuat");
-                    
-                    do { 
+
+                    do {
                         System.out.print("Nhap lua chon : ");
-                        choice = sc.nextInt();sc.nextLine();
-                        if(!(choice >= 0 && choice <= 3)){
+                        choice = sc.nextInt();
+                        sc.nextLine();
+                        if (!(choice >= 0 && choice <= 3)) {
                             System.out.println("Loi, Nhap lai");
-                        }                        
+                        }
                     } while (!(choice >= 0 && choice <= 3));
-        
-                
+
                     switch (choice) {
                         case 0:
-                        do { 
-                            System.out.println("0. them lich");
-                            System.out.println("1. them nhan vien");
-                            System.out.println("2. them khach hang");
-                            System.out.println("3. them dich vu ");
-                            System.out.println("4. them phong");
-                            System.out.println("5. Quay lai");
-    
-                            do { 
-                                System.out.print("Nhap lua chon : ");
-                                choice = sc.nextInt();sc.nextLine();
-                                if(!(luachon >= 0 && luachon <= 5)){
-                                    System.out.println("Loi, Nhap lai");
-                                }                        
-                            } while (!(luachon >= 0 && luachon <= 5));
-                            
-    
-                            switch (luachon) {
-                                case 1 : 
-                                    System.out.println("Nhap ten nhan vien ");
-                                    String name = sc.nextLine();
-                                    System.out.println("nhap so dien thoai cua nhan vien ");
-                                    String sdt = sc.nextLine();
-                                    // kiem tra sdt da co chua 
-                                    // them staff 
-                                break;
-                                case 2 : 
-                                    System.out.println("Nhap so dien thoai cua khach hang");
-                                    String sdt_kh = sc.nextLine();
-                                    if (cmng.check(sdt_kh)){
-                                        System.out.println("So dien thoai da duoc su dung");
-                                    } else {
-                                        System.out.println("Nhap ten khach hang ");
-                                        String ten = sc.nextLine();
-                                        System.out.println("Nhap gioi tinh cua khach hang || 0. Nam     1.Nu");
-                                        int gioitinh = sc.nextInt();sc.nextLine();
-                                        do { 
-                                            System.out.print("Nhap lua chon : ");
-                                            choice = sc.nextInt();sc.nextLine();
-                                            if(!(luachon >= 0 && luachon <= 1)){
-                                                System.out.println("Loi, Nhap lai");
-                                            }                        
-                                        } while (!(luachon >= 0 && luachon <= 1));
+                            do {
+                                System.out.println("0. them lich");
+                                System.out.println("1. them nhan vien");
+                                System.out.println("2. them khach hang");
+                                System.out.println("3. them dich vu ");
+                                System.out.println("4. them phong");
+                                System.out.println("5. Quay lai");
 
-                                        if(luachon == 0 ){
-                                            Customer cus = new Customer(ten, ten, true);   
-                                            cmng.addCustomer(cus);                                          
+                                do {
+                                    System.out.print("Nhap lua chon : ");
+                                    choice = sc.nextInt();
+                                    sc.nextLine();
+                                    if (!(luachon >= 0 && luachon <= 5)) {
+                                        System.out.println("Loi, Nhap lai");
+                                    }
+                                } while (!(luachon >= 0 && luachon <= 5));
+
+                                switch (luachon) {
+                                    case 1:
+                                        System.out.println("Nhap ten nhan vien ");
+                                        String name = sc.nextLine();
+                                        System.out.println("nhap so dien thoai cua nhan vien ");
+                                        String sdt = sc.nextLine();
+                                        // kiem tra sdt da co chua
+                                        // them staff
+                                        break;
+                                    case 2:
+                                        System.out.println("Nhap so dien thoai cua khach hang");
+                                        String sdt_kh = sc.nextLine();
+                                        if (cmng.check(sdt_kh)) {
+                                            System.out.println("So dien thoai da duoc su dung");
                                         } else {
-                                            Customer cus = new Customer(ten, ten, false);  
-                                        cmng.addCustomer(cus);                                          
+                                            System.out.println("Nhap ten khach hang ");
+                                            String ten = sc.nextLine();
+                                            System.out.println("Nhap gioi tinh cua khach hang || 0. Nam     1.Nu");
+                                            int gioitinh = sc.nextInt();
+                                            sc.nextLine();
+                                            do {
+                                                System.out.print("Nhap lua chon : ");
+                                                choice = sc.nextInt();
+                                                sc.nextLine();
+                                                if (!(luachon >= 0 && luachon <= 1)) {
+                                                    System.out.println("Loi, Nhap lai");
+                                                }
+                                            } while (!(luachon >= 0 && luachon <= 1));
+
+                                            if (luachon == 0) {
+                                                Customer cus = new Customer(ten, ten, true);
+                                                cmng.addCustomer(cus);
+                                            } else {
+                                                Customer cus = new Customer(ten, ten, false);
+                                                cmng.addCustomer(cus);
+                                            }
+                                            System.out.println("Da tao thanh cong khach hang");
                                         }
-                                        System.out.println("Da tao thanh cong khach hang");
-                                    }
 
-                                    break;
-                                
-                                case 3 : 
-                                    System.out.println("Cac dich vu da co ");
-                                    for (Service sv : svmng.getavailableServices()){
-                                        System.out.println(sv.getName() + "  " + sv.getPricepersession());
-                                    }
+                                        break;
 
-                                    System.out.println("Nhap ten dich vu");
-                                    String ten = sc.nextLine();
-                                    System.out.println("Nhap gia ");
-                                    String gianhap = sc.nextLine();
-                                    
-                                    Service sv = new Service(ten, Double.parseDouble(gianhap));
-                                    System.out.println("Da them thanh cong dich vu");
+                                    case 3:
+                                        System.out.println("Cac dich vu da co ");
+                                        for (Service sv : svmng.getavailableServices()) {
+                                            System.out.println(sv.getName() + "  " + sv.getPricepersession());
+                                        }
+
+                                        System.out.println("Nhap ten dich vu");
+                                        String ten = sc.nextLine();
+                                        System.out.println("Nhap gia ");
+                                        String gianhap = sc.nextLine();
+
+                                        Service sv = new Service(ten, Double.parseDouble(gianhap));
+                                        System.out.println("Da them thanh cong dich vu");
+                                        break;
+
+                                    case 4:
+                                        rmng.show_list_room();
+
+                                        System.out.println("Nhap ten phong : ");
+                                        String ten_phong = sc.nextLine();
+                                        System.out.println("Nhap kich co ");
+                                        int size_phong = sc.nextInt();
+                                        sc.nextLine();
+                                        System.out.println("nhap gia phong ");
+                                        String giaphongvao = sc.nextLine();
+                                        System.out.println("nhap tang");
+                                        int tang = sc.nextInt();
+                                        sc.nextLine();
+                                        double giaphong = Double.parseDouble(giaphongvao);
+                                        if (ten_phong.contains("Vip") || ten_phong.contains("vip")) {
+                                            Room r = new Vip_room(ten_phong, size_phong, 1, giaphong, tang);
+                                        } else {
+                                            Room r = new Standard_room(ten_phong, size_phong, 1, giaphong, tang);
+                                        }
+                                        System.out.println("Them Phong thanh cong ");
+
+                                        break;
+
+                                    case 5:
+                                        ktt = false;
+                                        break;
+                                    default:
+                                        System.out.println("Lua chon khong hop le ");
+                                }
+
                                 break;
+                            } while (ktt);
 
+                        case 1:
+                            do {
+                                System.out.println("0. Sua thong tin lich dat phong");
+                                System.out.println("1. Sua thong tin nhan vien");
+                                System.out.println("2. Sua thong tin khach hang");
+                                System.out.println("3. Sua thong tin dich vu");
+                                System.out.println("4. Sua thong tin phong hop");
+                                System.out.println("5. Quay lai");
 
-                                case 4 : 
-                                    rmng.show_list_room();
-
-                                    System.out.println("Nhap ten phong : ");
-                                    String ten_phong = sc.nextLine();
-                                    System.out.println("Nhap kich co ");
-                                    int size_phong = sc.nextInt();sc.nextLine();
-                                    System.out.println("nhap gia phong ");
-                                    String giaphongvao = sc.nextLine();
-                                    System.out.println("nhap tang");
-                                    int tang = sc.nextInt();sc.nextLine();
-                                    double giaphong =  Double.parseDouble(giaphongvao);
-                                    if(ten_phong.contains("Vip") || ten_phong.contains("vip")){
-                                        Room r = new Vip_room(ten_phong, size_phong, 1, giaphong, tang);
-                                    } else {
-                                        Room r = new Standard_room(ten_phong, size_phong, 1, giaphong, tang);
+                                do {
+                                    System.out.print("Nhap lua chon : ");
+                                    choice = sc.nextInt();
+                                    sc.nextLine();
+                                    if (!(luachon >= 0 && luachon <= 5)) {
+                                        System.out.println("Loi, Nhap lai");
                                     }
-                                    System.out.println("Them Phong thanh cong ");
+                                } while (!(luachon >= 0 && luachon <= 5));
 
-                                break;
+                                switch (luachon) {
+                                    case 0:
+                                        // sua thong tin dat phogn
+                                        break;
+                                    case 1:
+                                        // sua thong tin nhan vien
+                                        break;
+                                    case 2:
+                                        // sua thong tin khach hang
+                                        System.out.println("Nhap sdt khach hang ");
+                                        String sdt_kh = sc.nextLine();
+                                        if (cmng.check(t)) {
+                                            Customer cus = cmng.get_cus(sdt_kh);
+                                            System.out.println("Nhap so ten moi cua khach hang ");
+                                            String tenkh = sc.nextLine();
+                                            System.out.println("Nhap so dien thoai moi cua khach hang ");
+                                            sdt_kh = sc.nextLine();
+                                            cus.setName(tenkh);
+                                            cus.setPhoneNumber(sdt_kh);
 
-                                case 5:
-                                    ktt = false;
-                                    break;
-                                default:
-                                    System.out.println("Lua chon khong hop le ");
-                            }
-    
+                                            System.out.println("Cap nhat thong tin thanh cong ");
+                                        } else {
+                                            System.out.println("khach hang khong ton tai");
+                                        }
+                                        break;
+                                    case 3:
+                                        // sua thong tin dich vu
+                                        break;
+                                    case 4:
+                                        // sua thong tin Room
+                                        break;
+
+                                    default:
+                                        throw new AssertionError();
+                                }
+
+                            } while (luachon == 5);
+
                             break;
-                } while (ktt);
-                
-                    case 1 :
-                        do { 
-                            System.out.println("0. Sua thong tin lich dat phong");
-                            System.out.println("1. Sua thong tin nhan vien");
-                            System.out.println("2. Sua thong tin khach hang");
-                            System.out.println("3. Sua thong tin dich vu");
-                            System.out.println("4. Sua thong tin phong hop");
-                            System.out.println("5. Quay lai");
+                        case 2:
+                            do {
+                                System.out.println("0. Xoa lich dat phong");
+                                System.out.println("1. Xoa thong tin nhan vien");
+                                System.out.println("2. Xoa thong tin khach hang");
+                                System.out.println("3. Xoa thong tin dich vu");
+                                System.out.println("4. Xoa thong tin phong hop");
+                                System.out.println("5. Quay lai");
 
-                            do { 
-                                System.out.print("Nhap lua chon : ");
-                                choice = sc.nextInt();sc.nextLine();
-                                if(!(luachon >= 0 && luachon <= 5)){
-                                    System.out.println("Loi, Nhap lai");
-                                }                        
-                            } while (!(luachon >= 0 && luachon <= 5));
-
-                            switch (luachon) {
-                                case 0:
-                                    // sua thong tin dat phogn                                    
-                                    break;
-                                case 1:
-                                    // sua thong tin nhan vien 
-                                    break;
-                                case 2:
-                                    // sua thong tin khach hang 
-                                    System.out.println("Nhap sdt khach hang ");
-                                    String sdt_kh = sc.nextLine();
-                                    if (cmng.check(t)){
-                                        Customer cus = cmng.get_cus(sdt_kh);
-                                        System.out.println("Nhap so ten moi cua khach hang ");
-                                        String tenkh = sc.nextLine();
-                                        System.out.println("Nhap so dien thoai moi cua khach hang ");
-                                        sdt_kh = sc.nextLine();
-                                        cus.setName(tenkh);
-                                        cus.setPhoneNumber(sdt_kh);
-
-                                        System.out.println("Cap nhat thong tin thanh cong ");
-                                    } else {
-                                        System.out.println("khach hang khong ton tai");
+                                do {
+                                    System.out.print("Nhap lua chon : ");
+                                    choice = sc.nextInt();
+                                    sc.nextLine();
+                                    if (!(luachon >= 0 && luachon <= 5)) {
+                                        System.out.println("Loi, Nhap lai");
                                     }
-                                    break; 
-                                case 3:
-                                    //sua thong tin dich vu 
-                                    break;
-                                case 4:
-                                    // sua thong tin Room
-                                    break;
+                                } while (!(luachon >= 0 && luachon <= 5));
 
-                                default:
-                                    throw new AssertionError();
-                            }
+                                switch (luachon) {
+                                    case 0:
+                                        // Xoa thong tin dat phong
+                                        break;
+                                    case 1:
+                                        // xoa thong tin nhan vien
+                                        break;
+                                    case 2:
+                                        // sua thong tin khach hang
+                                        System.out.println("Nhap sdt khach hang ");
+                                        String sdt_kh = sc.nextLine();
+                                        if (cmng.check(t)) {
+                                            Customer cus = cmng.get_cus(sdt_kh);
+                                            cmng.customers.remove(cus);
 
-                        } while (luachon == 5);
+                                            System.out.println("Da xoa khach hang thanh cong ");
+                                        } else {
+                                            System.out.println("Da xoa khach hang thanh cong");
+                                        }
+                                        break;
+                                    case 3:
+                                        // xao thong tin dich vu
+                                        System.out.println("Cac dich vu da co ");
+                                        for (Service sv : svmng.getavailableServices()) {
+                                            System.out.println(sv.getName() + "  " + sv.getPricepersession());
+                                        }
+                                        System.out.println("Nhap ten dich vu muon xoa ");
+                                        String ten_dv = sc.nextLine();
+                                        for (Service sv : svmng.getavailableServices()) {
+                                            if (sv.getName().equalsIgnoreCase(ten_dv)) {
+                                                svmng.getavailableServices().remove(sv);
+                                            }
+                                        }
+                                        break;
+                                    case 4:
+                                        // Xoa thong tin Room
 
+                                        rmng.show_list_room();
+                                        System.out.println("Nhap ten phong ");
+                                        String ten_phong = sc.nextLine();
+                                        if (rmng.check_room(ten_phong)) {
+                                            rmng.getList_room().remove(rmng.get_room(ten_phong));
+                                        }
 
+                                        break;
 
-                        break;
-                    case 2 : 
-                        do { 
-                         System.out.println("0. Xoa lich dat phong");
-                        System.out.println("1. Xoa thong tin nhan vien");
-                        System.out.println("2. Xoa thong tin khach hang");
-                        System.out.println("3. Xoa thong tin dich vu");
-                        System.out.println("4. Xoa thong tin phong hop");
-                        System.out.println("5. Quay lai");
+                                    default:
+                                        throw new AssertionError();
+                                }
+                            } while (luachon == 5);
 
-                        do { 
-                            System.out.print("Nhap lua chon : ");
-                            choice = sc.nextInt();sc.nextLine();
-                            if(!(luachon >= 0 && luachon <= 5)){
-                                System.out.println("Loi, Nhap lai");
-                            }                        
-                        } while (!(luachon >= 0 && luachon <= 5));
+                            break;
 
+                        case 3:
+                            do {
+                                System.out.println("0. Thong ke all ");
+                                System.out.println("1. Thong ke theo quy");
+                                System.out.println("2. Thong ke theo nam ");
+                                System.out.println("3. Quay lai ");
 
-                        switch (luachon) {
-                                case 0:
-                                    // Xoa thong tin dat phong                                   
-                                    break;
-                                case 1:
-                                    // xoa thong tin nhan vien
-                                    break;
-                                case 2:
-                                    // sua thong tin khach hang 
-                                    System.out.println("Nhap sdt khach hang ");
-                                    String sdt_kh = sc.nextLine();
-                                    if (cmng.check(t)){
-                                        Customer cus = cmng.get_cus(sdt_kh);
-                                        cmng.customers.remove(cus);
-
-                                        System.out.println("Da xoa khach hang thanh cong ");
-                                    } else {
-                                        System.out.println("Da xoa khach hang thanh cong");
+                                do {
+                                    System.out.print("Nhap lua chon : ");
+                                    choice = sc.nextInt();
+                                    sc.nextLine();
+                                    if (!(luachon >= 0 && luachon <= 5)) {
+                                        System.out.println("Loi, Nhap lai");
                                     }
-                                    break; 
-                                case 3:
-                                    //xao thong tin dich vu 
-                                    System.out.println("Cac dich vu da co ");
-                                    for (Service sv : svmng.getavailableServices()){
-                                        System.out.println(sv.getName() + "  " + sv.getPricepersession());
-                                    }
-                                    System.out.println("Nhap ten dich vu muon xoa ");
-                                    String ten_dv = sc.nextLine();
-                                    for (Service sv : svmng.getavailableServices()){
-                                       if (sv.getName().equalsIgnoreCase(ten_dv)){
-                                        svmng.getavailableServices().remove(sv);
-                                       }
-                                    }
-                                    break;
-                                case 4:
-                                    // Xoa thong tin Room
+                                } while (!(luachon >= 0 && luachon <= 5));
 
-                                    rmng.show_list_room();
-                                    System.out.println("Nhap ten phong "); 
-                                    String ten_phong = sc.nextLine();
-                                    if (rmng.check_room(ten_phong)){
-                                        rmng.getList_room().remove(rmng.get_room(ten_phong));
-                                    }
-                                    
-                                    break;
+                                switch (luachon) {
+                                    case 0:
+                                        rmng.thong_ke();
+                                        break;
+                                    case 1:
 
-                                default:
-                                    throw new AssertionError();
-                            }
-                        } while (luachon == 5);
+                                        System.out.println("Nhap nam : ");
+                                        int nam = sc.nextInt();
+                                        sc.nextLine();
+                                        rmng.thong_ke_theo_quy(nam);
+                                        break;
+                                    case 2:
+                                        rmng.thong_ke_theo_nam();
+                                        break;
+                                    default:
+                                        throw new AssertionError();
+                                }
 
-                    break;
+                            } while (luachon == 3);
+                            break;
+                        default:
+                            throw new AssertionError();
+                    }
 
-                    case 3 : 
-                        do { 
-                            System.out.println("0. Thong ke all ");
-                            System.out.println("1. Thong ke theo quy");
-                            System.out.println("2. Thong ke theo nam ");                            
-                            System.out.println("3. Quay lai ");  
-                            
-                            do { 
-                                System.out.print("Nhap lua chon : ");
-                                choice = sc.nextInt();sc.nextLine();
-                                if(!(luachon >= 0 && luachon <= 5)){
-                                    System.out.println("Loi, Nhap lai");
-                                }                        
-                            } while (!(luachon >= 0 && luachon <= 5));
-
-                            switch (luachon) {
-                                case 0:
-                                    rmng.thong_ke();
-                                    break;
-                                case 1:
-
-                                    System.out.println("Nhap nam : ");
-                                    int nam = sc.nextInt();sc.nextLine();                                
-                                    rmng.thong_ke_theo_quy(nam);
-                                    break;
-                                case 2:
-                                    rmng.thong_ke_theo_nam();
-                                    break;                                
-                                default:
-                                    throw new AssertionError();
-                            }
-
-                        } while (luachon == 3);
-                    break;
-                    default:
-                        throw new AssertionError();
-                }
-        
-                
-
-
-                    if (choice == 0){
+                    if (choice == 0) {
                         kt = true;
                     }
                 } while (choice == 0);
             }
         } while (kt);
-        
-      
+
     }
+
     public home() {
         RoomManager rm = new RoomManager();
         StaffManager smm = new StaffManager();
@@ -436,19 +435,48 @@ public class home {
                                         smm.themNhanvien();
                                         break;
                                     case 2:
-                                        smm.xuatInfoTatCaStaff();
                                         do {
-                                            System.out.println("1. Doi trang thai nhan vien");
-                                            System.out.println("2. Quay lai");
-                                            System.out.println("3. Thoat");
+                                            System.out.println("1. Show danh sach nhan vien");
+                                            System.out.println("2. Doi trang thai nhan vien");
+                                            System.out.println("3. Them nhan vien");
+                                            System.out.println("4. Xoa nhan vien");
+                                            System.out.println("5. Sua thong tin nhan vien");
+                                            System.out.println("6. Quay lai");
+                                            System.out.println("7. Thoat");
                                             int option3 = Integer.parseInt(sc.nextLine());
                                             switch (option3) {
                                                 case 1:
+                                                    smm.xuatInfoTatCaStaff();
+                                                    break;
+                                                case 2:
                                                     System.out.print("Nhap sdt cua nhan vien muon chinh sua: ");
                                                     String sdt = sc.nextLine();
                                                     smm.switchStaffStatus(sdt);
                                                     break;
-                                                case 2:
+                                                case 3:
+                                                    smm.themNhanvien();
+                                                    break;
+                                                case 4:
+                                                    Staff staff_xoa = null;
+                                                    System.out.print("Nhap sdt nhan vien ban muon xoa");
+                                                    String phone_xoa = sc.nextLine();
+                                                    staff_xoa = smm.timNhanVien(phone_xoa);
+                                                    if (staff_xoa == null) {
+                                                        System.out.println("Nhan vien khong ton tai!");
+                                                    }
+                                                    smm.removeStaff(staff_xoa);
+                                                    break;
+                                                case 5:
+                                                    Staff staff_sua = null;
+                                                    System.out.print("Nhap sdt nhan vien ban muon xoa");
+                                                    String phone_sua = sc.nextLine();
+                                                    staff_sua = smm.timNhanVien(phone_sua);
+                                                    if (staff_sua == null) {
+                                                        System.out.println("Nhan vien khong ton tai!");
+                                                    }
+                                                    smm.editStaff(staff_sua);
+                                                    break;
+                                                case 6:
                                                     level3 = false;
                                                     break;
                                                 default:
@@ -461,7 +489,54 @@ public class home {
                                         } while (level3);
                                         break;
                                     case 3:
-                                        cm.xuatInfoTatCaCustomer();
+                                        do {
+                                            System.out.println("1. Show danh sach khach hang");
+                                            System.out.println("2. Them khach hang");
+                                            System.out.println("3. Xoa khach hang");
+                                            System.out.println("4. Sua thong tin khach hang");
+                                            System.out.println("5. Quay lai");
+                                            System.out.println("6. Thoat");
+                                            int option3 = Integer.parseInt(sc.nextLine());
+                                            switch (option3) {
+                                                case 1:
+                                                    cm.xuatInfoTatCaCustomer();
+                                                    break;
+                                                case 2:
+                                                    Customer cus = new Customer();
+                                                    cus.setInfo();
+                                                    cm.addCustomer(cus);
+                                                    break;
+                                                case 3:
+                                                    Customer cus_xoa = null;
+                                                    System.out.print("Nhap sdt khach hang ban muon xoa");
+                                                    String phone_xoa = sc.nextLine();
+                                                    cus_xoa = cm.get_cus(phone_xoa);
+                                                    if (cus_xoa == null) {
+                                                        System.out.println("Khach hang khong ton tai!");
+                                                    }
+                                                    cm.removeCustomer(cus_xoa);
+                                                    break;
+                                                case 4:
+                                                    Customer cus_sua = null;
+                                                    System.out.print("Nhap sdt khach hang ban muon xoa");
+                                                    String phone_sua = sc.nextLine();
+                                                    cus_sua = cm.get_cus(phone_sua);
+                                                    if (cus_sua == null) {
+                                                        System.out.println("Khach hang khong ton tai!");
+                                                    }
+                                                    cm.editCustomer(cus_sua);
+                                                    break;
+                                                case 5:
+                                                    level3 = false;
+                                                    break;
+                                                default:
+                                                    account = null;
+                                                    level1 = false;
+                                                    level2 = false;
+                                                    level3 = false;
+                                                    break;
+                                            }
+                                        } while (level3);
                                         break;
                                     case 4:
                                         do {
@@ -559,7 +634,8 @@ public class home {
                                         break;
                                 }
                             } while (level2);
-                        } else {
+                        }
+                        if (account.getStaff() instanceof ServiceTeamMember) {
                             System.out.println(GREEN + "Welcome " + account.getStaff().getName() + RESET);
                             LocalDateTime now = LocalDateTime.now();
                             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -567,10 +643,14 @@ public class home {
 
                             System.out.println(GREEN + "Current time: " + formattedDate + RESET);
                             do {
+
                                 System.out.println("1. Thong tin cua minh");
                                 System.out.println("2. Quan ly dat phong");
-                                System.out.println("3. Dang xuat");
-                                System.out.println("4. Thoat");
+                                System.out.println("3. Quan ly khach hang");
+                                System.out.println("4. Dang xuat");
+                                System.out.println("5. Thoat");
+
+                                boolean level3 = true;
                                 int option2 = Integer.parseInt(sc.nextLine());
                                 switch (option2) {
                                     case 1:
@@ -580,6 +660,56 @@ public class home {
                                         BookingManager.terminal();
                                         break;
                                     case 3:
+                                        do {
+                                            System.out.println("1. Show danh sach khach hang");
+                                            System.out.println("2. Them khach hang");
+                                            System.out.println("3. Xoa khach hang");
+                                            System.out.println("4. Sua thong tin khach hang");
+                                            System.out.println("5. Quay lai");
+                                            System.out.println("6. Thoat");
+                                            int option3 = Integer.parseInt(sc.nextLine());
+                                            switch (option3) {
+                                                case 1:
+                                                    cm.xuatInfoTatCaCustomer();
+                                                    break;
+                                                case 2:
+                                                    Customer cus = new Customer();
+                                                    cus.setInfo();
+                                                    cm.addCustomer(cus);
+                                                    break;
+                                                case 3:
+                                                    Customer cus_xoa = null;
+                                                    System.out.print("Nhap sdt khach hang ban muon xoa");
+                                                    String phone_xoa = sc.nextLine();
+                                                    cus_xoa = cm.get_cus(phone_xoa);
+                                                    if (cus_xoa == null) {
+                                                        System.out.println("Khach hang khong ton tai!");
+                                                    }
+                                                    cm.removeCustomer(cus_xoa);
+                                                    break;
+                                                case 4:
+                                                    Customer cus_sua = null;
+                                                    System.out.print("Nhap sdt khach hang ban muon xoa");
+                                                    String phone_sua = sc.nextLine();
+                                                    cus_sua = cm.get_cus(phone_sua);
+                                                    if (cus_sua == null) {
+                                                        System.out.println("Khach hang khong ton tai!");
+                                                    }
+                                                    cm.editCustomer(cus_sua);
+                                                    break;
+                                                case 5:
+                                                    level3 = false;
+                                                    break;
+                                                default:
+                                                    account = null;
+                                                    level1 = false;
+                                                    level2 = false;
+                                                    level3 = false;
+                                                    break;
+                                            }
+                                        } while (level3);
+                                        break;
+                                    case 4:
                                         account = null;
                                         level2 = false;
                                         break;

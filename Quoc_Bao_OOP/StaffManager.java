@@ -109,6 +109,85 @@ public class StaffManager {
         return tangChuaCoNhanVienPhucVu;
     }
 
+    public void removeStaff(Staff staff) {
+        if (staffs.contains(staff)) {
+            staffs.remove(staff);
+
+            // Xóa StaffAccount tương ứng với nhân viên này
+            String username = staff.getStaffAccount().getUsername();
+            if (StaffAccount.accounts.containsKey(username)) {
+                StaffAccount.accounts.remove(username);
+                System.out.println("Đã xóa tài khoản của nhân viên: " + username);
+            } else {
+                System.out.println("Không tìm thấy tài khoản liên kết với nhân viên.");
+            }
+        } else {
+            System.out.println("Nhân viên không tồn tại trong danh sách.");
+        }
+    }
+
+    public void editStaff(Staff staff) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Ban muon chinh sua cai gi?");
+        System.out.println("1. Name");
+        System.out.println("2. Phonenumber");
+        System.out.println("3. Sex");
+        System.out.println("4. Username");
+        System.out.println("5. Password");
+        int option = -1;
+        while (true) {
+            try {
+                System.out.print("Nhap lua chon: ");
+                option = Integer.parseInt(sc.nextLine());
+                if (option >= 1 && option <= 3) {
+                    break;
+                }
+                System.out.println("Lựa chọn không hợp lệ. Vui lòng chọn từ 1 đến 3.");
+            } catch (NumberFormatException e) {
+                System.out.println("Vui lòng nhập số!");
+            }
+        }
+
+        switch (option) {
+            case 1:
+                System.out.print("Nhap ten: ");
+                String name = sc.nextLine();
+                staff.setName(name);
+                break;
+            case 2:
+                System.out.print("Nhap so dien thoai: ");
+                String phonenumber = sc.nextLine();
+                StaffManager smm = new StaffManager();
+                if (smm.timNhanVien(phonenumber) != null) {
+                    System.out.println("So dien thoai nay da ton tai.");
+                } else {
+                    staff.setPhoneNumber(phonenumber);
+                }
+                break;
+            case 3:
+                System.out.print("Nhap gioi tinh: (Nam/Nu)");
+                Boolean sex = sc.nextLine().equalsIgnoreCase("Nam");
+                staff.setSex(sex);
+                break;
+            case 4:
+                System.out.print("Nhap username: ");
+                String username = sc.nextLine();
+                if (StaffAccount.accounts.containsKey(username)) {
+                    System.out.println("Username nay da ton tai.");
+                } else {
+                    staff.getStaffAccount().setUsername(username);
+                }
+                break;
+            case 5:
+                System.out.print("Nhap password: ");
+                String password = sc.nextLine();
+                staff.getStaffAccount().setPassword(password);
+                break;
+            default:
+                break;
+        }
+    }
+
     public void themNhanVienTuFile(File name) {
         if (staffs == null) {
             staffs = new ArrayList<>();
