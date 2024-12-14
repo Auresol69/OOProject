@@ -1,0 +1,10 @@
+John Doe#1234567890#true
+Jane Smith#0987654321#false
+Michael Brown#1122334455#true
+Emily Davis#2233445566#false
+David Wilson#3344556677#true
+Sophia Johnson#4455667788#false
+James Miller#5566778899#true
+Olivia Martinez#6677889900#false
+Robert Taylor#7788990011#true
+Isabella Anderson#8899001122#false

@@ -9,13 +9,9 @@ public class StaffManager {
     protected ArrayList<Staff> staffs;
     protected int MaxFloor = 3;
 
-<<<<<<< HEAD
-    
-=======
     public StaffManager() {
         staffs = new ArrayList<>();
     }
->>>>>>> cb54cfb2b2e83656cad21e45873afdd8a303ed0f
 
     public ArrayList<Staff> getStaffs() {
         return staffs;

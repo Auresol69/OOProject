@@ -1,10 +1,32 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 
 public class CustomerManager {
     protected ArrayList<Customer> customers;
 
     public CustomerManager() {
-        customers = new ArrayList<>();
+        ArrayList<Customer> list = new ArrayList<>();
+        try (BufferedReader br  = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/customer.txt"))){
+            String line ;
+            while((line = br.readLine())!=null){
+            String[] str = line.split("#");
+            String name = str[0];
+            String phonenumber = str[1];
+            boolean sex = false;
+            if (str[2] == "true"){
+                sex = true;
+            }
+            Customer cus = new Customer(name, phonenumber, sex);                                   
+            list.add(cus);
+    
+        }
+       } catch (Exception e) {
+        // TODO: handle exception
+       }
+       this.customers = list;
+
+        
     }
 
     public void addCustomer(Customer customer) {
@@ -32,4 +54,29 @@ public class CustomerManager {
             System.out.println(customer.toString());
         }
     }
+    public boolean find(String sdt){
+        for (Customer cus : this.customers){
+            if (cus.getPhoneNumber().equals(sdt)){
+                return true;
+            }
+        }
+        return false;
+    }
+    public Customer get_cus(String sdt){
+        for (Customer cus : this.customers){
+            if (cus.getPhoneNumber().equals(sdt)){
+                return cus;
+            }
+        }
+        return null;
+    }    
+    public boolean  check(String sdt ){
+        for (Customer cus : this.customers){
+            if (cus.getPhoneNumber().equals(sdt.trim())){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

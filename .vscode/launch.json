@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "home",
+      "request": "launch",
+      "mainClass": "home",
+      "projectName": "OOProject_93a2214f"
+    },
+    {
+      "type": "java",
       "name": "clm",
       "request": "launch",
       "mainClass": "clm",

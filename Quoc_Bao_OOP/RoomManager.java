@@ -609,7 +609,7 @@ public void thong_ke_theo_nam(){
 
     public Room get_room(String room_name){
         for (Room room : this.list_room){
-            if (room.getName().equals(room_name.trim())){
+            if (room.getName().equalsIgnoreCase(room_name.trim())){
                 return room;
             }
         }
@@ -677,9 +677,9 @@ public void thong_ke_theo_nam(){
 
     public static void main(String[] args) {
         RoomManager rmng = new RoomManager();
-        // rmng.show_calendar(LocalDate.of(2024, 12, 12), LocalDate.of(2024, 12, 14), 0);
+        
         Customer cus = new Customer("long","0923", false);
-        // rmng.history_by_date(LocalDate.of(2024, 12, 12), LocalDate.of(2024, 12, 14));
+        
         Booking book = new Booking(1, cus, new ArrayList<>());
 
         TreeMap<LocalDate,TreeMap<Integer,ArrayList<Room>>> c = new TreeMap<>();
