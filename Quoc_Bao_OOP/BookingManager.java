@@ -231,7 +231,11 @@ public class BookingManager {
                             System.out.println("Lua chon khong hop le!");
                             return;
                     }
-                    paymentmethod.ProcessPayment(0); // de tam la 0 vi chua lay dc price
+                    double sum = 0;
+                    for (Booking booking : bookingList) {
+                        sum += booking.getPrice();
+                    }
+                    paymentmethod.ProcessPayment(sum);
                 }
 
                 Receipt rc = new Receipt(cus, paymentmethod, bookingList);
