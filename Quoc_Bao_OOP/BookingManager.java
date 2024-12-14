@@ -17,31 +17,31 @@ public class BookingManager {
         bookings.add(booking);
     }
 
-    public BookingManager(RoomManager rmng, CustomerManager cmng,ServiceManager svmng ){
+    public BookingManager(RoomManager rmng, CustomerManager cmng, ServiceManager svmng) {
         ArrayList<Booking> list = new ArrayList<>();
-         try (BufferedReader br  = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/booking.txt"))){
-            String line ;
-            while((line = br.readLine())!=null){
-            String[] str = line.split("#");
-            int id = Integer.parseInt(str[0]);
-            double price = Double.parseDouble(str[1]) ;
-            int idreciep = Integer.parseInt(str[1]) ;
-            Customer cus = Integer.parseInt(str[2]);
+        try (BufferedReader br = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/booking.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] str = line.split("#");
+                int id = Integer.parseInt(str[0]);
+                double price = Double.parseDouble(str[1]);
+                int idreciep = Integer.parseInt(str[1]);
+                // Customer cus = Integer.parseInt(str[2]);
 
-            String[] dichvu = str[3].split("$");
-            ArrayList<Service> list_sv = new ArrayList<>();
-            for (String t : dichvu){
-                list_sv.add(svmng.getdichvu(t.trim()));
+                String[] dichvu = str[3].split("$");
+                ArrayList<Service> list_sv = new ArrayList<>();
+                for (String t : dichvu) {
+                    // list_sv.add(svmng.getdichvu(t.trim()));
+                }
+                int tang = Integer.parseInt(str[4]);
+                Room room;
+
+                // list.add(room);
+
             }
-            int tang = Integer.parseInt(str[4]) ;
-            Room room;
-            
-            list.add(room);
-    
+        } catch (Exception e) {
+            // TODO: handle exception
         }
-       } catch (Exception e) {
-        // TODO: handle exception
-       }
     }
 
     public static boolean removeBooking(int index) {
@@ -94,7 +94,7 @@ public class BookingManager {
             switch (choice) {
                 case 1:
                     Booking tmp = new Booking();
-                    tmp.setInfo();
+                    // tmp.setInfo();
                     break;
                 case 2:
                     System.out.println("Nhập ID của đặt chỗ cần xóa:");
