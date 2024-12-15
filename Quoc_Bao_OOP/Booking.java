@@ -43,14 +43,7 @@ public class Booking extends BookingIdManager {
     public void setDate(TreeMap<LocalDate, TreeMap<Integer, ArrayList<Room>>> date) {
         this.date = date;
     }
-    public Booking(int id, Customer cus, ArrayList<Service> selectedServices) {
-        this.id = id;
-        this.cus = cus;
-        this.selectedServices = selectedServices;
-        date = new TreeMap<>();
-        price = 0;
 
-    }
     public Booking (int id, double price,int receiptid,Customer cus, ArrayList<Service> selectedServices,TreeMap<LocalDate, TreeMap<Integer,ArrayList<Room>>> date){
         this.id = id;
         this.cus = cus;
@@ -174,10 +167,10 @@ public class Booking extends BookingIdManager {
         this.setPrice(sum);
     }
 
-    public void xuatFileBooking(BookingManager bmng) {
+    public void xuatFileBooking() {
         try {
             FileWriter fw = new FileWriter("./Quoc_Bao_OOP/data/Bookingmanager.txt");
-            for (Booking booking : bmng.bookings) {
+            for (Booking booking : BookingManager.bookings) {
                 String services = booking.getSelectedServices().stream().map(Service::toString)
                         .collect(Collectors.joining("|"));
                 String dates = booking.getDate().entrySet().stream()
@@ -193,13 +186,13 @@ public class Booking extends BookingIdManager {
         }
     }
 
-    public void setInfo(RoomManager rmng, CustomerManager cmng,ServiceManager svmng) {
+    public void setInfo() {
         Scanner sc = new Scanner(System.in);
         int choice = -1 ;
        do { 
         System.out.print(yeelow("Enter Phone number customer  : "));
         String sdt = sc.nextLine();
-        if (!cmng.find(sdt)){
+        if (!CustomerManager.find(sdt)){
             System.out.println(red("╔"+RoomManager.border(70)+"╗"));
             System.out.println(red("║") +RoomManager.form_SO("Khach hang khong ton tai", 70)+red("║"));
             System.out.println(red("╠"+RoomManager.border(70)+"╣"));
@@ -236,7 +229,7 @@ public class Booking extends BookingIdManager {
                     } else {
                         Customer cus = new Customer(name, name, false);
                     }
-                    cmng.addCustomer(cus);
+                    CustomerManager.addCustomer(cus);
                     this.cus = cus;
                     System.out.println(green(cus.getName() + " " + cus.getPhoneNumber()));
                     choice = -1;
@@ -246,12 +239,12 @@ public class Booking extends BookingIdManager {
         }else if (choice == 2) {
             return ;
         } else {
-            this.cus = cmng.get_cus(sdt);
+            this.cus = CustomerManager.get_cus(sdt);
             System.out.println(green(cus.getName() + " " + cus.getPhoneNumber()));
         }
        } while (choice == 0);
         
-      if (!this.set_calendar_and_service(rmng,svmng)){
+      if (set_calendar_and_service()){
         System.out.println("Huy bo dat lich ");
         return ;
       }
@@ -282,10 +275,13 @@ public class Booking extends BookingIdManager {
     }
 
     public boolean add_room(LocalDate date, int session, Room room) {
-        if (!room.add_booking(date, session, this)){            
-            return false ;
-        }
+        String str = session == 0 ? "sang" : session == 1 ? "trua" : "chieu";
+        if (room.check_calendar(date, session)) {
 
+            System.out.println("!!!!THEM KHONG THANH CONG !!!! : Phong " + room.getName() + " da co lich vao buoi "
+                    + str + " ngay " + date);
+            return false;
+        }
         if (!this.date.containsKey(date)) {
             this.date.put(date, new TreeMap<>());
         }
@@ -293,10 +289,15 @@ public class Booking extends BookingIdManager {
         if (!this.date.get(date).containsKey(session)) {
             this.date.get(date).put(session, new ArrayList<>());
         }
-        
-        this.date.get(date).get(session).add(room);  
 
-            
+        if (this.date.get(date).get(session).contains(room)) {
+            System.out.println("!!!!THEM KHONG THANH CONG !!!! : Ban da dat lich nay cho phong " + room.getName()
+                    + " vao buoi " + str + " ngay " + date);
+            return false;
+        }
+        room.add_booking(date, session, this);
+        this.date.get(date).get(session).add(room);
+        System.out.println("Them thanh cong lich vao buoi " + str + " ngay " + date);
         return true;
     }
 
@@ -333,7 +334,7 @@ public class Booking extends BookingIdManager {
     }
 
 
-    public boolean set_calendar_and_service(RoomManager rmng,ServiceManager svmng){
+    public boolean set_calendar_and_service(){
         double price = 0;
         int sophongthuong = 0;
         int sophongvip = 0;
@@ -347,7 +348,7 @@ public class Booking extends BookingIdManager {
         int session = 0;   
         boolean continueChoosing = true;
         TreeMap<Integer,TreeMap<Service,Boolean>> service_list = new TreeMap<>();  
-        for (Service sv : svmng.availableServices){
+        for (Service sv : ServiceManager.availableServices){
             TreeMap<Service,Boolean> sos = new TreeMap<>();
             sos.put(sv, false);
             service_list.put(session, sos);
@@ -360,10 +361,12 @@ public class Booking extends BookingIdManager {
                     String date_b = sc.nextLine();
                     try {
                         date = LocalDate.parse(date_b, form_time);
+                        session = 0;
                     } catch (Exception e) {
                         System.out.println(red("Loi dinh dang, Nhap lai !!"));
                     }
-                } while (date == null);  
+                } while (session != 0);  
+                session = -1;
                 if (!c.containsKey(date)){
                     c.put(date, new TreeMap<>());
                 }    
@@ -388,10 +391,10 @@ public class Booking extends BookingIdManager {
                         do { 
                             System.out.print(yeelow("nhap phong : "));
                             String roomname = sc.nextLine();
-                            if (!rmng.check_room(roomname)){
+                            if (!RoomManager.check_room(roomname)){
                                 System.out.println(red("phong '" + roomname + "' khong ton tai, Nhap lai !!"));
                             } else {
-                                room = rmng.get_room(roomname);
+                                room = RoomManager.get_room(roomname);
                                 kt = false;
                             }
                         } while (kt);
@@ -399,10 +402,11 @@ public class Booking extends BookingIdManager {
 
                         String str = session == 0? "sang" : session ==1 ?"trua" :"toi";
                         if (room.check_calendar(date, session)){
-                            System.out.println(red("Phong "+room.getName() + "da co lich trong " + str + " ngay " + date.format(form_time)));
+                            System.out.println(red("day la session : " +session));
+                            System.out.println(red("Phong "+room.getName() + " da co lich vao buoi " + str + " ngay " + date.format(form_time)));
                         } else {
                             if (c.get(date).get(session).contains(room)){
-                                System.out.println("phong da them vao truoc!!");
+                                System.out.println(red(str));
                             } else {
                                 c.get(date).get(session).add(room);
                                 System.out.println(green("them thanh cong ngay " + date.format(form_time) + " buoi " +str+ " phong " + room.getName()));
@@ -434,6 +438,7 @@ public class Booking extends BookingIdManager {
                         System.out.println(yeelow("╚" + RoomManager.border(70) + "╝")); 
                         boolean xd = true;
                         do {
+                            System.out.print(yeelow("Nhap lua chon : "));
                             luachon = sc.nextInt();
                             sc.nextLine();
                             if (date == null){
@@ -468,6 +473,7 @@ public class Booking extends BookingIdManager {
                                 System.out.println(yeelow("║")+RoomManager.form_SO("Tong tien tam tinh : " + form_tien.format((price)+(sophongthuong*price_dv) + (sophongvip*price_dv)*1.5), 70)+yeelow("║"));                                    
                                 System.out.println(yeelow("╚" + RoomManager.border(70) + "╝"));                                                                                          
                             do {
+                                System.out.print(yeelow("Nhap lua chon : "));
                                 luachontrong = sc.nextInt();
                                 sc.nextLine();
                                 if(luachontrong < 0 || luachontrong > 3){
@@ -516,6 +522,7 @@ public class Booking extends BookingIdManager {
                                     System.out.println(red("╠"+RoomManager.border(70)+"╣"));
                                     System.out.println(red("║")+RoomManager.form_SO("Tong tien tam tinh : " + form_tien.format((price)+(sophongthuong*price_dv) + (sophongvip*price_dv)*1.5), 70)+red("║"));                                    
                                     System.out.println(red("╚" + RoomManager.border(70) + "╝"));
+                                    System.out.print(yeelow("Nhap lua chon : "));
                                     luachontrongtrong = sc.nextInt();
                                     sc.nextLine();                                    
                                 }
@@ -543,6 +550,7 @@ public class Booking extends BookingIdManager {
                                     System.out.println(red("╠"+RoomManager.border(70)+"╣"));
                                     System.out.println(red("║")+RoomManager.form_SO("Tong tien tam tinh : " + form_tien.format((price)+(sophongthuong*price_dv) + (sophongvip*price_dv)*1.5), 70)+red("║"));                                    
                                     System.out.println(red("╚" + RoomManager.border(70) + "╝"));
+                                    System.out.print(yeelow("Nhap lua chon : "));
                                     luachontrongtrong = sc.nextInt();
                                     sc.nextLine();                                    
                                 } else {
@@ -584,7 +592,7 @@ public class Booking extends BookingIdManager {
                                             System.out.println(red("╠"+RoomManager.border(70)+"╣"));
                                             System.out.println(red("║")+RoomManager.form_SO("Tong tien tam tinh : " + form_tien.format((price)+(sophongthuong*price_dv) + (sophongvip*price_dv)*1.5), 70)+red("║"));                                     
                                             System.out.println(red("╚" + RoomManager.border(70) + "╝"));
-
+                                            System.out.print(yeelow("Nhap lua chon : "));
                                             luachontrongtrong = sc.nextInt();
                                             sc.nextLine();                                        
                                         }
@@ -615,6 +623,7 @@ public class Booking extends BookingIdManager {
                                     System.out.println(red("╠"+RoomManager.border(70)+"╣"));
                                     System.out.println(red("║")+RoomManager.form_SO("Tong tien tam tinh : " + form_tien.format((price)+(sophongthuong*price_dv) + (sophongvip*price_dv)*1.5), 70)+red("║"));                                    
                                     System.out.println(red("╚" + RoomManager.border(70) + "╝"));
+                                    System.out.print(yeelow("Nhap lua chon : "));
                                     luachontrongtrong = sc.nextInt();
                                     sc.nextLine();                                    
                                 } else {
@@ -639,7 +648,7 @@ public class Booking extends BookingIdManager {
                                             System.out.println(red("║")+RoomManager.form_SO("Tong tien tam tinh : " + form_tien.format((price)+(sophongthuong*price_dv) + (sophongvip*price_dv)*1.5), 70)+red("║"));                                    
                                             System.out.println(red("╚" + RoomManager.border(70) + "╝"));
 
-
+                                            System.out.print(yeelow("Nhap lua chon : "));
                                             luachontrongtrong = sc.nextInt();
                                             sc.nextLine();                                        
                                         }
@@ -649,8 +658,8 @@ public class Booking extends BookingIdManager {
                                         System.out.print(yeelow("Nhap ten phong : "));
                                         do { 
                                             String rname = sc.nextLine();
-                                            if (rmng.check_room(rname)){
-                                                room = rmng.get_room(rname);
+                                            if (RoomManager.check_room(rname)){
+                                                room = RoomManager.get_room(rname);
                                                 if (!c.get(date).get(session).contains(room)){
                                                     String strr = session == 0 ? "sang" : session == 1 ? "sang" : "chieu";                                                    
                                                     System.out.println(red("╔"+RoomManager.border(70)+"╗"));
@@ -662,7 +671,7 @@ public class Booking extends BookingIdManager {
                                                     System.out.println(red("║")+RoomManager.form_SO("Tong tien tam tinh : " + form_tien.format((price)+(sophongthuong*price_dv) + (sophongvip*price_dv)*1.5), 70)+red("║"));                                   
                                                     System.out.println(red("╚" + RoomManager.border(70) + "╝"));
 
-
+                                                    System.out.print(yeelow("Nhap lua chon : "));
                                                     luachontrongtrong = sc.nextInt();
                                                     sc.nextLine();
                                                 } else {
@@ -690,10 +699,25 @@ public class Booking extends BookingIdManager {
                                                 }
                                             } else {
                                                System.out.println(red("Phong '" + rname + "' khong ton tai"));
-                                               System.out.println(yeelow("0. Nhap lai ten phong"));
-                                               System.out.println(yeelow("1. Quay lai"));      
-                                               luachontrongtrong = sc.nextInt();
-                                               sc.nextLine();                                                                                                                                         
+
+                                               System.out.println(yeelow("╔"+RoomManager.border(70)+"╗"));
+                                               System.out.println(yeelow("║") +RoomManager.form_SO("OPTION", 70)+yeelow("║"));
+                                               System.out.println(yeelow("╠"+RoomManager.border(70)+"╣"));
+                                               System.out.println(yeelow("║")+RoomManager.form_option("0. Nhap lai ten phong", 70)+yeelow("║"));
+                                               System.out.println(yeelow("║")+RoomManager.form_option("1. Quay lai", 70)+yeelow("║"));
+                                               System.out.println(yeelow("╠"+RoomManager.border(70)+"╣"));
+                                               System.out.println(yeelow("║")+RoomManager.form_SO("Tong tien tam tinh : " + form_tien.format((price)+(sophongthuong*price_dv) + (sophongvip*price_dv)*1.5), 70)+yeelow("║"));                                    
+                                               System.out.println(yeelow("╚" + RoomManager.border(70) + "╝"));                                                   
+
+                                               do { 
+                                                System.out.print(yeelow("Nhap lua chon : "));
+                                                luachontrongtrong = sc.nextInt();
+                                                sc.nextLine();
+                                                if (!(luachontrongtrong == 1 || luachontrongtrong==0)){
+                                                    System.out.println(red("Nhap lai lua chon"));
+                                                }
+                                               } while (!(luachontrongtrong == 1 || luachontrongtrong==0));
+                                                                                                                                                                                       
                                             }
                                            
                                         } while (luachontrongtrong == 0);
@@ -708,9 +732,18 @@ public class Booking extends BookingIdManager {
                             } while (ktt);                                                        
                         }
                         else if(luachon == 5){
+                            System.out.println(yeelow("╔"+RoomManager.border(70)+"╗"));
+                           System.out.println(yeelow("║") +RoomManager.form_SO("OPTION", 70)+yeelow("║"));
+                           System.out.println(yeelow("╠"+RoomManager.border(70)+"╣"));
+                           System.out.println(yeelow("║")+RoomManager.form_option("0. Xac nhan", 70)+yeelow("║"));
+                           System.out.println(yeelow("║")+RoomManager.form_option("1. Tro lai ", 70)+yeelow("║"));
+                           System.out.println(yeelow("╠"+RoomManager.border(70)+"╣"));
+                           System.out.println(yeelow("║")+RoomManager.form_SO("Tong tien tam tinh : " + form_tien.format((price)+(sophongthuong*price_dv) + (sophongvip*price_dv)*1.5), 70)+yeelow("║"));                                    
+                           System.out.println(yeelow("╚" + RoomManager.border(70) + "╝"));
                             System.out.println(yeelow("0. Xac nhan "));
                             System.out.println(yeelow("1. Tro lai "));
                             do { 
+                                System.out.print(yeelow("Nhap lua chon : "));
                                 luachon = sc.nextInt();
                                 sc.nextLine();
                                 if(luachon < 0 || luachon > 1){
@@ -748,7 +781,7 @@ public class Booking extends BookingIdManager {
                                          System.out.println(yeelow("╚" + RoomManager.border(70) + "╝")); 
                                         int choice;
                                         do { 
-                                        System.out.print(yeelow(str));
+                                            System.out.print(yeelow("Nhap lua chon : "));
                                          choice = Integer.parseInt(sc.nextLine());
                                         } while(!(choice >= 0 && choice <= bien1));                                                                                                                                                              
                                                  
@@ -760,7 +793,7 @@ public class Booking extends BookingIdManager {
                                                     do { 
                                                         System.out.println( yeelow("╔"+RoomManager.border(70)+"╗") );
                                                         System.out.println(yeelow("║") +RoomManager.form_SO("Lua chon", 70)+yeelow("║"));
-                                                        System.out.println(yeelow("╠")+RoomManager.border(70)+yeelow("╣"));
+                                                        System.out.println(yeelow("╠"+RoomManager.border(70)+"╣"));
                                                         System.out.println(yeelow("║")+RoomManager.form_option("0. Dong y ", 70)+yeelow("║"));                        
                                                         System.out.println(yeelow("║")+RoomManager.form_option("1. Chinh sua", 70)+yeelow("║"));
                                                         System.out.println(yeelow("║")+RoomManager.form_option("2. Thoat", 70)+yeelow("║"));
@@ -770,6 +803,7 @@ public class Booking extends BookingIdManager {
                                                     
                                                      
                                                         do { 
+                                                            System.out.print(yeelow("Nhap lua chon : "));
                                                             luachon = sc.nextInt();
                                                             sc.nextLine();
                                                             if(luachon < 0 || luachon > 2){
@@ -792,8 +826,8 @@ public class Booking extends BookingIdManager {
                                                             System.out.println(yeelow("╠"+RoomManager.border(70)+"╣"));
                                                             System.out.println(yeelow("║")+RoomManager.form_SO("Tong tien tam tinh : " + form_tien.format((price)+(sophongthuong*price_dv) + (sophongvip*price_dv)*1.5), 70)+yeelow("║"));                                   
                                                             System.out.println(yeelow("╚" + RoomManager.border(70) + "╝"));
-    
-                                                            do { 
+                                                            
+                                                            do { System.out.print(yeelow("Nhap lua chon : "));
                                                                 luachon = sc.nextInt();
                                                                 sc.nextLine();
                                                                 if(luachon < 0 || luachon > 2){
@@ -889,9 +923,7 @@ public class Booking extends BookingIdManager {
             }
         }
         this.price =(price)+(sophongthuong*price_dv) + (sophongvip*price_dv)*1.5;
-
-        
-        
+        this.date = c;
     return true;
 }
 
@@ -979,19 +1011,12 @@ public class Booking extends BookingIdManager {
 
 
     public static void main(String[] args) {
-        RoomManager rmng = new RoomManager();
-        CustomerManager cmng = new CustomerManager();
-        Customer cus = new Customer("long", "0923", false);
-        Booking book = new Booking(nextId, cus, null);
+       
 
-        LocalDate a = LocalDate.of(2024, 12, 12);
-        LocalDate b = LocalDate.of(2024, 12, 11);
-        LocalDate c = LocalDate.of(2024, 12, 10);
+        RoomManager.show_calendar(LocalDate.of(2004, 9, 1),LocalDate.of(2004, 9, 3), 0);
+        
 
-        TreeMap<LocalDate, TreeMap<Integer, ArrayList<String>>> d = new TreeMap<>();
-
-       Booking bookk = new Booking();
-      
+ 
        
 
 

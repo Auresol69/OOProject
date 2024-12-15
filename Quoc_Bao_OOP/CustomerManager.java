@@ -3,8 +3,30 @@ import java.io.FileReader;
 import java.util.ArrayList;
 
 public class CustomerManager {
-    protected ArrayList<Customer> customers;
+    protected static ArrayList<Customer> customers;
 
+    static {
+        customers = new ArrayList<>();
+        ArrayList<Customer> list = new ArrayList<>();
+        try (BufferedReader br  = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/customer.txt"))){
+            String line ;
+            while((line = br.readLine())!=null){
+            String[] str = line.split("#");
+            String name = str[0];
+            String phonenumber = str[1];
+            boolean sex = false;
+            if (str[2] == "true"){
+                sex = true;
+            }
+            Customer cus = new Customer(name, phonenumber, sex);                                   
+            list.add(cus);
+    
+        }
+       } catch (Exception e) {
+        // TODO: handle exception
+       }
+       customers = list;
+    }
     public CustomerManager() {
         ArrayList<Customer> list = new ArrayList<>();
         try (BufferedReader br  = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/customer.txt"))){
@@ -29,8 +51,8 @@ public class CustomerManager {
         
     }
 
-    public void addCustomer(Customer customer) {
-        customers.add(customer);
+    public static void addCustomer(Customer customer) {
+        CustomerManager.customers.add(customer);
     }
 
     public void removeCustomer(int index) {
@@ -54,16 +76,16 @@ public class CustomerManager {
             System.out.println(customer.toString());
         }
     }
-    public boolean find(String sdt){
-        for (Customer cus : this.customers){
+    public static boolean find(String sdt){
+        for (Customer cus : CustomerManager.customers){
             if (cus.getPhoneNumber().equals(sdt)){
                 return true;
             }
         }
         return false;
     }
-    public Customer get_cus(String sdt){
-        for (Customer cus : this.customers){
+    public static Customer get_cus(String sdt){
+        for (Customer cus : CustomerManager.customers){
             if (cus.getPhoneNumber().equals(sdt)){
                 return cus;
             }

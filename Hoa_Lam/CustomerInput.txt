@@ -1,3 +1,0 @@
-Nguyen A,0123456789,Male,500,Đồng
-Tran B,0987654321,Female,600,Bạc
-Le C,0912345678,Male,1500,Vàng

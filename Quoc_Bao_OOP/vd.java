@@ -9,15 +9,15 @@ public class vd {
         for (Booking b : bmng.getBookings()){
         }
 
-        rmng.history();
+        
         Booking b = new Booking();     
-        b.set_calendar_and_service(rmng,svmng);   
+        b.set_calendar_and_service();   
         bmng.add_booking(b);
         System.out.println("consad s");
         
 
 
-        rmng.history();
+        
        
         
         

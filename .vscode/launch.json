@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "BookingManager",
+      "request": "launch",
+      "mainClass": "BookingManager",
+      "projectName": "OOProject_93a2214f"
+    },
+    {
+      "type": "java",
       "name": "Ghi_file",
       "request": "launch",
       "mainClass": "Ghi_file",

@@ -13,14 +13,13 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class BookingManager {
-    protected ArrayList<Booking> bookings;
-
-
+    protected static ArrayList<Booking> bookings;
     
-    DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    public BookingManager(RoomManager rmng, CustomerManager cmng, ServiceManager svmng) {
-        ArrayList<Booking> list = new ArrayList<>();
+    static {
+        BookingManager.bookings = new ArrayList<>();
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         try (BufferedReader br = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/booking.txt"))) {
+           
             String line;
             while ((line = br.readLine()) != null) {
                 String[] linee = line.split("\\*");
@@ -30,11 +29,10 @@ public class BookingManager {
                     String[] str = linee[ss].split("#");
                     int id = Integer.parseInt(str[0]);
                     double price = Double.parseDouble(str[1]);
-                    int idreciep = Integer.parseInt(str[2]);
-                    // Customer cus = Integer.parseInt(str[3]);
+                    int idreciep = Integer.parseInt(str[2]);                    
                     
                     
-                    Customer cus = cmng.get_cus(str[3]);
+                    Customer cus = CustomerManager.get_cus(str[3]);
                     if (cus == null){
                         cus = new Customer("####", "####", false);   
                     } 
@@ -42,16 +40,12 @@ public class BookingManager {
                     ArrayList<Service> list_dv = new ArrayList<>();
                     String[] dichvu = str[4].split("\\$"); 
                     for (String dv : dichvu){
-                        Service sv = svmng.getdichvu(dv); 
+                        Service sv = ServiceManager.getdichvu(dv); 
+                        list_dv.add(sv);
                         if(sv == null){
                             sv = new Service("####", 0.0);                    
                         }
-                        
-
-
-                    }
-
-                    
+                    }                    
                     TreeMap<LocalDate,TreeMap<Integer,ArrayList<Room>>> calendar = new TreeMap<>();
                     String[] lich = str[5].split("\\?");
                     for (int i = 0; i< lich.length; i++){
@@ -64,26 +58,33 @@ public class BookingManager {
                                
                                 if (k == 0){
                                     calendar.get(LocalDate.parse(ngay[0], f)).put(Integer.parseInt(phong[0]),new ArrayList<>());
-                                } else {
-                                    Room r = rmng.get_room(phong[k]);
+                                } else {                                                                        
+                                    Room r = RoomManager.get_room(phong[k]);
                                     calendar.get(LocalDate.parse(ngay[0], f)).get(Integer.parseInt(phong[0])).add(r);
                                 }
                             }
                         }                                            
-                    }
-                    
-                    Booking booking = new Booking(idreciep, price, id, cus, list_dv, calendar);
-                    list.add(booking);
+                    }                    
+                    Booking booking = new Booking(id, price, idreciep, cus, list_dv, calendar);     
+                    System.out.println(booking);              
+                    bookings.add(booking);
                     
 
                     }
             }
                 
         } catch (Exception e) {
+            System.out.println(e);
             // TODO: handle exception
         }
-        this.bookings = list;
+       
     }
+
+    public static void addBooking(Booking booking) {
+        bookings.add(booking);
+    }
+
+    
 
 
 
@@ -102,11 +103,11 @@ public class BookingManager {
         return bookings;
     }
 
-    public  void setBookings(ArrayList<Booking> bookings) {
-        this.bookings = bookings;
+    public static void setBookings(ArrayList<Booking> bookings) {
+        BookingManager.bookings = bookings;
     }
 
-    public  void printList() {
+    public static void printList() {
         for (Booking b : bookings) {
             System.out.println(b.getCus().XuatThongTin() + " " + "id: " + b.getId());
         }
@@ -311,7 +312,7 @@ public class BookingManager {
                 } 
             }
             str.append("#");
-
+            DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             for (Map.Entry<LocalDate,TreeMap<Integer,ArrayList<Room>>> c : book.getDate().entrySet()){
                 str.append(c.getKey().format(f)+"$");
                 for (Map.Entry<Integer,ArrayList<Room>> c1 : c.getValue().entrySet()){
@@ -337,6 +338,124 @@ public class BookingManager {
    public void add_booking(Booking b){
     this.bookings.add(b);
    }
+
+   public static void hisroty(){
+        int dembuoi=0;
+        int temp =0;
+        int idtam =-1;
+        System.out.println("╔"+RoomManager.border(160)+"╗");
+        System.out.println("║"+RoomManager.form_SO("HISTORY", 160)+"║");
+        System.out.println("╠"+RoomManager.border(10)+"╦"+RoomManager.border(15)+"╦"+RoomManager.border(10)+"╦"+RoomManager.border(50)+"╦"+RoomManager.border(50)+"╦"+RoomManager.border(20)+"╣");
+        StringBuilder str = new StringBuilder();
+       str.append("║"+RoomManager.form_SO("ID", 10));
+       str.append("║"+RoomManager.form_SO("Date", 15));
+       str.append("║"+RoomManager.form_SO("buoi", 10));
+       str.append("║"+RoomManager.form_SO("phong", 50));
+       str.append("║"+RoomManager.form_SO("dich vu", 50));
+       str.append("║"+RoomManager.form_SO("tong tien", 20)+"║");
+       System.out.println(str);
+        for (Booking booking : bookings){
+            LocalDate datetam = LocalDate.of(1, 1, 1);
+            System.out.println("║"+RoomManager.border(10)+"╬"+RoomManager.border(15)+"╬"+RoomManager.border(10)+"╬"+RoomManager.border(50)+"╬"+RoomManager.border(50)+"╬"+RoomManager.border(20)+"╣");
+            temp = 0;
+            for (Map.Entry<LocalDate,TreeMap<Integer,ArrayList<Room>>> c : booking.getDate().entrySet()){
+                if(temp ==0){
+                    temp++;
+                } else {
+                    System.out.println("║"+RoomManager.form_SO("",10)+"╠"+RoomManager.border(15)+"╬"+RoomManager.border(10)+"╬"+RoomManager.border(50)+"╣"+RoomManager.form_SO("", 50)+"║"+RoomManager.form_SO("",20)+"║");
+                }
+                dembuoi =0;
+                    for (Map.Entry<Integer,ArrayList<Room>> c1 : c.getValue().entrySet()){    
+                        if(dembuoi ==0){
+                            dembuoi++;
+                        } else {
+                            System.out.println("║"+RoomManager.form_SO("",10)+"║"+RoomManager.form_SO("",15)+"╠"+RoomManager.border(10)+"╬"+RoomManager.border(50)+"╣"+RoomManager.form_SO("" ,50)+"║"+RoomManager.form_SO("",20)+"║");
+                        }
+                        StringBuilder phong = new StringBuilder();
+                        int k = 0;
+                        for (Room room : c1.getValue()){                                                   
+                            
+                            if(k==0){
+                                k++;
+                                phong.append(room.getName());
+                            } else {
+                                phong.append(", "+room.getName());
+                            }
+                        }
+                        StringBuilder dichvu = new StringBuilder();
+                        k=0;
+                        for (Service sv : booking.getSelectedServices()){
+                            if (k==0){
+                                k++;
+                                dichvu.append(sv.getName());
+                            } else {
+                                dichvu.append(", "+sv.getName());
+                            }
+                            
+                        }
+                        if (idtam != booking.getId()){
+                            idtam = booking.getId();
+                            str = new StringBuilder();
+                            String session = (c1.getKey()==0) ? "sang" : (c1.getKey() == 1) ? "trua" : "toi";
+                            str.append("║"+RoomManager.form_SO(booking.getId(), 10));
+                            str.append("║"+RoomManager.form_SO(c.getKey(), 15));
+                            str.append("║"+RoomManager.form_SO(session, 10));//buoi
+                            str.append("║"+RoomManager.form_SO(phong, 50));//danh sahcphong 
+                            str.append("║"+RoomManager.form_SO(dichvu, 50));//danhsach dv
+                            str.append("║"+RoomManager.form_SO(RoomManager.form_tien.format(booking.getPrice()), 20)+"║");
+                            datetam = c.getKey();
+                        } else {
+                            if (!datetam.isEqual(c.getKey())) {
+                                datetam = c.getKey();
+                                str = new StringBuilder();
+                                String session = (c1.getKey()==0) ? "sang" : (c1.getKey() == 1) ? "trua" : "toi";
+                                str.append("║"+RoomManager.form_SO("", 10));
+                                str.append("║"+RoomManager.form_SO(c.getKey(), 15));
+                                str.append("║"+RoomManager.form_SO(session, 10));//buoi
+                                str.append("║"+RoomManager.form_SO(phong, 50));//danh sahcphong 
+                                str.append("║"+RoomManager.form_SO("", 50));//danhsach dv
+                                str.append("║"+RoomManager.form_SO("", 20)+"║");
+                            } else {
+                                str = new StringBuilder();
+                                String session = (c1.getKey()==0) ? "sang" : (c1.getKey() == 1) ? "trua" : "toi";
+                                str.append("║"+RoomManager.form_SO("", 10));
+                                str.append("║"+RoomManager.form_SO("", 15));
+                                str.append("║"+RoomManager.form_SO(session, 10));//buoi
+                                str.append("║"+RoomManager.form_SO(phong, 50));//danh sahcphong 
+                                str.append("║"+RoomManager.form_SO("", 50));//danhsach dv
+                                str.append("║"+RoomManager.form_SO("", 20)+"║");
+                            }
+                            
+                            
+                        }
+                            
+                              
+                        
+                        System.out.println(str);   
+                    }
+                }
+        }
+        
+        System.out.println("╚"+RoomManager.border(10)+"╩"+RoomManager.border(15)+"╩"+RoomManager.border(10)+"╩"+RoomManager.border(50)+"╩"+RoomManager.border(50)+"╩"+RoomManager.border(20)+"╝");
+    }
+
+
+
+    public static void main(String[] args) {
+       
+        // RoomManager.show_calendar(LocalDate.of(2004, 9, 1),LocalDate.of(2004, 9, 3), 0);
+        // Booking b = new Booking();
+        // bookings.add(b);
+        // // b.set_calendar_and_service();
+        // RoomManager.show_calendar(LocalDate.of(2004, 9, 1),LocalDate.of(2004, 9, 3), 0);
+        hisroty();
+        RoomManager.sosanh_cac_nam();
+        RoomManager.thong_ke_theo_nam();
+        
+       
+       
+        
+    }
 
     
 }

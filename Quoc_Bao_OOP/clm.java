@@ -17,7 +17,7 @@ public class clm {
         System.out.println(clm.so);
         int i = 50;
         so.remove(1);
-        System.out.println(clm.so); 
+        System.out.println(so); 
        
         
         

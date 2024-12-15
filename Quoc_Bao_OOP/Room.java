@@ -63,30 +63,33 @@ public abstract class Room implements Comparable<Room> {
     }
 
     DateTimeFormatter form_time = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    public boolean check_calendar(LocalDate date,int session){
+    public boolean check_calendar(LocalDate date,int session){        
         if (this.calendar.containsKey(date)){
             if (this.calendar.get(date)[session] != null){
                 return true;
-            }
+            } 
         }
-        
-        return false;
-            
+            return false;
     }
 
     public boolean add_booking(LocalDate date , int session,Booking book){
-        if (this.check_calendar(date, session)){        
+        String str = session == 0? "sang" : session == 1 ? "trua" : "toi";
+        if (this.check_calendar(date, session)){
+            System.out.println("Phong " + this.getName() +" da co lich vao buoi "+str + " " + date);
             return false; 
         }
         if (!this.calendar.containsKey(date)){
             this.calendar.put(date, new Booking[3]);
         }
         this.calendar.get(date)[session] = book;
+        System.out.println("Phong " + this.getName() + " da them thanh cong lich vao buoi " + str+ " " + date);
         return true;
     }
 
     public boolean delete_booking(LocalDate date, int session){
-        if (!check_calendar(date, session)){            
+        String str = session == 0 ? "sang" : session == 1? "trua" :"chieu";
+        if (!check_calendar(date, session)){
+            System.out.println("Phong " + this.Name + " vao buoi " + str + " ngay " + date.format(form_time) + " khong co lich");
             return false ;
         }
 
@@ -230,5 +233,4 @@ public abstract class Room implements Comparable<Room> {
     public void setNgaycapnhatgannhat(LocalDate ngaycapnhatgannhat) {
         this.ngaycapnhatgannhat = ngaycapnhatgannhat;
     }
-    
 }
