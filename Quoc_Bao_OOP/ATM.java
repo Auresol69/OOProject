@@ -2,14 +2,14 @@ public class ATM extends PaymentMethod {
     protected String cardNumber;
     protected String atmPin;
 
-    public ATM(String cardNumber, String atmPin) {
-        super("ATM");
+    public ATM(String cardNumber, Customer cus, String atmPin) {
+        super("ATM", cus);
         this.cardNumber = cardNumber;
         this.atmPin = atmPin;
     }
 
     public ATM(Customer cus) {
-        super("ATM");
+        super("ATM", cus);
     }
 
     public String getCardNumber() {
@@ -28,10 +28,4 @@ public class ATM extends PaymentMethod {
         this.atmPin = atmPin;
     }
 
-    @Override
-    public void ProcessPayment(double amount) {
-        int length = cardNumber.length();
-        String maskedCardNumber = "x".repeat(Math.max(0, length - 4)) + cardNumber.substring(length - 4);
-        System.out.println("Processing ATM payment of $" + amount + " using card " + maskedCardNumber);
-    }
 }

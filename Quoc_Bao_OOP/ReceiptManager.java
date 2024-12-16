@@ -1,3 +1,9 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -5,12 +11,57 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class ReceiptManager {
+    public static final String RESET = "\033[0m"; // Reset màu
+    public static final String RED = "\033[0;31m"; // Đỏ
+    public static final String GREEN = "\033[0;32m"; // Xanh lá
+    public static final String YELLOW = "\033[0;33m"; // Vàng
+    public static final String BLUE = "\033[0;34m"; // Xanh dương
+
+    public static String yeelow(String x) {
+        return "\033[33m" + x + "\033[0m";
+    }
+
+    public static String red(String x) {
+        return "\033[31m" + x + "\033[0m";
+    }
+
+    public static String green(String x) {
+        return "\033[32m" + x + "\033[0m";
+    }
+
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     protected static ArrayList<Receipt> receipts;
 
     static {
         receipts = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/receipt.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] lines = line.split("#");
+                int id = Integer.parseInt(lines[0]);
+                Customer cus = CustomerManager.get_cus(lines[1]);
+                if (cus == null) {
+                    cus = new Customer("####", "####", false);
+                }
+                ArrayList<Booking> booking_choosed = new ArrayList<Booking>();
+                String[] bookings = lines[2].split("\\$");
+                for (int i = 0; i < bookings.length; i++) {
+                    Booking booking = BookingManager.get_booking_byID(Integer.parseInt(bookings[i]));
+                    if (booking == null) {
+                        booking = new Booking(-1, 0, -1, cus, null, null);
+                    }
+                    booking_choosed.add(booking);
+                }
+                PaymentMethod paymentmethod = PaymentmethodManager.getPaymentMethodById(Integer.parseInt(lines[3]));
+                LocalDateTime dateTime = LocalDateTime.parse(lines[4], formatter);
+                double totalCost = Double.parseDouble(lines[5]);
+                Receipt receipt = new Receipt(id, cus, booking_choosed, paymentmethod, dateTime, totalCost);
+                ReceiptManager.addReceipt(receipt);
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi khi đọc file: " + e.getMessage());
+        }
     }
 
     public static ArrayList<Receipt> getReceipts() {
@@ -56,6 +107,37 @@ public class ReceiptManager {
             }
         }
 
+    }
+
+    public static void addReceipt(Receipt rc) {
+        if (rc != null && receipts.contains(rc)) {
+            receipts.add(rc);
+            writeToFile();
+        }
+    }
+
+    public static void writeToFile() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("./Quoc_Bao_OOP/data/receipt.txt"))) {
+            for (Receipt rc : receipts) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(rc.getId()).append("#");
+                sb.append(rc.getCus().getPhoneNumber()).append("#");
+                for (int i = 0; i < rc.getBookings_choosed().size(); i++) {
+                    sb.append(rc.getBookings_choosed().get(i).getId()).append("$");
+                    if (i < rc.getBookings_choosed().size() - 1) {
+                        sb.append("$");
+                    }
+                }
+                sb.append("#");
+                sb.append(rc.getPaymentmethod().getId()).append("#");
+                sb.append(rc.getDateTime().format(formatter)).append("#");
+                sb.append(rc.getTotalCost());
+                bw.write(sb.toString());
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static String form_SO(Object c) {
@@ -104,19 +186,20 @@ public class ReceiptManager {
         }
 
         String formattedDate = rc.getDateTime().format(formatter);
-        System.out.print("╔" + border(39) + "╗" + "\n");
-        System.out.print("║" + form_SO("RECEIPT") + "║" + "\n");
-        System.out.print("╠" + border(39) + "╣" + "\n");
-        System.out.print("║" + form_SO("Date: " + formattedDate) + "║" + "\n");
-        System.out.print("║" + form_SO("BookingID:", 20) + form_SO("Price:", 19) + "║" + "\n");
+        System.out.print(green("╔" + border(39) + "╗" + "\n"));
+        System.out.print(green("║" + form_SO("RECEIPT") + "║" + "\n"));
+        System.out.print(green("╠" + border(39) + "╣" + "\n"));
+        System.out.print(green("║" + form_SO("Date: " + formattedDate) + "║" + "\n"));
+        System.out.print(green("║" + form_SO("BookingID:", 20) + form_SO("Price:", 19) + "║" + "\n"));
 
         if (rc.bookings_choosed != null)
             for (Booking booking : rc.bookings_choosed) {
                 System.out
-                        .print("║" + form_SO(booking.getId(), 20) + form_SO(booking.getPrice(), 19) + "║" + "\n");
+                        .print(green(
+                                "║" + form_SO(booking.getId(), 20) + form_SO(booking.getPrice(), 19) + "║" + "\n"));
             }
-        System.out.print("║" + form_SO("Total Cost: " + rc.getTotalCost()) + "║" + "\n");
-        System.out.println("╚" + border(39) + "╝");
+        System.out.print(green("║" + form_SO("Total Cost: " + rc.getTotalCost()) + "║" + "\n"));
+        System.out.println(green("╚" + border(39) + "╝"));
     }
 
     public static void showReceipt() {
@@ -132,19 +215,20 @@ public class ReceiptManager {
         }
 
         String formattedDate = rc.getDateTime().format(formatter);
-        System.out.print("╔" + border(39) + "╗" + "\n");
-        System.out.print("║" + form_SO("RECEIPT") + "║" + "\n");
-        System.out.print("╠" + border(39) + "╣" + "\n");
-        System.out.print("║" + form_SO("Date: " + formattedDate) + "║" + "\n");
-        System.out.print("║" + form_SO("BookingID:", 20) + form_SO("Price:", 19) + "║" + "\n");
+        System.out.print(green("╔" + border(39) + "╗" + "\n"));
+        System.out.print(green("║" + form_SO("RECEIPT") + "║" + "\n"));
+        System.out.print(green("╠" + border(39) + "╣" + "\n"));
+        System.out.print(green("║" + form_SO("Date: " + formattedDate) + "║" + "\n"));
+        System.out.print(green("║" + form_SO("BookingID:", 20) + form_SO("Price:", 19) + "║" + "\n"));
 
         if (rc.bookings_choosed != null)
             for (Booking booking : rc.bookings_choosed) {
                 System.out
-                        .print("║" + form_SO(booking.getId(), 20) + form_SO(booking.getPrice(), 19) + "║" + "\n");
+                        .print(green(
+                                "║" + form_SO(booking.getId(), 20) + form_SO(booking.getPrice(), 19) + "║" + "\n"));
             }
-        System.out.print("║" + form_SO("Total Cost: " + rc.getTotalCost()) + "║" + "\n");
-        System.out.println("╚" + border(39) + "╝");
+        System.out.print(green("║" + form_SO("Total Cost: " + rc.getTotalCost()) + "║" + "\n"));
+        System.out.println(green("╚" + border(39) + "╝"));
     }
 
     public static void showReceipt1Cus() {

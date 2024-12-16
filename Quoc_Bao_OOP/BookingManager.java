@@ -503,21 +503,21 @@ public class BookingManager {
                     int option = Integer.parseInt(sc.nextLine());
                     switch (option) {
                         case 1:
-                            paymentmethod = new Cash();
+                            paymentmethod = new Cash(cus);
                             break;
                         case 2:
                             System.out.print("Nhap Momo PIN: ");
                             String momoPin = sc.nextLine();
                             System.out.print("Nhap Momo phone: ");
                             String momoPhone = sc.nextLine();
-                            paymentmethod = new Momo(momoPin, momoPhone);
+                            paymentmethod = new Momo(momoPin, cus, momoPhone);
                             break;
                         case 3:
                             System.out.print("Nhap so the ATM: ");
                             String cardNumber = sc.nextLine();
                             System.out.print("Nhap ATM PIN: ");
                             String atmPin = sc.nextLine();
-                            paymentmethod = new ATM(cardNumber, atmPin);
+                            paymentmethod = new ATM(cardNumber, cus, atmPin);
                             break;
                         default:
                             System.out.println("Lua chon khong hop le!");
@@ -527,11 +527,12 @@ public class BookingManager {
                     for (Booking booking : bookingList) {
                         sum += booking.getPrice();
                     }
-                    paymentmethod.ProcessPayment(sum);
+                    PaymentmethodManager.addPaymentMethod(paymentmethod);
+                    paymentmethod.toString(sum);
                 }
 
                 Receipt rc = new Receipt(cus, paymentmethod, bookingList);
-                ReceiptManager.receipts.add(rc);
+                ReceiptManager.addReceipt(rc);
                 for (Booking booking : bookingList) {
                     booking.setReceiptid(rc.getId());
                 }
