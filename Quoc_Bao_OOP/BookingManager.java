@@ -33,8 +33,8 @@ public class BookingManager {
                         ID = id;
                     }
                     double price = Double.parseDouble(str[1]);
-                    
-                    Integer idreciep = str[2].equals("null")? null : Integer.parseInt(str[2]);
+
+                    Integer idreciep = str[2].equals("null") ? null : Integer.parseInt(str[2]);
 
                     Customer cus = CustomerManager.get_cus(str[3]);
                     if (cus == null) {
@@ -289,7 +289,8 @@ public class BookingManager {
             System.out.println(yeelow("║") + RoomManager.form_option("2. Sua lich ", 70) + yeelow("║"));
             System.out.println(yeelow("║") + RoomManager.form_option("3. Xoa lich ", 70) + yeelow("║"));
             System.out.println(yeelow("║") + RoomManager.form_option("4. Lich su  ", 70) + yeelow("║"));
-            System.out.println(yeelow("║") + RoomManager.form_option("5. tim kiem ", 70) + yeelow("║"));
+            System.out.println(yeelow("║") + RoomManager.form_option("5. Tim kiem ", 70) + yeelow("║"));
+            System.out.println(yeelow("║") + RoomManager.form_option("6. Thanh toan ", 70) + yeelow("║"));
             System.out.println(yeelow("╚" + RoomManager.border(70) + "╝"));
 
             do {
@@ -327,6 +328,9 @@ public class BookingManager {
                     break;
                 case 5:
                     BookingManager.search();
+                    break;
+                case 6:
+                    BookingManager.thanhToan();
                     break;
                 case 0:
                     return;
