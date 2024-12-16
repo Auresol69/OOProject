@@ -18,6 +18,16 @@ public class ReceiptManager {
         ReceiptManager.receipts = receipts;
     }
 
+    public static void printReceipts() {
+        for (Receipt receipt : ReceiptManager.receipts) {
+            System.out.println(
+                    "ReceiptID: " + receipt.getId() + " Bookings: " + receipt.getBookings_choosed() + " PaymentMethod: "
+                            + receipt.getPaymentmethod() + " Total: " + receipt.getTotalCost() + " Customer: "
+                            + receipt.getCus() + " Time: "
+                            + receipt.getDateTime());
+        }
+    }
+
     public static void showReceipt1Cus() {
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter customer's ID: ");
@@ -33,7 +43,7 @@ public class ReceiptManager {
         System.out.println("Danh sach hoa don cua khach hang co so dien thoai " + phone_cus + ":");
         for (Booking booking : filteredBookings) {
             System.out.println("ID: " + booking.getId() + ", Ten khach hang: " + booking.getCus().getName()
-                    + ", Receipt ID: " + booking.getReceiptid());
+                    + ", Receipt ID: " + booking.getReceiptid() + ", Total: " + booking.getPrice());
         }
     }
 }

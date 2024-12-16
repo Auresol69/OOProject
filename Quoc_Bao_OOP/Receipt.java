@@ -18,6 +18,7 @@ public class Receipt extends ReceiptIdManager {
         this.bookings_choosed = new ArrayList<>();
         this.dateTime = LocalDateTime.now();
         this.totalCost = 0;
+        cus.CongDiemTichLuy(this.totalCost);
     }
 
     public Receipt(Customer cus, ArrayList<Booking> bookings_choosed, PaymentMethod paymentmethod,
@@ -45,6 +46,14 @@ public class Receipt extends ReceiptIdManager {
                 .mapToDouble(Booking::getPrice) // Lamda API Stream
                 .sum();
         cus.CongDiemTichLuy(this.totalCost);
+    }
+
+    public PaymentMethod getPaymentmethod() {
+        return paymentmethod;
+    }
+
+    public void setPaymentmethod(PaymentMethod paymentmethod) {
+        this.paymentmethod = paymentmethod;
     }
 
     public Customer getCus() {
