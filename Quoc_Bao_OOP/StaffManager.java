@@ -7,7 +7,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class StaffManager {
-    protected ArrayList<Staff> staffs;
+    protected static ArrayList<Staff> staffs;
     protected int MaxFloor = 3;
 
     public StaffManager() {
@@ -18,8 +18,9 @@ public class StaffManager {
         return staffs;
     }
 
-    public void setStaffs(ArrayList<Staff> staffs) {
-        this.staffs = staffs;
+    public static void setStaffs(ArrayList<Staff> staffs) {
+
+        StaffManager.staffs = staffs;
     }
 
     public String spacing(Object c) {
@@ -37,15 +38,18 @@ public class StaffManager {
 
         return k.toString();
     }
-    public static String yeelow (String x){
+
+    public static String yeelow(String x) {
         return "\033[33m" + x + "\033[0m";
-    } 
-    public static String red(String x){
+    }
+
+    public static String red(String x) {
         return "\033[31m" + x + "\033[0m";
-    } 
-    public static String green (String x){
+    }
+
+    public static String green(String x) {
         return "\033[32m" + x + "\033[0m";
-    } 
+    }
 
     public String spacing(Object c, int n) {
         StringBuilder k = new StringBuilder();
@@ -62,7 +66,9 @@ public class StaffManager {
 
         return k.toString();
     }
-    DecimalFormat form_tien = new DecimalFormat("#,###.00");  
+
+    DecimalFormat form_tien = new DecimalFormat("#,###.00");
+
     public static String createBorderLine(int a) {
         StringBuilder b = new StringBuilder();
         for (int i = 0; i < a; i++) {
@@ -249,15 +255,13 @@ public class StaffManager {
 
     public void themNhanvien() {
         Scanner sc = new Scanner(System.in);
-        StringBuilder k = new StringBuilder();
 
-        System.out.println(yeelow("╔"+RoomManager.border(70)+"╗"));
-        System.out.println(yeelow("║" )+RoomManager.form_SO("OPTION", 70)+yeelow("║" ));
-        System.out.println(yeelow("╠"+RoomManager.border(70)+"╣"));
-        System.out.println(yeelow("║" )+RoomManager.form_option("1. Nhân viên quản lý", 70)+yeelow("║" ));                        
-        System.out.println(yeelow("║" )+RoomManager.form_option("2. Nhân viên phục vụ ", 70)+yeelow("║" ));                                                       
-        
-                                   
+        System.out.println(yeelow("╔" + RoomManager.border(70) + "╗"));
+        System.out.println(yeelow("║") + RoomManager.form_SO("OPTION", 70) + yeelow("║"));
+        System.out.println(yeelow("╠" + RoomManager.border(70) + "╣"));
+        System.out.println(yeelow("║") + RoomManager.form_option("1. Nhân viên quản lý", 70) + yeelow("║"));
+        System.out.println(yeelow("║") + RoomManager.form_option("2. Nhân viên phục vụ ", 70) + yeelow("║"));
+
         System.out.println(yeelow("╚" + RoomManager.border(70) + "╝"));
         int chon = Integer.parseInt(sc.nextLine());
         Staff nv = null;

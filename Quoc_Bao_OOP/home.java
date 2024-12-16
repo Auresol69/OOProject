@@ -26,7 +26,6 @@ public class home {
     static DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public home(String t) {
-
         int choice = 0;
         Scanner sc = new Scanner(System.in);
         boolean kt = true;
@@ -104,13 +103,16 @@ public class home {
                         System.out.println(yeelow("╔" + RoomManager.border(70) + "╗"));
                         System.out.println(yeelow("║") + RoomManager.form_SO("OPTION", 70) + yeelow("║"));
                         System.out.println(yeelow("╠" + RoomManager.border(70) + "╣"));
-                        System.out.println(yeelow("║") + RoomManager.form_option("0. Thong ke booking theo quy ", 70)
-                                + yeelow("║"));
-                        System.out.println(
-                                yeelow("║") + RoomManager.form_option("1. Thong ke theo nam ", 70) + yeelow("║"));
-                        System.out.println(
-                                yeelow("║") + RoomManager.form_option("2. Thong ke theo thoi gian ", 70) + yeelow("║"));
-                        System.out.println(yeelow("║") + RoomManager.form_option("3. Quay lai", 70) + yeelow("║"));
+                        System.out
+                                .println(yeelow("║") + RoomManager.form_option("0. Lich dat phong ", 70) + yeelow("║"));
+                        System.out.println(yeelow("║") + RoomManager.form_option("1. Phong hop", 70) + yeelow("║"));
+                        System.out.println(yeelow("║") + RoomManager.form_option("2. Dich vu ", 70) + yeelow("║"));
+                        System.out.println(yeelow("║") + RoomManager.form_option("3. Nhan vien", 70) + yeelow("║"));
+                        System.out.println(yeelow("║") + RoomManager.form_option("4. Nhan vien", 70) + yeelow("║"));
+                        System.out.println(yeelow("║") + RoomManager.form_option("5. Thong ke ", 70) + yeelow("║"));
+                        System.out.println(yeelow("║") + RoomManager.form_option("6. Hoa don ", 70) + yeelow("║"));
+                        System.out.println(yeelow("║") + RoomManager.form_option("7. Tai khoan ", 70) + yeelow("║"));
+                        System.out.println(yeelow("║") + RoomManager.form_option("8. Dang xuat ", 70) + yeelow("║"));
                         System.out.println(yeelow("╚" + RoomManager.border(70) + "╝"));
 
                         do {
@@ -213,7 +215,6 @@ public class home {
     }
 
     public home() {
-        RoomManager rm = new RoomManager();
         StaffManager smm = new StaffManager();
         CustomerManager cm = new CustomerManager();
         DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -338,13 +339,13 @@ public class home {
                                                 case 2:
                                                     Customer cus = new Customer();
                                                     cus.setInfo();
-                                                    cm.addCustomer(cus);
+                                                    CustomerManager.addCustomer(cus);
                                                     break;
                                                 case 3:
                                                     Customer cus_xoa = null;
                                                     System.out.print("Nhap sdt khach hang ban muon xoa");
                                                     String phone_xoa = sc.nextLine();
-                                                    cus_xoa = cm.get_cus(phone_xoa);
+                                                    cus_xoa = CustomerManager.get_cus(phone_xoa);
                                                     if (cus_xoa == null) {
                                                         System.out.println("Khach hang khong ton tai!");
                                                     }
@@ -354,7 +355,7 @@ public class home {
                                                     Customer cus_sua = null;
                                                     System.out.print("Nhap sdt khach hang ban muon xoa");
                                                     String phone_sua = sc.nextLine();
-                                                    cus_sua = cm.get_cus(phone_sua);
+                                                    cus_sua = CustomerManager.get_cus(phone_sua);
                                                     if (cus_sua == null) {
                                                         System.out.println("Khach hang khong ton tai!");
                                                     }
@@ -392,7 +393,7 @@ public class home {
                                                     String endDate1 = sc.nextLine();
                                                     LocalDate ed1 = LocalDate.parse(endDate1, f);
 
-                                                    rm.history_by_date(sd1, ed1);
+                                                    RoomManager.history_by_date(sd1, ed1);
                                                     break;
                                                 case 2:
                                                     System.out.println("1. Thong ke theo nam");
@@ -403,7 +404,7 @@ public class home {
                                                     int option4 = Integer.parseInt(sc.nextLine());
                                                     switch (option4) {
                                                         case 1:
-                                                            rm.thong_ke_theo_nam();
+                                                            RoomManager.thong_ke_theo_nam();
                                                             break;
                                                         case 2:
                                                             System.out.println();
@@ -416,10 +417,10 @@ public class home {
                                                             System.out.print("End date: ");
                                                             String endDate2 = sc.nextLine();
                                                             LocalDate ed2 = LocalDate.parse(endDate2, f);
-                                                            rm.thong_ke_bydate(sd2, ed2);
+                                                            RoomManager.thong_ke_bydate(sd2, ed2);
                                                             break;
                                                         case 3:
-                                                            rm.thong_ke_theo_quy(option4);
+                                                            RoomManager.thong_ke_theo_quy(option4);
                                                             break;
                                                         case 4:
                                                             break;
@@ -440,7 +441,7 @@ public class home {
 
                                                     System.out.print("Size: ");
                                                     int size = Integer.parseInt(sc.nextLine());
-                                                    rm.show_calendar(sd2, ed2, size);
+                                                    RoomManager.show_calendar(sd2, ed2, size);
                                                     break;
                                                 case 4:
                                                     level3 = false;
@@ -513,13 +514,13 @@ public class home {
                                                 case 2:
                                                     Customer cus = new Customer();
                                                     cus.setInfo();
-                                                    cm.addCustomer(cus);
+                                                    CustomerManager.addCustomer(cus);
                                                     break;
                                                 case 3:
                                                     Customer cus_xoa = null;
                                                     System.out.print("Nhap sdt khach hang ban muon xoa");
                                                     String phone_xoa = sc.nextLine();
-                                                    cus_xoa = cm.get_cus(phone_xoa);
+                                                    cus_xoa = CustomerManager.get_cus(phone_xoa);
                                                     if (cus_xoa == null) {
                                                         System.out.println("Khach hang khong ton tai!");
                                                     }
@@ -529,7 +530,7 @@ public class home {
                                                     Customer cus_sua = null;
                                                     System.out.print("Nhap sdt khach hang ban muon xoa");
                                                     String phone_sua = sc.nextLine();
-                                                    cus_sua = cm.get_cus(phone_sua);
+                                                    cus_sua = CustomerManager.get_cus(phone_sua);
                                                     if (cus_sua == null) {
                                                         System.out.println("Khach hang khong ton tai!");
                                                     }
@@ -575,6 +576,6 @@ public class home {
     }
 
     public static void main(String[] args) {
-        home h = new home("t");
+        home h = new home();
     }
 }

@@ -12,25 +12,26 @@ public class CustomerManager {
     static {
         customers = new ArrayList<>();
         ArrayList<Customer> list = new ArrayList<>();
-        try (BufferedReader br  = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/customer.txt"))){
-            String line ;
-            while((line = br.readLine())!=null){
-            String[] str = line.split("#");
-            String name = str[0];
-            String phonenumber = str[1];
-            boolean sex = false;
-            if (str[2] == "true"){
-                sex = true;
+        try (BufferedReader br = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/customer.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] str = line.split("#");
+                String name = str[0];
+                String phonenumber = str[1];
+                boolean sex = false;
+                if (str[2] == "true") {
+                    sex = true;
+                }
+                Customer cus = new Customer(name, phonenumber, sex);
+                list.add(cus);
+
             }
-            Customer cus = new Customer(name, phonenumber, sex);                                   
-            list.add(cus);
-    
+        } catch (Exception e) {
+            // TODO: handle exception
         }
-       } catch (Exception e) {
-        // TODO: handle exception
-       }
-       customers = list;
+        customers = list;
     }
+
     public CustomerManager() {
         ArrayList<Customer> list = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/customer.txt"))) {
@@ -50,7 +51,7 @@ public class CustomerManager {
         } catch (Exception e) {
             // TODO: handle exception
         }
-        this.customers = list;
+        CustomerManager.customers = list;
 
     }
 
@@ -91,8 +92,7 @@ public class CustomerManager {
             case 2:
                 System.out.print("Nhap so dien thoai: ");
                 String phonenumber = sc.nextLine();
-                CustomerManager cm = new CustomerManager();
-                if (cm.find(phonenumber)) {
+                if (CustomerManager.find(phonenumber)) {
                     System.out.println("So dien thoai nay da ton tai.");
                 } else {
                     cus.setPhoneNumber(phonenumber);
@@ -117,7 +117,7 @@ public class CustomerManager {
     }
 
     public void setCustomers(ArrayList<Customer> customers) {
-        this.customers = customers;
+        CustomerManager.customers = customers;
     }
 
     public void xuatInfoTatCaCustomer() {
@@ -125,17 +125,19 @@ public class CustomerManager {
             System.out.println(customer.toString());
         }
     }
-    public static boolean find(String sdt){
-        for (Customer cus : CustomerManager.customers){
-            if (cus.getPhoneNumber().equals(sdt)){
+
+    public static boolean find(String sdt) {
+        for (Customer cus : CustomerManager.customers) {
+            if (cus.getPhoneNumber().equals(sdt)) {
                 return true;
             }
         }
         return false;
     }
-    public static Customer get_cus(String sdt){
-        for (Customer cus : CustomerManager.customers){
-            if (cus.getPhoneNumber().equals(sdt)){
+
+    public static Customer get_cus(String sdt) {
+        for (Customer cus : CustomerManager.customers) {
+            if (cus.getPhoneNumber().equals(sdt)) {
                 return cus;
             }
         }
@@ -143,7 +145,7 @@ public class CustomerManager {
     }
 
     public boolean check(String sdt) {
-        for (Customer cus : this.customers) {
+        for (Customer cus : CustomerManager.customers) {
             if (cus.getPhoneNumber().equals(sdt.trim())) {
                 return true;
             }
@@ -151,21 +153,17 @@ public class CustomerManager {
         return false;
     }
 
-    public static void luu_data(){
+    public static void luu_data() {
         StringBuilder str = new StringBuilder();
 
-        for (Customer cus : CustomerManager.customers){
-            str.append(cus.getName()+"#");
-            str.append(cus.getPhoneNumber()+"#");
+        for (Customer cus : CustomerManager.customers) {
+            str.append(cus.getName() + "#");
+            str.append(cus.getPhoneNumber() + "#");
             str.append(cus.getSex());
             str.append("\n");
         }
 
-
-
-
-
-         String filePath = "./Quoc_Bao_OOP/data/customer.txt"; // Đường dẫn tới file
+        String filePath = "./Quoc_Bao_OOP/data/customer.txt"; // Đường dẫn tới file
         String data = str.toString();
 
         // Sử dụng BufferedWriter để ghi dữ liệu
