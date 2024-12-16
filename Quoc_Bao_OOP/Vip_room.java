@@ -1,6 +1,6 @@
-public class Vip_room extends Room{
-    public Vip_room(String name, int size, int status,double  price,int tang){
-        super(name, size, status, price,tang);
+public class Vip_room extends Room {
+    public Vip_room(String name, int size, int status, double price, int tang) {
+        super(name, size, status, price, tang);
     }
 
     @Override
@@ -9,5 +9,4 @@ public class Vip_room extends Room{
         return super.getName();
     }
 
-    
 }

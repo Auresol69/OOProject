@@ -611,7 +611,7 @@ public class BookingManager {
     }
 
     public void add_booking(Booking b) {
-        this.bookings.add(b);
+        BookingManager.bookings.add(b);
     }
 
     public static void history() {
@@ -979,12 +979,10 @@ public class BookingManager {
                 + RoomManager.form_SO("QUY 2", 20) + "║" + RoomManager.form_SO("QUY 3", 20) + "║"
                 + RoomManager.form_SO("QUY 4", 20) + "║" + RoomManager.form_SO("TONG TIEN", 20) + "║");
 
-        StringBuilder str = new StringBuilder();
         for (Map.Entry<Integer, Double[]> c1 : c.entrySet()) {
             System.out.println("╠" + RoomManager.border(15) + "╬" + RoomManager.border(20) + "╬"
                     + RoomManager.border(20) + "╬" + RoomManager.border(20) + "╬" + RoomManager.border(20) + "╬"
                     + RoomManager.border(20) + "╣");
-            str = new StringBuilder();
             double price = c1.getValue()[0] + c1.getValue()[1] + c1.getValue()[2] + c1.getValue()[3];
             System.out.println("║" + RoomManager.form_SO(c1.getKey(), 15) + "║"
                     + RoomManager.form_SO(c1.getValue()[0], 20) + "║" + RoomManager.form_SO(c1.getValue()[1], 20) + "║"
