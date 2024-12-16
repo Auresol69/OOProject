@@ -48,6 +48,14 @@ public class Receipt extends ReceiptIdManager {
         cus.CongDiemTichLuy(this.totalCost);
     }
 
+    public PaymentMethod getPaymentmethod() {
+        return paymentmethod;
+    }
+
+    public void setPaymentmethod(PaymentMethod paymentmethod) {
+        this.paymentmethod = paymentmethod;
+    }
+
     public Customer getCus() {
         return cus;
     }
