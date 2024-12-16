@@ -96,63 +96,6 @@ public class Receipt extends ReceiptIdManager {
         this.id = id;
     }
 
-    public static String form_SO(Object c) {
-        StringBuilder tmp = new StringBuilder();
-        int totalSpace = (39 - c.toString().length());
-        int space_left = totalSpace / 2;
-        int space_right = totalSpace - space_left;
-        for (int i = 0; i < space_left; i++) {
-            tmp.append(" ");
-        }
-        tmp.append(c.toString());
-        for (int i = 0; i < space_right; i++) {
-            tmp.append(" ");
-        }
-        return tmp.toString();
-    }
-
-    public static String form_SO(Object c, int space) {
-        StringBuilder tmp = new StringBuilder();
-        int totalSpace = (space - c.toString().length());
-        int space_left = totalSpace / 2;
-        int space_right = totalSpace - space_left;
-        for (int i = 0; i < space_left; i++) {
-            tmp.append(" ");
-        }
-        tmp.append(c.toString());
-        for (int i = 0; i < space_right; i++) {
-            tmp.append(" ");
-        }
-        return tmp.toString();
-    }
-
-    public static String border(int a) {
-        StringBuilder b = new StringBuilder();
-        for (int i = 0; i < a; i++) {
-            b.append("═");
-        }
-        return b.toString();
-    }
-
-    public void showReceipt() {
-        String formattedDate = this.getDateTime().format(formatter);
-        System.out.print("╔" + border(39) + "╗" + "\n");
-        System.out.print("║" + form_SO("RECEIPT") + "║" + "\n");
-        System.out.print("╠" + border(39) + "╣" + "\n");
-        System.out.print("║" + form_SO("Date: " + formattedDate) + "║" + "\n");
-        System.out.print("║" + form_SO("BookingID:", 20) + form_SO("Price:", 19) + "║" + "\n");
-
-        if (this.bookings_choosed != null)
-            for (Booking booking : this.bookings_choosed) {
-                System.out
-                        .print("║" + form_SO(booking.getId(), 20) + form_SO(booking.getPrice(), 19) + "║" + "\n");
-            }
-        System.out.print("║" + form_SO("Total Cost: " + this.getTotalCost()) + "║" + "\n");
-        System.out.println("╚" + border(39) + "╝");
-    }
-
     public static void main(String[] args) {
-        Receipt r = new Receipt();
-        r.showReceipt();
     }
 }

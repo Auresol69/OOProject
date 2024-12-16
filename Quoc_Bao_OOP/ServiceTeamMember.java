@@ -1,11 +1,14 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ServiceTeamMember extends Staff {
     protected int SoGioLam;
+    protected ArrayList<StaffSchedule> PersonalSchedule;
 
     public ServiceTeamMember() {
         super();
         this.Role = "Phục vụ";
+        this.PersonalSchedule = new ArrayList<>();
     }
 
     @Override
@@ -14,6 +17,17 @@ public class ServiceTeamMember extends Staff {
             return 1000;
         } else {
             return 500;
+        }
+    }
+
+    public void addPersonalSchedule(StaffSchedule schedule) {
+        PersonalSchedule.add(schedule);
+    }
+
+    public void viewPersonalSchedules() {
+        System.out.println("Lịch riêng của nhân viên: " + super.getName() + " (Phone: " + super.getPhoneNumber() + ")");
+        for (StaffSchedule schedule : PersonalSchedule) {
+            schedule.displaySchedule();
         }
     }
 
@@ -27,6 +41,10 @@ public class ServiceTeamMember extends Staff {
 
     public ServiceTeamMember(int SoGioLam) {
         this.SoGioLam = SoGioLam;
+    }
+
+    public ArrayList<StaffSchedule> getPersonalSchedules() {
+        return PersonalSchedule;
     }
 
     @Override

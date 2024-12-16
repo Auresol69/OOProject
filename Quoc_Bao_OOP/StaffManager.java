@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -444,7 +445,75 @@ public class StaffManager {
         System.out.println(border_thuong(80));
         for (Staff nv : staffs) {
             System.out.println(nv.XuatThongTin());
+            if (nv instanceof ServiceTeamMember) {
+                ServiceTeamMember ServiceMember = (ServiceTeamMember) nv;
+                ArrayList<StaffSchedule> schedules = ServiceMember.getPersonalSchedules();
+                if (!schedules.isEmpty()) {
+                    System.out.println("Lịch làm việc của nhân viên là:");
+                    for (StaffSchedule schedule : schedules) {
+                        System.out.println("    Ngày: " + schedule.getDate() + ", Ca: " + schedule.getShift()
+                                + ", Tầng: " + ServiceMember.getFloor());
+                    }
+                } else {
+                    System.out.println("  Nhân viên chưa có lịch làm việc.");
+                }
+            }
         }
         System.out.println(border_thuong(80));
     }
+
+    private boolean kiemTraTrungLich(ServiceTeamMember member, LocalDate date, int shift) {
+        for (StaffSchedule lich : member.getPersonalSchedules()) {
+            if (lich.getDate().equals(date) && lich.getShift() == shift) {
+                return true; // Trùng lịch
+            }
+        }
+        return false; // Không trùng lịch
+    }
+
+    public void ganLichLamViec(int shift, int roomSize, LocalDate date, int floor) {
+        int soNhanVienHienTai = 0;
+
+        // Đếm số phục vụ cho một phòng(trong trường hợp đã có)
+        for (Staff nv : staffs) {
+            if (nv instanceof ServiceTeamMember && nv.getFloor() == floor) {
+                ServiceTeamMember serviceMember = (ServiceTeamMember) nv;
+
+                // Duyệt qua lịch làm việc cá nhân
+                for (StaffSchedule lich : serviceMember.getPersonalSchedules()) {
+                    if (lich.getDate().equals(date) && lich.getShift() == shift) {
+                        soNhanVienHienTai++;
+                    }
+                }
+            }
+        }
+
+        // Kiểm tra nếu số nhân viên hiện tại vượt quá sức chứa phòng
+        if (soNhanVienHienTai >= roomSize) {
+            System.out
+                    .println("Không thể gán lịch. Phòng đã đủ số nhân viên phục vụ cho ca " + shift + " ngày " + date);
+            return;
+        }
+
+        // Gán lịch cho nhân viên
+        for (Staff nv : staffs) {
+            if (nv instanceof ServiceTeamMember && nv.getFloor() == floor) {
+                ServiceTeamMember serviceMember = (ServiceTeamMember) nv;
+
+                // Kiểm tra nhân viên này có lịch trùng không
+                if (!kiemTraTrungLich(serviceMember, date, shift)) {
+                    // Gán lịch mới
+                    StaffSchedule lichMoi = new StaffSchedule(date, shift);
+                    serviceMember.addPersonalSchedule(lichMoi);
+
+                    System.out.println("Đã gán lịch cho nhân viên " + serviceMember.getName() +
+                            ": Ngày = " + date + ", Ca = " + shift);
+                    return; // Thoát sau khi gán lịch cho 1 nhân viên
+                }
+            }
+        }
+
+        System.out.println("Không tìm thấy nhân viên nào phù hợp để gán lịch.");
+    }
+
 }
