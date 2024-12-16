@@ -28,6 +28,9 @@ public class ReceiptManager {
         }
     }
 
+    public static void terminal() {
+    }
+
     public static void showReceipt1Cus() {
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter customer's ID: ");
