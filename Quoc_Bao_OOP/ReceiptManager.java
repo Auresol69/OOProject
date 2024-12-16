@@ -199,6 +199,7 @@ public class ReceiptManager {
                                 "║" + form_SO(booking.getId(), 20) + form_SO(booking.getPrice(), 19) + "║" + "\n"));
             }
         System.out.print(green("║" + form_SO("Total Cost: " + rc.getTotalCost()) + "║" + "\n"));
+        System.out.print(green("║" + form_SO("PaymentMethod: " + rc.getPaymentmethod().getMethodName()) + "║" + "\n"));
         System.out.println(green("╚" + border(39) + "╝"));
     }
 
@@ -228,6 +229,7 @@ public class ReceiptManager {
                                 "║" + form_SO(booking.getId(), 20) + form_SO(booking.getPrice(), 19) + "║" + "\n"));
             }
         System.out.print(green("║" + form_SO("Total Cost: " + rc.getTotalCost()) + "║" + "\n"));
+        System.out.print(green("║" + form_SO("PaymentMethod: " + rc.getPaymentmethod().getMethodName()) + "║" + "\n"));
         System.out.println(green("╚" + border(39) + "╝"));
     }
 
