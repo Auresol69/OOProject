@@ -537,7 +537,7 @@ public class BookingManager {
                 }
                 System.out.println("Thanh toan thanh cong. Receipt ID: " + rc.getId());
                 System.out.println("So hoa don cua ban la: " + rc.getId());
-                rc.showReceipt();
+                ReceiptManager.showReceipt(rc);
             } else {
                 System.out.println("Khong tim thay khach hang voi so dien thoai: " + phone_cus);
             }

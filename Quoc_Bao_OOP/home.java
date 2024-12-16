@@ -26,6 +26,7 @@ public class home {
     static DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public home(String t) {
+
         int choice = 0;
         Scanner sc = new Scanner(System.in);
         boolean kt = true;
@@ -54,7 +55,9 @@ public class home {
                     String pass = sc.nextLine();
                     acc = accountManager.getaccount(username, pass);
                 }
-
+                if (acc == null) {
+                    System.out.println(red("Sai tai khoan hoac mat khau"));
+                }
             } while (acc == null);
 
             do {
@@ -527,6 +530,6 @@ public class home {
     }
 
     public static void main(String[] args) {
-        home h = new home();
+        home h = new home("t");
     }
 }

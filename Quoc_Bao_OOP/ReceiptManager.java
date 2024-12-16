@@ -96,6 +96,29 @@ public class ReceiptManager {
         return b.toString();
     }
 
+    public static void showReceipt(Receipt rc) {
+
+        if (rc == null) {
+            System.out.println("Khong tim thay hoa don nay!");
+            return;
+        }
+
+        String formattedDate = rc.getDateTime().format(formatter);
+        System.out.print("╔" + border(39) + "╗" + "\n");
+        System.out.print("║" + form_SO("RECEIPT") + "║" + "\n");
+        System.out.print("╠" + border(39) + "╣" + "\n");
+        System.out.print("║" + form_SO("Date: " + formattedDate) + "║" + "\n");
+        System.out.print("║" + form_SO("BookingID:", 20) + form_SO("Price:", 19) + "║" + "\n");
+
+        if (rc.bookings_choosed != null)
+            for (Booking booking : rc.bookings_choosed) {
+                System.out
+                        .print("║" + form_SO(booking.getId(), 20) + form_SO(booking.getPrice(), 19) + "║" + "\n");
+            }
+        System.out.print("║" + form_SO("Total Cost: " + rc.getTotalCost()) + "║" + "\n");
+        System.out.println("╚" + border(39) + "╝");
+    }
+
     public static void showReceipt() {
         Scanner sc = new Scanner(System.in);
         showReceipt1Cus();
