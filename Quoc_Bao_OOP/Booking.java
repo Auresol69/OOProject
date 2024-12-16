@@ -10,7 +10,7 @@ import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-public class Booking extends BookingIdManager {
+public class Booking {
     protected Integer id;
     protected Customer cus;
     protected double price;
@@ -337,7 +337,6 @@ public class Booking extends BookingIdManager {
         return 0.0;
     }
 
-    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Customer: ").append(cus.getName()).append("\n");

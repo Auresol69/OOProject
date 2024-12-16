@@ -26,6 +26,7 @@ public class home {
     static DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public home(String t) {
+
         int choice = 0;
         Scanner sc = new Scanner(System.in);
         boolean kt = true;
@@ -58,7 +59,9 @@ public class home {
                 if (acc == null){
                     System.out.println("rong ");
                 }
-
+                if (acc == null) {
+                    System.out.println(red("Sai tai khoan hoac mat khau"));
+                }
             } while (acc == null);
 
                     
@@ -181,20 +184,7 @@ public class home {
                                     ReceiptManager.showReceipt1Cus();
                                     break;
                                 case 3:
-                                    System.out.print("Nhap so hoa don muon in: ");
-                                    int id = Integer.parseInt(sc.nextLine());
-                                    Receipt rc = null;
-                                    for (Receipt r : ReceiptManager.getReceipts()) {
-                                        if (r.getId() == id) {
-                                            rc = r;
-                                            break;
-                                        }
-                                    }
-                                    if (rc == null)
-                                        System.out.println("Khong tim thay so hoa don nay!");
-                                    else {
-                                        rc.showReceipt();
-                                    }
+                                    ReceiptManager.showReceipt();
                                     break;
                                 case 4:
                                     case5 = false;

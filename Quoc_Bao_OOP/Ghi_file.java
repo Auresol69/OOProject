@@ -5,8 +5,6 @@ import java.io.IOException;
 public class Ghi_file {
     public static void main(String[] args) {
 
-        StringBuilder dataa = new StringBuilder();
-
         StringBuilder str = new StringBuilder();
         str.append("asdkyg ausyd" + "*");
         String filePath = "./Quoc_Bao_OOP/data/output.txt"; // Đường dẫn tới file

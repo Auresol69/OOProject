@@ -1,8 +1,33 @@
-public abstract class PaymentMethod {
+public class PaymentMethod {
+    protected int id;
     protected String methodName;
+    protected Customer cus;
 
-    public PaymentMethod(String methodName) {
+    public PaymentMethod(String methodName, Customer cus) {
+        PaymentmethodManager.ID++;
+        this.id = PaymentmethodManager.ID;
         this.methodName = methodName;
+        this.cus = cus;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
+    }
+
+    public Customer getCus() {
+        return cus;
+    }
+
+    public void setCus(Customer cus) {
+        this.cus = cus;
     }
 
     public String getMethodName() {
@@ -13,5 +38,11 @@ public abstract class PaymentMethod {
         this.methodName = methodName;
     }
 
-    public abstract void ProcessPayment(double amount);
+    public String toString(double sum) {
+        return "PaymentMethod{" +
+                "id=" + id +
+                ", methodName='" + methodName + '\'' +
+                ", CustomerPhone='" + cus.getPhoneNumber() + '\'' + ", TotalAmount='" + sum +
+                '}';
+    }
 }

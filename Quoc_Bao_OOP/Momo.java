@@ -2,20 +2,14 @@ public class Momo extends PaymentMethod {
     protected String momoPin;
     protected String phoneNumber;
 
-    public Momo(String momoPin, String phoneNumber) {
-        super("Momo");
+    public Momo(String momoPin, Customer cus, String phoneNumber) {
+        super("Momo", cus);
         this.momoPin = momoPin;
         this.phoneNumber = phoneNumber;
     }
 
-    public Momo() {
-        super("Momo");
-    }
-
-    @Override
-    public void ProcessPayment(double amount) {
-        System.out
-                .println("Processing Momo payment of " + amount + "$" + " using phone number " + getPhoneNumber());
+    public Momo(Customer cus) {
+        super("Momo", cus);
     }
 
     public String getMomoPin() {
