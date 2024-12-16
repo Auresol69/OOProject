@@ -98,6 +98,7 @@ public class accountManager {
              pass = sc.nextLine();
              account = new account(username, pass, choice);
             accountManager.accounts.add(acc);
+            accountManager.luu_data();
         } else if (choice ==2) {
             System.out.println("Nhap mat khau hien tai ");
             pass = sc.nextLine();
@@ -107,6 +108,7 @@ public class accountManager {
                 System.out.println("Nhap mat khau moi");
                 acc.setPassword(pass);
                 System.out.println("Thay doi thanh cong");
+                accountManager.luu_data();
             }
             
         } else if (choice == 3 ){
@@ -114,6 +116,7 @@ public class accountManager {
             String username = sc.nextLine();
             if (accountManager.delete_account(username)){
                 System.out.println("Da xoa thanh cong");
+                accountManager.luu_data();
             } else {
                 System.out.println("Tai khoan khong ton tai");
             }

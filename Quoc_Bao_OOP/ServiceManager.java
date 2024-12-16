@@ -39,6 +39,9 @@ public class ServiceManager {
     public static String green (String x){
         return "\033[32m" + x + "\033[0m";
     } 
+    public static String tim (String x){
+        return "\u001B[35m" + x + "\033[0m";
+    } 
 
     public ArrayList<Service> getavailableServices() {
         return availableServices;
@@ -72,16 +75,17 @@ public class ServiceManager {
 
     public static void show_list_service(){
 
-        System.out.println(yeelow("╔"+RoomManager.border(70)+"╗"));
-        System.out.println(yeelow("║") +RoomManager.form_SO("Service", 70)+yeelow("║"));
-        System.out.println(yeelow("╠"+RoomManager.border(70)+"╣"));
-       
+        System.out.println(tim("╔"+RoomManager.border(70)+"╗"));
+        System.out.println(tim("║") +RoomManager.form_SO("Service", 70)+tim("║"));
+        System.out.println(tim("╠"+RoomManager.border(35)+"╦"+RoomManager.border(34)+"╣"));
+        System.out.println(tim("║")+RoomManager.form_SO("Ten dich vu",35)+"║"+RoomManager.form_SO("Gia ",34)+tim("║"));
+        System.out.println(tim("╠"+RoomManager.border(35)+"╩"+RoomManager.border(34)+"╣"));
        
     
         for (Service sv : ServiceManager.availableServices){
-            System.out.println(yeelow("║")+RoomManager.form_option(sv.getName() + "   " + sv.getPricepersession(), 70)+yeelow("║"));
+            System.out.println(tim("║")+RoomManager.form_option(sv.getName() + "   " + sv.getPricepersession(), 70)+tim("║"));
         }
-        System.out.println(yeelow("╚" + RoomManager.border(70) + "╝")); 
+        System.out.println(tim("╚" + RoomManager.border(70) + "╝")); 
     }
 
     public  static  Service get_service(String name){
@@ -178,8 +182,9 @@ public class ServiceManager {
                     
                     break;
                 case 3:
+                return ;
                     
-                    break;
+                    
                 default:
                     throw new AssertionError();
             }
@@ -190,7 +195,7 @@ public class ServiceManager {
         StringBuilder str = new StringBuilder();
         for (Service sv : ServiceManager.availableServices){
             str.append(sv.getName()+"#");
-            str.append(sv.getPricepersession());
+            str.append(sv.getPricepersession()+"\n");
         }
         String filePath = "./Quoc_Bao_OOP/data/Service.txt"; // Đường dẫn tới file
         String data = str.toString();
