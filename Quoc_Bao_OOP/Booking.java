@@ -218,35 +218,33 @@ public class Booking extends BookingIdManager {
         LocalDate end = null;
         int size;
 
-        System.out.println("Nhap so luong nguoi tham gia");
-        int soluong = sc.nextInt();
-        size = soluong <= 15 ? 0 : soluong <= 25 ? 1 : 2;
-
+        
+        String b,e;
         do {
             begin = null;
             end = null;
             do {
-                System.out.println("Nhap ngay bat dau (dd/MM/yyyy) : ");
-                String b = sc.nextLine();
-                try {
+                System.out.print("Nhap ngay bat dau (dd/MM/yyyy) : ");
+                 b = sc.nextLine();
+                 System.out.print("Nhap ngay ket thuc (dd/MM/yyyy) : ");
+                 e = sc.nextLine();
+                
+                 try {
                     begin = LocalDate.parse(b, form_time);
-                } catch (Exception e) {
-                    System.out.println("Loi dinh dang, Nhap lai ");
-                }
-            } while (begin == null);
+                    end = LocalDate.parse(e, form_time);
+                 } catch (Exception ee) {
+                    // TODO: handle exception
+                    System.out.println("Loi dinh dang");
+                 }
+                
+               
+            } while (end == null || begin == null);
 
-            do {
-                System.out.println("Nhap ngay ket thuc (dd/MM/yyyy) : ");
-                String b = sc.nextLine();
-                try {
-                    end = LocalDate.parse(b, form_time);
-                } catch (Exception e) {
-                    System.out.println("Loi dinh dang, Nhap lai ");
-                }
-            } while (end == null);
-
-        } while (!begin.isAfter(end));
-
+        } while (begin.isAfter(end));
+        System.out.print("Nhap so luong khach : ");
+        int soluong = Integer.parseInt(sc.nextLine());
+        
+        size = soluong <= 15? 0 : soluong <=25 ? 1 : 2;
         BookingManager.cham();
         RoomManager.show_calendar(begin, end, size);
 
@@ -1283,9 +1281,6 @@ public class Booking extends BookingIdManager {
 
         Booking b = new Booking();
 
-        RoomManager.show_calendar(LocalDate.of(2004, 9, 22), LocalDate.of(2004, 9, 24), 0);
-        b.set_calendar_and_service();
-        RoomManager.show_calendar(LocalDate.of(2004, 9, 22), LocalDate.of(2004, 9, 24), 0);
-
+        b.setInfo();
     }
 }
