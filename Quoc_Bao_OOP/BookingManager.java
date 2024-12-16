@@ -33,7 +33,8 @@ public class BookingManager {
                         ID = id;
                     }
                     double price = Double.parseDouble(str[1]);
-                    int idreciep = Integer.parseInt(str[2]);
+                    
+                    Integer idreciep = str[2].equals("null")? null : Integer.parseInt(str[2]);
 
                     Customer cus = CustomerManager.get_cus(str[3]);
                     if (cus == null) {
@@ -405,7 +406,7 @@ public class BookingManager {
                     String sdt = sc.nextLine();
                     ArrayList<Booking> list_kh = new ArrayList<>();
                     for (Booking book : BookingManager.bookings) {
-                        if (book.getCus().getName().contains(sdt)) {
+                        if (book.getCus().getPhoneNumber().contains(sdt)) {
                             list_kh.add(book);
                         }
                     }

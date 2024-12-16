@@ -13,12 +13,7 @@ public class clm {
         so.add(60);
     }
     public static void main(String[] args) {
-        System.out.println("hello word");
-        System.out.println(clm.so);
-        int i = 50;
-        so.remove(1);
-        System.out.println(so); 
-       
+      
         
         
     }

@@ -2,3 +2,4 @@ CoffeenTea#200.0
 SoundnProjector#250.0
 Wifi 5G#100.0
 ca phe voi nguoi ngoi tieng #100000.0
+chocopie#156.0
