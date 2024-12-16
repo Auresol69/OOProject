@@ -31,6 +31,7 @@ public class Receipt extends ReceiptIdManager {
                 .filter(booking -> booking != null)
                 .mapToDouble(Booking::getPrice) // Lamda API Stream
                 .sum();
+        cus.CongDiemTichLuy(this.totalCost);
     }
 
     public Receipt(Customer cus, PaymentMethod paymentmethod, ArrayList<Booking> bookings_choosed) {
@@ -43,6 +44,7 @@ public class Receipt extends ReceiptIdManager {
                 .filter(booking -> booking != null)
                 .mapToDouble(Booking::getPrice) // Lamda API Stream
                 .sum();
+        cus.CongDiemTichLuy(this.totalCost);
     }
 
     public Customer getCus() {
@@ -124,15 +126,6 @@ public class Receipt extends ReceiptIdManager {
     }
 
     public void showReceipt() {
-        // System.out.println("ID: " + this.id);
-        // System.out.println("Customer Name: " + this.cus.getName());
-        // System.out.println("DateTime: " + this.dateTime);
-        // System.out.println("Total Cost: " + this.totalCost);
-        // System.out.println("Payment Method: " + this.paymentmethod.getMethodName());
-        // System.out.println("Bookings: ");
-        // for (Booking booking : this.bookings_choosed) {
-        // booking.showBooking();
-        // }
         String formattedDate = this.getDateTime().format(formatter);
         System.out.print("╔" + border(39) + "╗" + "\n");
         System.out.print("║" + form_SO("RECEIPT") + "║" + "\n");

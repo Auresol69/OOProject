@@ -73,28 +73,28 @@ public abstract class Room implements Comparable<Room> {
     }
 
     public boolean add_booking(LocalDate date , int session,Booking book){
-        String str = session == 0? "sang" : session == 1 ? "trua" : "toi";
         if (this.check_calendar(date, session)){
-            System.out.println("Phong " + this.getName() +" da co lich vao buoi "+str + " " + date);
+            System.out.println("day la check booking ");
             return false; 
         }
         if (!this.calendar.containsKey(date)){
             this.calendar.put(date, new Booking[3]);
         }
         this.calendar.get(date)[session] = book;
-        System.out.println("Phong " + this.getName() + " da them thanh cong lich vao buoi " + str+ " " + date);
         return true;
     }
 
     public boolean delete_booking(LocalDate date, int session){
-        String str = session == 0 ? "sang" : session == 1? "trua" :"chieu";
         if (!check_calendar(date, session)){
-            System.out.println("Phong " + this.Name + " vao buoi " + str + " ngay " + date.format(form_time) + " khong co lich");
             return false ;
         }
-
         this.calendar.get(date)[session] = null;
-        // System.out.println("lich vao buoi " + str + " ngay " + date.format(form_time) + " cua phong "+ this.getName() + " da duoc xoa thanh cong ");
+        for (int i = 0; i < 3; i++){
+            if (this.calendar.get(date)[i] != null){
+                return true;
+            }
+        }
+        this.calendar.remove(date);
         return true;
     }
       
@@ -145,7 +145,9 @@ public abstract class Room implements Comparable<Room> {
         for (Map.Entry<LocalDate,Booking[]> c : this.calendar.entrySet()){
             for(int i = 0; i < 3; i++){
                 if ( c.getValue()[i] != null){
-                    d += c.getValue()[i].getPrice();
+                    for (Service sv : c.getValue()[i].getSelectedServices() ){
+                        d += this.getPrice() + sv.getPricepersession();
+                    }
                 }
             }  
         }
@@ -158,7 +160,9 @@ public abstract class Room implements Comparable<Room> {
             if(!c.getKey().isBefore(begin) && !c.getKey().isAfter(end)){
                 for(int i = 0; i < 3; i++){
                     if ( c.getValue()[i] != null){
-                        d += c.getValue()[i].getPrice();
+                        for (Service sv : c.getValue()[i].getSelectedServices() ){
+                            d += this.getPrice() + sv.getPricepersession();
+                        }
                     }
                 } 
             }
@@ -233,4 +237,6 @@ public abstract class Room implements Comparable<Room> {
     public void setNgaycapnhatgannhat(LocalDate ngaycapnhatgannhat) {
         this.ngaycapnhatgannhat = ngaycapnhatgannhat;
     }
+
+   
 }

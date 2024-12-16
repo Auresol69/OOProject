@@ -5,7 +5,7 @@ public class vd {
         CustomerManager cmng = new CustomerManager();
         ServiceManager svmng = new ServiceManager();
 
-        BookingManager bmng = new BookingManager(rmng, cmng, svmng);
+
         for (Booking b : bmng.getBookings()){
         }
 
