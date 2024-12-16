@@ -1,5 +1,8 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -148,4 +151,28 @@ public class CustomerManager {
         return false;
     }
 
+    public static void luu_data(){
+        StringBuilder str = new StringBuilder();
+
+        for (Customer cus : CustomerManager.customers){
+            str.append(cus.getName()+"#");
+            str.append(cus.getPhoneNumber()+"#");
+            str.append(cus.getSex());
+            str.append("\n");
+        }
+
+
+
+
+
+         String filePath = "./Quoc_Bao_OOP/data/customer.txt"; // Đường dẫn tới file
+        String data = str.toString();
+
+        // Sử dụng BufferedWriter để ghi dữ liệu
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write(data); // Ghi dữ liệu vào file
+        } catch (IOException e) {
+            System.err.println("Có lỗi xảy ra khi ghi vào file: " + e.getMessage());
+        }
+    }
 }

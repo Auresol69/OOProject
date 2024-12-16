@@ -209,6 +209,43 @@ public class Booking extends BookingIdManager {
 
     public void setInfo() {
         Scanner sc = new Scanner(System.in);
+        LocalDate begin = null;
+        LocalDate end = null;
+        int size ;
+
+        System.out.println("Nhap so luong nguoi tham gia");
+        int soluong = sc.nextInt();
+        size = soluong <= 15 ? 0 : soluong <=25 ? 1 : 2;
+        
+
+        do { 
+            begin = null;
+            end = null;
+            do { 
+                System.out.println("Nhap ngay bat dau (dd/MM/yyyy) : ");
+                String b = sc.nextLine();   
+                try {
+                    begin = LocalDate.parse(b, form_time);
+                } catch (Exception e) {
+                    System.out.println("Loi dinh dang, Nhap lai ");
+                }
+            } while (begin == null);
+            
+            do { 
+                System.out.println("Nhap ngay ket thuc (dd/MM/yyyy) : ");
+                String b = sc.nextLine();   
+                try {
+                    end = LocalDate.parse(b, form_time);
+                } catch (Exception e) {
+                    System.out.println("Loi dinh dang, Nhap lai ");
+                }
+            } while (end == null);
+            
+        } while (!begin.isAfter(end));
+
+        BookingManager.cham();
+        RoomManager.show_calendar(begin, end, size);
+
         int choice = -1 ;
        do { 
         System.out.print(yeelow("Nhap so dien thoai  : "));

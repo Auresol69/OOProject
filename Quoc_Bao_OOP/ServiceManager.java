@@ -128,6 +128,7 @@ public class ServiceManager {
                      gia = Double.parseDouble(sc.nextLine());
                     Service sv = new Service(sv_name, gia);
                     ServiceManager.availableServices.add(sv);
+                    ServiceManager.luu_data();
                     break;
                 case 1:
                     System.out.println("Nhap ten dich vu ban muon chinh sua");
@@ -156,6 +157,7 @@ public class ServiceManager {
                             gia = Double.parseDouble(sc.nextLine());
                         }
                     }
+                    ServiceManager.luu_data();
                        
                     break;
                 case 2:
@@ -170,6 +172,8 @@ public class ServiceManager {
                         ServiceManager.availableServices.remove(service);
                         System.out.println("Da xoa dich vu '" + sv_name+ "' ");
                     }
+
+                    ServiceManager.luu_data();
                     
                     
                     break;

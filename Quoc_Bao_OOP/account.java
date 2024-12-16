@@ -4,6 +4,7 @@ public class account {
     private String username;
     private String password;
     private int quyen;
+    private Staff staff;
     public account (String username , String password, int quyen){
         this.username = username;
         this.password = password;

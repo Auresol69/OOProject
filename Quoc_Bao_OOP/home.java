@@ -68,7 +68,8 @@ public class home {
                 System.out.println(yeelow("║")+RoomManager.form_option("3. Nhan vien", 70)+yeelow("║"));
                 System.out.println(yeelow("║")+RoomManager.form_option("4. Thong ke ", 70)+yeelow("║"));
                 System.out.println(yeelow("║")+RoomManager.form_option("5. Hoa don ", 70)+yeelow("║"));
-                System.out.println(yeelow("║")+RoomManager.form_option("6. Dang xuat ", 70)+yeelow("║"));
+                System.out.println(yeelow("║")+RoomManager.form_option("6. Tai khoan ", 70)+yeelow("║"));
+                System.out.println(yeelow("║")+RoomManager.form_option("7. Dang xuat ", 70)+yeelow("║"));
                 System.out.println(yeelow("╚" + RoomManager.border(70) + "╝")); 
 
                 do { 
@@ -102,7 +103,7 @@ public class home {
                        System.out.println(yeelow("╔"+RoomManager.border(70)+"╗"));
                         System.out.println(yeelow("║") +RoomManager.form_SO("OPTION", 70)+yeelow("║"));
                         System.out.println(yeelow("╠"+RoomManager.border(70)+"╣"));
-                        System.out.println(yeelow("║")+RoomManager.form_option("0. Thong ke theo quy ", 70)+yeelow("║"));
+                        System.out.println(yeelow("║")+RoomManager.form_option("0. Thong ke booking theo quy ", 70)+yeelow("║"));
                         System.out.println(yeelow("║")+RoomManager.form_option("1. Thong ke theo nam ", 70)+yeelow("║"));
                         System.out.println(yeelow("║")+RoomManager.form_option("2. Thong ke theo thoi gian ", 70)+yeelow("║"));
                         System.out.println(yeelow("║")+RoomManager.form_option("3. Quay lai", 70)+yeelow("║"));
@@ -141,11 +142,15 @@ public class home {
 
                         break;
                     case 5:
-                    
+                       
                         
                         break;
                     case 6:
-                    
+                       accountManager.terminal_account(acc);
+                        
+                        break;
+                    case 7:
+                       kt = false;
                         
                         break;
                         
