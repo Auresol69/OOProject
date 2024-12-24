@@ -10,15 +10,19 @@ import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-public class Booking {
+public class Booking implements Comparable<Booking>{
     protected Integer id;
     protected Customer cus;
     protected double price;
     protected Integer receiptid;
     protected TreeMap<LocalDate, TreeMap<Integer, ArrayList<Room>>> date;
     protected ArrayList<Service> selectedServices;
+    
+    @Override
+    public int compareTo(Booking other) {
+        return other.getDate().firstKey().compareTo(this.getDate().firstKey()); // So sánh theo tuổi
+    }
     DecimalFormat form_tien = new DecimalFormat("#,###.00");
-
     public static String yeelow(String x) {
         return "\033[33m" + x + "\033[0m";
     }
@@ -50,13 +54,18 @@ public class Booking {
             for (Map.Entry<Integer, ArrayList<Room>> c1 : c.getValue().entrySet()) {
                 for (Room room : c1.getValue()) {
                     room.add_booking(c.getKey(), c1.getKey(), this);
+
+                   //room 
+                   //c1.getKey() = shift
+                   // c.getKey() = date;
+
                 }
             }
         }
     }
 
     public Booking(int id, double price, Integer receiptid, Customer cus, ArrayList<Service> selectedServices,
-            TreeMap<LocalDate, TreeMap<Integer, ArrayList<Room>>> date) {
+        TreeMap<LocalDate, TreeMap<Integer, ArrayList<Room>>> date) {
         this.id = id;
         this.cus = cus;
         this.price = price;
@@ -68,6 +77,8 @@ public class Booking {
             for (Map.Entry<Integer, ArrayList<Room>> c1 : c.getValue().entrySet()) {
                 for (Room room : c1.getValue()) {
                     room.add_booking(c.getKey(), c1.getKey(), this);
+                   
+
                 }
             }
         }
@@ -81,6 +92,7 @@ public class Booking {
         this.selectedServices = new ArrayList<>();
         this.price = 0;
         this.date = new TreeMap<>();
+        this.receiptid = null;
     }
 
     public boolean kiemtrasdt(String sdt) {
@@ -224,9 +236,9 @@ public class Booking {
             begin = null;
             end = null;
             do {
-                System.out.print("Nhap ngay bat dau (dd/MM/yyyy) : ");
+                System.out.print(yeelow("Nhap ngay bat dau (dd/MM/yyyy) : "));
                  b = sc.nextLine();
-                 System.out.print("Nhap ngay ket thuc (dd/MM/yyyy) : ");
+                 System.out.print(yeelow("Nhap ngay ket thuc (dd/MM/yyyy) : "));
                  e = sc.nextLine();
                 
                  try {
@@ -262,7 +274,7 @@ public class Booking {
                 System.out.println(red("╚" + RoomManager.border(70) + "╝"));
 
                 do {
-                    System.out.println(yeelow("Nhap lua chon "));
+                    System.out.print(yeelow("Nhap lua chon "));
                     choice = sc.nextInt();
                     sc.nextLine();
                     if (!(choice >= 0 && choice <= 2)) {
@@ -289,16 +301,16 @@ public class Booking {
                         choice = sc.nextInt();
                         sc.nextLine();
                         if (!(choice >= 0 && choice <= 1)) {
-                            System.out.println("Nhap lai");
+                            System.out.println(red("Nhap lai!"));
                         }
                     } while (!(choice >= 0 && choice <= 1));
 
                     Customer cus = null;
                     if (choice == 0) {
                         if (choice == 0) {
-                            cus = new Customer(name, sdt, true);
+                            cus = new Customer(name, sdt, true,0);
                         } else {
-                            cus = new Customer(name, sdt, false);
+                            cus = new Customer(name, sdt, false,0);
                         }
                         CustomerManager.addCustomer(cus);
                         this.cus = cus;
@@ -421,6 +433,21 @@ public class Booking {
             service_list.put(session, sos);
             session++;
         }
+        TreeMap<LocalDate,TreeMap<Integer,ArrayList<Room>>> c  = new TreeMap<>();
+        for (Map.Entry<LocalDate,TreeMap<Integer,ArrayList<Room>>> bansao : this.date.entrySet()){
+            if (!c.containsKey(bansao.getKey())){
+                c.put(bansao.getKey(), new TreeMap<>());
+            }
+            for (Map.Entry<Integer,ArrayList<Room>> bansao1 : bansao.getValue().entrySet()){
+                if (!c.get(bansao.getKey()).containsKey(bansao1.getKey())){
+                    c.get(bansao.getKey()).put(bansao1.getKey(), new ArrayList<>());
+                }
+                for (Room roomm : bansao1.getValue()){
+                    c.get(bansao.getKey()).get(bansao1.getKey()).add(room);
+                }
+            }
+        }
+
         for (Service sv : this.selectedServices) {
             for (Map.Entry<Integer, TreeMap<Service, Boolean>> temp : service_list.entrySet()) {
                 for (Map.Entry<Service, Boolean> temp1 : temp.getValue().entrySet()) {
@@ -496,12 +523,7 @@ public class Booking {
                                 }
                             }
                         } else {
-                            if (this.date.containsKey(date)){
-                                System.out.println(red(str));
-                            }
-                             if (this.date.get(date).get(session).contains(room)) {
-                                System.out.println(red(str));
-                            } else {
+                            
                                 this.date.get(date).get(session).add(room);
                                 room.add_booking(date, session, this);
 
@@ -516,7 +538,7 @@ public class Booking {
                                     sophongthuong++;
                                 }
 
-                            }
+                            
                         }
                     }
                     do {
@@ -838,7 +860,7 @@ public class Booking {
                                                
                                                 System.out.print(yeelow("Nhap ten phong : "));
                                                 String rname = sc.nextLine();
-                                                System.out.println("asi gasuy fagnsuydgunay ds");
+                                               
                                                 if (RoomManager.check_room(rname)) {
                                                     room = RoomManager.get_room(rname);
                                                     if (!this.date.get(date).get(session).contains(room)) {
@@ -1073,7 +1095,7 @@ public class Booking {
                                                 System.out.println(yeelow("╔" + RoomManager.border(70) + "╗"));
                                                 System.out.println(
                                                         yeelow("║") + RoomManager.form_SO("Lua chon", 70) + "║");
-                                                System.out.println("╠" + RoomManager.border(70) + "╣");
+                                                System.out.println(yeelow("╠" + RoomManager.border(70) + "╣"));
                                                 System.out.println(
                                                         yeelow("║") + RoomManager.form_option("0. Chinh sua lich", 70)
                                                                 + yeelow("║"));
@@ -1286,6 +1308,8 @@ public class Booking {
         System.out.println(yeelow("╚" + RoomManager.border(70) + "╝"));
 
     }
+
+    
 
     public static void main(String[] args) {
 

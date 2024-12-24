@@ -1,29 +1,40 @@
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class StaffSchedule {
-        private LocalDate date;
-        private int Shift;
+    private LocalDate date;
+    private int shift;
+    private Room room; // Thêm thông tin phòng
 
     // Constructor
-    public StaffSchedule(LocalDate date, int  Shift) {
+    public StaffSchedule(LocalDate date, int shift, Room room) {
         this.date = date;
-        this.Shift = Shift;
+        this.shift = shift;
+        this.room = room;
     }
 
-    // Phương thức hiển thị thông tin lịch làm việc
-    public void displaySchedule() {
-        System.out.println("Ngày: " + date +
-                           ", Buổi: " + Shift
-        );
+    // Getter cho room
+    public Room getRoom() {
+        return room;
     }
 
-    // Getter (có thể cần nếu muốn xử lý dữ liệu lịch ngoài lớp)
+    // Setter cho room
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
+    // Getter cho date
     public LocalDate getDate() {
         return date;
     }
 
+    // Getter cho shift
     public int getShift() {
-        return Shift;
+        return shift;
+    }
+
+    // Hiển thị thông tin lịch
+    public void displaySchedule() {
+        System.out.println("Ngày: " + date + ", Ca: " + shift + ", Phòng: " + room);
     }
 }
+

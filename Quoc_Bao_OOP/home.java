@@ -34,8 +34,9 @@ public class home {
 
         do {
             do {
-                System.out.println("0. Dang nhap");
-                System.out.println("1. Thoat");
+                kt = true;
+                System.out.println(yeelow("0. Dang nhap"));
+                System.out.println(yeelow("1. Thoat"));
 
                 do {
                     System.out.print(yeelow("Nhap lua chon  : "));
@@ -49,9 +50,9 @@ public class home {
                 if (choice == 1) {
                     return;
                 } else {
-                    System.out.println("Username : ");
+                    System.out.print(yeelow("Username : "));
                     String username = sc.nextLine();
-                    System.out.println("password ");
+                    System.out.print(yeelow("password "));
                     String pass = sc.nextLine();
                     acc = accountManager.getaccount(username, pass);
                 }
@@ -59,62 +60,65 @@ public class home {
                     System.out.println(red("Sai tai khoan hoac mat khau"));
                 }
             } while (acc == null);
+            int quyen = acc.getQuyen() == 0 ? 8 :7;
 
             do {
 
                 System.out.println(yeelow("╔" + RoomManager.border(70) + "╗"));
                 System.out.println(yeelow("║") + RoomManager.form_SO("OPTION", 70) + yeelow("║"));
                 System.out.println(yeelow("╠" + RoomManager.border(70) + "╣"));
-                System.out.println(yeelow("║") + RoomManager.form_option("0. Lich dat phong ", 70) + yeelow("║"));
-                System.out.println(yeelow("║") + RoomManager.form_option("1. Phong hop", 70) + yeelow("║"));
-                System.out.println(yeelow("║") + RoomManager.form_option("2. Dich vu ", 70) + yeelow("║"));
-                System.out.println(yeelow("║") + RoomManager.form_option("3. Nhan vien", 70) + yeelow("║"));
-                System.out.println(yeelow("║") + RoomManager.form_option("4. Khach hang ", 70) + yeelow("║"));
-                System.out.println(yeelow("║") + RoomManager.form_option("5. Thong ke ", 70) + yeelow("║"));
-                System.out.println(yeelow("║") + RoomManager.form_option("6. Hoa don ", 70) + yeelow("║"));
-                System.out.println(yeelow("║") + RoomManager.form_option("7. Tai khoan ", 70) + yeelow("║"));
-                System.out.println(yeelow("║") + RoomManager.form_option("8. Dang xuat ", 70) + yeelow("║"));
+                System.out.println(yeelow("║") + RoomManager.form_option("1. Lich dat phong ", 70) + yeelow("║"));
+                System.out.println(yeelow("║") + RoomManager.form_option("2. Phong hop", 70) + yeelow("║"));
+                System.out.println(yeelow("║") + RoomManager.form_option("3. Dich vu ", 70) + yeelow("║"));
+                System.out.println(yeelow("║") + RoomManager.form_option("4. Nhan vien", 70) + yeelow("║"));
+                System.out.println(yeelow("║") + RoomManager.form_option("5. Khach hang ", 70) + yeelow("║"));
+                System.out.println(yeelow("║") + RoomManager.form_option("6. Thong ke ", 70) + yeelow("║"));
+                System.out.println(yeelow("║") + RoomManager.form_option("7. Hoa don ", 70) + yeelow("║"));
+                
+                if (quyen ==8){
+                    System.out.println(yeelow("║") + RoomManager.form_option("8. Tai khoan ", 70) + yeelow("║"));
+                }
+                System.out.println(yeelow("║") + RoomManager.form_option("0. Dang xuat ", 70) + yeelow("║"));
                 System.out.println(yeelow("╚" + RoomManager.border(70) + "╝"));
 
                 do {
-                    System.out.println(yeelow("Nhap lua chon  : "));
+                    System.out.print(yeelow("Nhap lua chon  : "));
                     choice = sc.nextInt();
                     sc.nextLine();
-                    if (!(choice >= 0 && choice <= 6)) {
-                        System.out.println("Sai");
+                    if (!(choice >= 0 && choice <= 8)) {
+                        System.out.println(red("Sai"));
                     }
-                } while (!(choice >= 0 && choice <= 6));
+                } while (!(choice >= 0 && choice <= quyen));
                 LocalDate begin = null;
                 LocalDate end = null;
                 switch (choice) {
-                    case 0:
+                    case 1:
                         BookingManager.terminal_booking();
                         break;
-                    case 1:
+                    case 2:
                         RoomManager.terminal_room();
 
                         break;
-                    case 2:
+                    case 3:
                         ServiceManager.termianl_service();
 
                         break;
 
-                    case 3:
-                        break;
                     case 4:
                         break;
                     case 5:
+                    CustomerManager.terminal();
+                        break;
+                    case 6:
                         BookingManager.cham();
                         System.out.println(yeelow("╔" + RoomManager.border(70) + "╗"));
                         System.out.println(yeelow("║") + RoomManager.form_SO("OPTION", 70) + yeelow("║"));
                         System.out.println(yeelow("╠" + RoomManager.border(70) + "╣"));
-                        System.out.println(yeelow("║") + RoomManager.form_option("0. Thong ke booking theo quy ", 70)
-                                + yeelow("║"));
                         System.out.println(
-                                yeelow("║") + RoomManager.form_option("1. Thong ke theo nam ", 70) + yeelow("║"));
+                                yeelow("║") + RoomManager.form_option("0. Thong ke theo phong", 70) + yeelow("║"));
                         System.out.println(
-                                yeelow("║") + RoomManager.form_option("2. Thong ke theo thoi gian ", 70) + yeelow("║"));
-                        System.out.println(yeelow("║") + RoomManager.form_option("3. Quay lai", 70) + yeelow("║"));
+                                yeelow("║") + RoomManager.form_option("1. Thong ke theo booking ", 70) + yeelow("║"));
+                        System.out.println(yeelow("║") + RoomManager.form_option("2. Quay lai", 70) + yeelow("║"));
                         System.out.println(yeelow("╚" + RoomManager.border(70) + "╝"));
 
                         do {
@@ -125,43 +129,30 @@ public class home {
                             }
                         } while (!(choice >= 0 && choice <= 3));
 
-                        if (choice == 0) {
-                            System.out.println("Nhap nam");
-                            int nam = Integer.parseInt(sc.nextLine());
-                            RoomManager.thong_ke_theo_quy(nam);
+
+
+                        if (choice == 0){
+                            RoomManager.terminal_thongke();
                         } else if (choice == 1) {
-                            RoomManager.thong_ke_theo_nam();
-                        } else if (choice == 2) {
-                            do {
-
-                                System.out.println("Nhap thoi gian bat dau (dd/MM/yyyy)");
-                                String b = sc.nextLine();
-                                System.out.println("Nhap thoi gian ket thuc (dd/MM/yyyy):");
-                                String e = sc.nextLine();
-                                begin = LocalDate.parse(b, f);
-                                end = LocalDate.parse(e, f);
-                            } while (begin == null || end == null);
-                            RoomManager.thong_ke_bydate(begin, end);
-                            begin = null;
-                            end = null;
+                            BookingManager.terminal_thongke();
                         }
-
-                        break;
-                    case 6:
-                        ReceiptManager.terminal_receipt();
+                        
+                        
                         break;
                     case 7:
-                        accountManager.terminal_account(acc);
+                        ReceiptManager.terminal_receipt();
                         break;
                     case 8:
-                        kt = false;
-
+                        accountManager.terminal_account(acc);
                         break;
-
+                    case 0 :
+                        kt = true;
+                        break;
+                    
                     default:
                         throw new AssertionError();
                 }
-            } while (choice != 6);
+            } while (choice != 0);
 
         } while (kt);
 

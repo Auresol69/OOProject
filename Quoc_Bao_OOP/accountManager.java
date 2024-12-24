@@ -19,8 +19,9 @@ public class accountManager {
                 String username = str[0];
                 String pass = str[1];
                 int maquyen = Integer.parseInt(str[2]);
-                account acc = new account(username, pass, 0);
+                account acc = new account(username, pass, maquyen);
                 accounts.add(acc);
+
             }
         } catch (Exception e) {
             // TODO: handle exception
@@ -47,7 +48,7 @@ public class accountManager {
 
     public static boolean delete_account(String username) {
         for (account ac : accounts) {
-            if (ac.getUsername().equals(ac)) {
+            if (ac.getUsername().equals(username)) {
                 accounts.remove(ac);
                 return true;
             }
@@ -66,6 +67,17 @@ public class accountManager {
 
         return signIn(username, password);
     }
+    public static String yeelow(String x) {
+        return "\033[33m" + x + "\033[0m";
+    }
+
+    public static String red(String x) {
+        return "\033[31m" + x + "\033[0m";
+    }
+
+    public static String green(String x) {
+        return "\033[32m" + x + "\033[0m";
+    }
 
     public static void main(String[] args) {
         System.out.println(accountManager.getaccount("long", "16"));
@@ -75,10 +87,20 @@ public class accountManager {
         int choice = 0;
         Scanner sc = new Scanner(System.in);
         do {
-            System.out.println("0. Quay lai ");
-            System.out.println("1. Them tai khoan ");
-            System.out.println("2. Doi password cua ban ");
-            System.out.println("3. Xoa (Xoa cac tk con)");
+           
+
+            System.out.println(yeelow("╔" + RoomManager.border(70) + "╗"));
+                System.out.println(yeelow("║") + RoomManager.form_SO("OPTION", 70) + yeelow("║"));
+                System.out.println(yeelow("╠" + RoomManager.border(70) + "╣"));
+                System.out.println(yeelow("║") + RoomManager.form_option("0. Quay lai", 70) + yeelow("║"));
+                System.out.println(yeelow("║") + RoomManager.form_option("1. Them tai khoan", 70) + yeelow("║"));
+                System.out.println(yeelow("║") + RoomManager.form_option("2. Doi password cua ban ", 70) + yeelow("║"));
+                System.out.println(yeelow("║") + RoomManager.form_option("3. Xoa (Xoa tk con)", 70) + yeelow("║"));         
+                System.out.println(yeelow("╚" + RoomManager.border(70) + "╝"));
+
+
+
+
             String pass;
             account account;
             do {
@@ -92,33 +114,42 @@ public class accountManager {
             return ;
         }
         else if( choice == 1){
-            System.out.println("Nhap username");
+            System.out.print(yeelow("Nhap username : "));
             String username = sc.nextLine();
-            System.out.println("Nhap password ");
+            System.out.print(yeelow("Nhap password : "));
              pass = sc.nextLine();
-             account = new account(username, pass, choice);
-            accountManager.accounts.add(acc);
+             System.out.println(yeelow("Nhap ma quyen cho tai khaon moi || 0. Admin     1.User    :  "));
+             int i ;
+            do { 
+                 i  = sc.nextInt();sc.nextLine();
+                 if(!(i==0 || i==1)){
+                    System.out.println("Nhap lai");
+                 }
+            } while (!(i==0 || i==1));
+             account = new account(username, pass, i);
+            accountManager.accounts.add(account);
             accountManager.luu_data();
+            System.out.println(green("Tao thanh cong tai khoan !! "));
         } else if (choice ==2) {
-            System.out.println("Nhap mat khau hien tai ");
+            System.out.print(yeelow("Nhap mat khau hien tai : "));
             pass = sc.nextLine();
             if (acc.getPassword().equals(pass)){
-                System.out.println("Mat khau khong dung");
+                System.out.println(red("Mat khau khong dung"));
             } else {
-                System.out.println("Nhap mat khau moi");
+                System.out.print(yeelow("Nhap mat khau moi : "));
                 acc.setPassword(pass);
-                System.out.println("Thay doi thanh cong");
+                System.out.println(green("Thay doi thanh cong"));
                 accountManager.luu_data();
             }
             
         } else if (choice == 3 ){
-            System.out.println("Nhap ten tai Khoan ban muon xoa ");
+            System.out.print(yeelow("Nhap ten tai Khoan ban muon xoa "));
             String username = sc.nextLine();
             if (accountManager.delete_account(username)){
-                System.out.println("Da xoa thanh cong");
+                System.out.println(green("Da xoa thanh cong"));
                 accountManager.luu_data();
             } else {
-                System.out.println("Tai khoan khong ton tai");
+                System.out.println(red("Tai khoan khong ton tai"));
             }
         }
         } while (true);

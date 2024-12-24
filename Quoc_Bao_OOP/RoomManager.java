@@ -91,7 +91,7 @@ public class RoomManager {
         RoomManager.list_room.add(room);
     }
 
-    DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    static DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     static DateTimeFormatter f_out = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     static DecimalFormat form_tien = new DecimalFormat("#,###.00");
 
@@ -349,10 +349,9 @@ public class RoomManager {
     row.append("║"+form_SO("SO LAN THUE",15));
     row.append("║"+form_SO("TIEN THUE PHONG",20));
     row.append("║"+form_SO("TIEN DICH VU",20));
-    row.append("║"+form_SO("TIEN KHUYEN MAI",20));
     row.append("║"+form_SO("DOANH THU",20)+"║");
     
-    System.out.println("╠" + border(10)+"╦"+ border(10)+"╦"+ border(10)+"╦"+ border(10)+"╦"+ border(15)+"╦"+ border(20)+"╦"+ border(20)+"╦"+ border(20)+"╦"+ border(20) + "╣");
+    System.out.println("╠" + border(10)+"╦"+ border(10)+"╦"+ border(10)+"╦"+ border(10)+"╦"+ border(15)+"╦"+ border(20)+"╦"+ border(20)+"╦"+ border(20) + "╣");
     System.out.println(row);
     
 
@@ -373,43 +372,42 @@ public class RoomManager {
         row.append("|"+form_SO(soluong,15));
         row.append("|"+form_SO(form_tien.format(soluong*price),20));
         row.append("|"+form_SO(form_tien.format(tien_dich_vu),20));
-        row.append("|"+form_SO(form_tien.format(tien_khuyen_mai),20));
         row.append("|"+form_SO(form_tien.format(doanh_thu_tt),20)+"║");
 
         String s ;
         if (bor == 0){
-            s = "╠" + border(10)+"╩"+ border(10)+"╩"+ border(10)+"╩"+ border(10)+"╩"+ border(15)+"╩"+ border(20)+"╩"+ border(20)+"╩"+ border(20)+"╩"+ border(20) + "╣";
+            s = "╠" + border(10)+"╩"+ border(10)+"╩"+ border(10)+"╩"+ border(10)+"╩"+ border(15)+"╩"+ border(20)+"╩"+ border(20)+"╩"+ border(20) + "╣";
         } else {
-            s= "║" + border_thuong(10)+"+"+ border_thuong(10)+"+"+ border_thuong(10)+"+"+ border_thuong(10)+"+"+ border_thuong(15)+"+"+ border_thuong(20)+"+"+ border_thuong(20)+"+"+ border_thuong(20)+"+"+ border_thuong(20)+ "║";
+            s= "║" + border_thuong(10)+"+"+ border_thuong(10)+"+"+ border_thuong(10)+"+"+ border_thuong(10)+"+"+ border_thuong(15)+"+"+ border_thuong(20)+"+"+ border_thuong(20)+"+"+ border_thuong(20)+ "║";
         }
         bor++;
         System.out.println(s);
         System.out.println(row);
     }
    
-    System.out.println("╠" + border(143)+ "╣");
-    System.out.println("║"+form_SO("Tong doanh thu : " + total,143) +"║");
-    System.out.println("╚" + border(143) + "╝");
+    System.out.println("╠" + border(122)+ "╣");
+    System.out.println("║"+form_SO("Tong doanh thu : " + total,122) +"║");
+    System.out.println("╚" + border(122) + "╝");
 
 }
 
 public static void thong_ke_theo_quy(int nam){
     System.out.println(" DOANH THU THEO QUY ");
     System.out.println("QUY 1 ");
-    System.out.println("╔" + border(143) + "╗");
-    System.out.println("║" + form_SO("QUY 1", 143) + "║");
+    System.out.println("╔" + border(122) + "╗");
+    System.out.println("║" + form_SO("QUY 1", 122) + "║");
     thong_ke_bydate(LocalDate.of(nam, 1, 1), LocalDate.of(nam, 4, 30));
     System.out.println("\n\n\n");
-    System.out.println("╔" + border(143) + "╗");
-    System.out.println("║" + form_SO("QUY 2", 143) + "║");
+    System.out.println("╔" + border(122) + "╗");
+    System.out.println("║" + form_SO("QUY 2", 122) + "║");
     thong_ke_bydate(LocalDate.of(nam, 1, 4), LocalDate.of(nam, 7, 30));
     System.out.println("\n\n\n");
-    System.out.println("╔" + border(143) + "╗");
-    System.out.println("║" + form_SO("QUY 3", 143) + "║");
+    System.out.println("╔" + border(122) + "╗");
+    System.out.println("║" + form_SO("QUY 3", 122) + "║");
     thong_ke_bydate(LocalDate.of(nam, 1, 7), LocalDate.of(nam, 10, 30));
     System.out.println("\n\n\n");
-    System.out.println("╔" + border(143) + "╗");
-    System.out.println("║" + form_SO("QUY 4", 143) + "║");
+    System.out.println("╔" + border(122) + "╗");
+    System.out.println("║" + form_SO("QUY 4", 122) + "║");
     thong_ke_bydate(LocalDate.of(nam, 1, 10), LocalDate.of(nam, 12, 31));
 }
 
@@ -488,16 +486,17 @@ public static void thong_ke_theo_nam(){
     Map.Entry<LocalDate,ArrayList<Room>> firttime = RoomManager.calendar.firstEntry();
     Map.Entry<LocalDate,ArrayList<Room>> lasttime = RoomManager.calendar.lastEntry();
     System.out.println(firttime.getKey() + " va " + lasttime.getKey());
-
+   
   for (LocalDate date = firttime.getKey() ; !date.isAfter(lasttime.getKey()) ; date = date.plusYears(1)){
-       System.out.println("DOANH THU CUA NAM " + date.getYear());
+    System.out.println("\n\n\n\n");
+    System.out.println("╔" + border(122)+"╗");
+    
+       System.out.println("║"+form_SO("DOANH THU CUA NAM " + date.getYear(), 122)+ "║");
        thong_ke_bydate(LocalDate.of(date.getYear(), 1, 1), LocalDate.of(date.getYear(), 12, 31));
        doanh_thu_byyear.put(date.getYear(), RoomManager.tong_doanh_thu_theo_nam(date.getYear()));
   }
 
-  for (Map.Entry<Integer,Double> c : doanh_thu_byyear.entrySet()){
-    System.out.println(c.getKey() + " : " + c.getValue()) ;
-  }
+ 
 }
   
 
@@ -821,10 +820,67 @@ public static void thong_ke_theo_nam(){
     
     }
 
+    public static void cham(){
+        
+    }
+  
+    public static void terminal_thongke(){
+        Scanner sc = new Scanner(System.in);
+        int choice = 0;
+        LocalDate b,e;
+       do { 
+        
+        
 
+
+        System.out.println(yeelow("╔" + RoomManager.border(70) + "╗"));
+        System.out.println(yeelow("║") + RoomManager.form_SO("OPTION", 70) + yeelow("║"));
+        System.out.println(yeelow("╠" + RoomManager.border(70) + "╣"));
+        System.out.println(yeelow("║") + RoomManager.form_option("0. Thong ke theo quy", 70) + yeelow("║"));
+        System.out.println(yeelow("║") + RoomManager.form_option("1. Thong ke theo nam", 70) + yeelow("║"));
+        System.out.println(yeelow("║") + RoomManager.form_option("2. Thong ke theo thoi gian", 70) + yeelow("║"));
+        System.out.println(yeelow("║") + RoomManager.form_option("3. Quay lai ", 70) + yeelow("║"));
+        System.out.println(yeelow("╚" + RoomManager.border(70) + "╝"));
+        System.out.print(yeelow("Nhap lua chon"));
+        do { 
+            choice = sc.nextInt(); sc.nextLine();
+            if(!(choice >= 0 && choice <=3 )){
+                System.out.println("Sai");
+            }
+        } while (!(choice >= 0 && choice <=3 ));
+
+        if (choice == 0){
+            System.out.println("Nhap nam");
+            int nam = sc.nextInt();sc.nextLine();
+            thong_ke_theo_quy(nam);
+        } else if (choice == 1){
+            thong_ke_theo_nam();
+        } else if (choice == 2 ){
+            do { 
+                b=e=null;
+            System.out.println("Nhap ngay bat dau (dd/MM/yyyy) : ");
+            String begin = sc.nextLine();
+            System.out.println("Nhap thoi gian ket thuc (dd/MM/yyyy) : ");
+            String end = sc.nextLine();
+            try {
+                b = LocalDate.parse(end, f);
+            } catch (Exception ee) {
+                System.out.println(red("Sai dinh dang, Nhap lai !!"));
+            }
+            } while (b == null || e == null);
+
+        }
+        else if(choice == 3){
+            return;
+        }
+       } while (true);
+    }
+    
 public static void main(String[] args) {
    BookingManager.cham();
-   RoomManager.thong_ke();
+   CustomerManager.cham();
+   thong_ke_theo_quy(2024);
+   thong_ke_theo_nam();
 }
  
 }

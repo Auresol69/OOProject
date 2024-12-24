@@ -1,0 +1,35 @@
+Nguyen Van A#123456789#true#true#1#1#40
+Tran Thi B#987654321#false#true#1#1#35
+Le Van C#933445566#true#true#1#1#30
+Pham Thi D#911223344#false#true#1#1#25
+Hoang Van E#977332211#true#true#1#1#20
+Nguyen Van A#123456789#true#true#1#1#40
+Tran Thi B#987654321#false#true#1#1#35
+Le Van C#933445566#true#true#1#1#30
+Pham Thi D#911223344#false#true#1#1#25
+Hoang Van E#977332211#true#true#1#1#20
+Nguyen Thi F#909887766#false#true#1#0#50
+
+Nguyen Van G#123123123#true#true#2#1#45
+Tran Thi H#981234567#false#true#2#1#40
+Le Van I#912345678#true#true#2#1#35
+Pham Thi J#923456789#false#true#2#1#30
+Hoang Van K#934567890#true#true#2#1#25
+Nguyen Van G#123123123#true#true#2#1#45
+Tran Thi H#981234567#false#true#2#1#40
+Le Van I#912345678#true#true#2#1#35
+Pham Thi J#923456789#false#true#2#1#30
+Hoang Van K#934567890#true#true#2#1#25
+Nguyen Thi L#945678901#false#true#2#0#55
+
+Nguyen Van M#956789012#true#true#3#1#50
+Tran Thi N#967890123#false#true#3#1#45
+Le Van O#978901234#true#true#3#1#40
+Pham Thi P#989012345#false#true#3#1#35
+Hoang Van Q#990123456#true#true#3#1#30
+Nguyen Van M#956789012#true#true#3#1#50
+Tran Thi N#967890123#false#true#3#1#45
+Le Van O#978901234#true#true#3#1#40
+Pham Thi P#989012345#false#true#3#1#35
+Hoang Van Q#990123456#true#true#3#1#30
+Nguyen Thi R#911234567#false#true#3#0#60

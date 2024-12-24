@@ -11,26 +11,45 @@ public class CustomerManager {
 
     static {
         customers = new ArrayList<>();
-        ArrayList<Customer> list = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/customer.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
+                
                 String[] str = line.split("#");
+                
                 String name = str[0];
                 String phonenumber = str[1];
+                
                 boolean sex = false;
                 if (str[2] == "true") {
                     sex = true;
                 }
-                Customer cus = new Customer(name, phonenumber, sex);
-                list.add(cus);
+               
+                double diem = Double.parseDouble(str[3]);
+                
+                Customer cus = new Customer(name, phonenumber, sex,diem);
+                customers.add(cus);
+                
 
             }
         } catch (Exception e) {
             // TODO: handle exception
         }
-        customers = list;
+   
     }
+    public static String yeelow(String x) {
+        return "\033[33m" + x + "\033[0m";
+    }
+
+    public static String red(String x) {
+        return "\033[31m" + x + "\033[0m";
+    }
+
+    public static String green(String x) {
+        return "\033[32m" + x + "\033[0m";
+    }
+
+    
 
     public CustomerManager() {
         ArrayList<Customer> list = new ArrayList<>();
@@ -44,7 +63,7 @@ public class CustomerManager {
                 if (str[2] == "true") {
                     sex = true;
                 }
-                Customer cus = new Customer(name, phonenumber, sex);
+                Customer cus = new Customer(name, phonenumber, sex,0);
                 list.add(cus);
 
             }
@@ -159,7 +178,8 @@ public class CustomerManager {
         for (Customer cus : CustomerManager.customers) {
             str.append(cus.getName() + "#");
             str.append(cus.getPhoneNumber() + "#");
-            str.append(cus.getSex());
+            str.append(cus.getSex()+"#");
+            str.append(cus.getDiemTichLuy());
             str.append("\n");
         }
 
@@ -172,5 +192,182 @@ public class CustomerManager {
         } catch (IOException e) {
             System.err.println("Có lỗi xảy ra khi ghi vào file: " + e.getMessage());
         }
+    }
+    public static void cham(){
+        
+    }
+    
+    public static void show(){
+        int i = 0;
+        StringBuilder str= new StringBuilder();
+
+        str.append("╠"+RoomManager.border( 20));
+        str.append("╦"+RoomManager.border( 20));
+        str.append("╦"+RoomManager.border( 20));
+        str.append("╦"+RoomManager.border( 20)+"╣");
+        System.out.println(str);
+        str= new StringBuilder();
+        str.append("║"+RoomManager.form_SO("Ten KH", 20));
+        str.append("║"+RoomManager.form_SO("SDT", 20));
+        str.append("║"+RoomManager.form_SO("DTL", 20));
+        str.append("║"+RoomManager.form_SO("GIOI TINH", 20)+"║");
+        System.out.println(str);
+        str = new StringBuilder();
+        str.append("╠"+RoomManager.border( 20));
+        str.append("╩"+RoomManager.border( 20));
+        str.append("╩"+RoomManager.border( 20));
+        str.append("╩"+RoomManager.border( 20)+"╣");
+        System.out.println(str);
+        for (Customer cus : customers){
+            if (i == 0){
+                i++;
+            } else {
+                str= new StringBuilder();
+                str.append("║"+RoomManager.border_thuong( 20));
+                str.append("+"+RoomManager.border_thuong( 20));
+                str.append("+"+RoomManager.border_thuong( 20));
+                str.append("+"+RoomManager.border_thuong( 20)+"║");
+                System.out.println(str);
+            }
+            str= new StringBuilder();
+            str.append("║"+RoomManager.form_SO(cus.getName(), 20));
+            str.append("|"+RoomManager.form_SO(cus.getPhoneNumber(), 20));
+            str.append("|"+RoomManager.form_SO(cus.getDiemTichLuy(), 20));
+            str.append("|"+RoomManager.form_SO(cus.getSex(), 20)+"║");
+            System.out.println(str);
+            
+        }
+        System.out.println("╚"+ RoomManager.border(83) + "╝");
+    }
+
+    public static void terminal(){
+        show();
+        int choice = 0;
+        Scanner sc = new Scanner(System.in);
+        do { 
+        System.out.println(yeelow("╔" + RoomManager.border(70) + "╗"));
+        System.out.println(yeelow("╠" + RoomManager.border(70) + "╣"));
+        System.out.println(yeelow("║") + RoomManager.form_SO("OPTION", 70) + yeelow("║"));
+        System.out.println(yeelow("║") + RoomManager.form_option("0. Them khach hang", 70) + yeelow("║"));
+        System.out.println(yeelow("║") + RoomManager.form_option("1. Sua thong tin khach hang ", 70) + yeelow("║"));
+        System.out.println(yeelow("║") + RoomManager.form_option("2. Xoa khach hang", 70) + yeelow("║"));
+        System.out.println(yeelow("║") + RoomManager.form_option("3. Quay lai ", 70) + yeelow("║"));
+        System.out.println(yeelow("╚" + RoomManager.border(70) + "╝"));
+
+
+        System.out.print("Nhap lua chon"); 
+
+            do { 
+                choice = sc.nextInt();sc.nextLine();
+                if (!(choice >= 0 && choice <= 3)){
+                    System.out.println(red("SAI"));
+                }
+            } while (!(choice >= 0 && choice <= 3));
+           
+            if (choice == 0){
+                System.out.println("Nhap so dien thoai khach hang ");
+                String sdt = sc.nextLine();
+                
+                 Customer cus = CustomerManager.get_cus(sdt);
+                 if (cus == null){
+                    System.out.println("Nhap ten khach hang");
+                    String ten = sc.nextLine();
+                    System.out.print("Nhap gioi tinh || 0. nam    1. nu   : ");
+                    do { 
+                        
+                    } while (!(choice == 0 || choice == 1));
+
+                    if (choice == 0){
+                        cus = new Customer(sdt, ten, true, 0);
+                    } else {
+                        cus = new Customer(sdt, ten, false, 0);
+                    }
+                    customers.add(cus);
+                    CustomerManager.addCustomer(cus);
+                    CustomerManager.luu_data();
+                    System.out.println(green("Them thanh cong khach hang"));
+                   
+                 } else {
+                    System.out.println(red("So dien thoai da duoc su dung"));
+                 }
+            } else if ( choice == 1){
+
+                System.out.println("Nhap so dien thoai khach hang ban muon sua thong tin ");
+                String sdt = sc.nextLine();
+                
+                Customer cus = CustomerManager.get_cus(sdt);
+                if (cus == null){
+                    System.out.println(red("so dien thoai khong ton tai"));
+                } else {
+                    do { 
+                       
+                    
+                    System.out.println(yeelow("╔" + RoomManager.border(70) + "╗"));
+                    System.out.println(yeelow("╠" + RoomManager.border(70) + "╣"));
+                    System.out.println(yeelow("║") + RoomManager.form_SO("OPTION", 70) + yeelow("║"));
+                    System.out.println(yeelow("║") + RoomManager.form_option("0. Sua ten ", 70) + yeelow("║"));
+                    System.out.println(yeelow("║") + RoomManager.form_option("2. Sua gioi tinh ", 70) + yeelow("║"));
+                    System.out.println(yeelow("║") + RoomManager.form_option("3. Sua diem ", 70) + yeelow("║"));
+                    System.out.println(yeelow("║") + RoomManager.form_option("4. Quay lai", 70) + yeelow("║"));
+                    System.out.println(yeelow("╚" + RoomManager.border(70) + "╝"));
+                    
+                    System.out.print(yeelow("Nhap lua chon : "));
+
+                    do { 
+                        choice = sc.nextInt();sc.nextLine();
+                        if (!(choice >= 0 && choice <= 3)){
+                            System.out.println(red("SAI"));
+                        }
+                    } while (!(choice >= 0 && choice <= 4));
+
+                    if (choice == 0){
+                        System.out.print(yeelow("Nhap ten moi : "));
+                        String ten  =sc.nextLine();
+                        cus.setName(ten);
+                        CustomerManager.luu_data();
+                    } else if (choice == 1) {
+                        System.out.println("Nhap so dien thoai moi ");
+                        cus.setPhoneNumber(sdt);
+                        CustomerManager.luu_data();
+                    } else if (choice == 2 ){
+                        boolean b = cus.getSex()? false :true;
+                        cus.setSex(b);
+                        System.out.println(green("Sua thanh cong gioi tinh "));
+                    } else if ( choice == 3){
+                        System.out.print("Nhap diem moi cho khach hang  :  ");
+                        double diem = Double.parseDouble(sc.nextLine());
+                        cus.setDiem(diem);
+                        System.out.println(green("Sua diem thanh cong"));
+                    }
+                    } while (choice != 4);
+
+                }
+               
+
+                
+                
+            } else if (choice == 2){
+                System.out.print(yeelow("Nhap sdt khach hang ban muon xoa "));
+
+                String sdt = sc.nextLine();
+                Customer cus = CustomerManager.get_cus(sdt);
+                if (cus==null){
+                    System.out.println(red("SDT khong ton tai"));
+                } else {
+                    customers.remove(cus);
+                    CustomerManager.luu_data();
+                    System.out.println(green("Xoa thanh cong khach hang"));
+                }
+
+            }
+            else if (choice == 3){
+                return;
+            }
+        } while (true);
+
+    }
+    public static void main(String[] args) {
+        show();
+       
     }
 }

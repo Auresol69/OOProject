@@ -1,26 +1,27 @@
 public class Customer extends Person {
-    protected int DiemTichLuy = 0;
+    protected double  DiemTichLuy = 0;
     protected String Tier = "Đồng";
 
     public Customer() {
         super();
     }
 
-    public Customer(String Name, String PhoneNumber, boolean Sex) {
+    public Customer(String Name, String PhoneNumber, boolean Sex,double diem) {
         super(Name, PhoneNumber, Sex);
-    }
+        this.DiemTichLuy = diem;
+    }   
 
     public void setInfo() {
         super.NhapThongTin();
     }
 
-    public int CongDiemTichLuy(double receiptValue) {
+    public double CongDiemTichLuy(double receiptValue) {
         double Points = receiptValue * 0.1;
         updateTier();
-        return DiemTichLuy += (int) Points;
+        return DiemTichLuy +=  Points;
     }
 
-    public int getDiemTichLuy() {
+    public double  getDiemTichLuy() {
         return DiemTichLuy;
     }
 
@@ -37,6 +38,9 @@ public class Customer extends Person {
 
     public String getTier() {
         return Tier;
+    }
+    public void setDiem(double diem){
+        this.DiemTichLuy = diem;
     }
 
     public String toString() {

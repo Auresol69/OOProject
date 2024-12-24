@@ -38,8 +38,15 @@ public class PaymentmethodManager {
         }
     }
 
-    public static boolean removePaymentMethod(int id) {
-        return methods.removeIf(pm -> pm.id == id);
+    public static void removePaymentMethod(int id) {
+        for (int i = 0; i < methods.size(); i++) {
+            if (methods.get(i).getId() == id) {
+                methods.remove(i);
+                System.out.println("Da xoa thanh cong!");
+                writeToFile();
+                return;
+            }
+        }
     }
 
     public static PaymentMethod getPaymentMethodById(int id) {

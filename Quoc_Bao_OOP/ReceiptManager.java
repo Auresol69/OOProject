@@ -16,7 +16,7 @@ public class ReceiptManager {
     public static final String GREEN = "\033[0;32m"; // Xanh lá
     public static final String YELLOW = "\033[0;33m"; // Vàng
     public static final String BLUE = "\033[0;34m"; // Xanh dương
-
+    public static int ID = 0;
     public static String yeelow(String x) {
         return "\033[33m" + x + "\033[0m";
     }
@@ -34,15 +34,19 @@ public class ReceiptManager {
     protected static ArrayList<Receipt> receipts;
 
     static {
+        ID = 1;
         receipts = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("./Quoc_Bao_OOP/data/receipt.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] lines = line.split("#");
                 int id = Integer.parseInt(lines[0]);
+                if (ID <=id){
+                    ID = id;
+                }
                 Customer cus = CustomerManager.get_cus(lines[1]);
                 if (cus == null) {
-                    cus = new Customer("####", "####", false);
+                    cus = new Customer("####", "####", false,0);
                 }
                 ArrayList<Booking> booking_choosed = new ArrayList<Booking>();
                 String[] bookings = lines[2].split("\\$");
@@ -60,7 +64,7 @@ public class ReceiptManager {
                 ReceiptManager.addReceipt(receipt);
             }
         } catch (Exception e) {
-            System.out.println("Lỗi khi đọc file: " + e.getMessage());
+            System.out.println("Loi khi doc file: " + e.getMessage());
         }
     }
 
@@ -83,12 +87,27 @@ public class ReceiptManager {
     }
 
     public static void terminal_receipt() {
+        ArrayList<Booking> list = new ArrayList<>();
+        for (Booking book : BookingManager.bookings){
+            if (book.getReceiptid() == null){
+                list.add(book);
+            }
+        }
+
+        BookingManager.show_booking(list);
         Scanner sc = new Scanner(System.in);
         while (true) {
-            System.out.println("0. Hien thi danh sach hoa don");
-            System.out.println("1. Hien thi hoa don theo khach hang");
-            System.out.println("2. In hoa don");
-            System.out.println("3. Quay lai");
+           
+
+            System.out.println(yeelow("╔" + RoomManager.border(70) + "╗"));
+                System.out.println(yeelow("║") + RoomManager.form_SO("OPTION", 70) + yeelow("║"));
+                System.out.println(yeelow("╠" + RoomManager.border(70) + "╣"));
+                System.out.println(yeelow("║") + RoomManager.form_option("0. Hien thi danh sach hoa don ", 70) + yeelow("║"));
+                System.out.println(yeelow("║") + RoomManager.form_option("1. Hien thi hoa don theo khach hang", 70) + yeelow("║"));
+                System.out.println(yeelow("║") + RoomManager.form_option("2. In hoa don ", 70) + yeelow("║"));
+                System.out.println(yeelow("║") + RoomManager.form_option("3. Xoa hoa don", 70) + yeelow("║"));
+                System.out.println(yeelow("║") + RoomManager.form_option("4. Quay lai", 70) + yeelow("║"));
+                System.out.println(yeelow("╚" + RoomManager.border(70) + "╝"));
             int choice = Integer.parseInt(sc.nextLine());
             switch (choice) {
                 case 0:
@@ -101,6 +120,11 @@ public class ReceiptManager {
                     ReceiptManager.showReceipt();
                     break;
                 case 3:
+                    System.out.print("Hay nhap so ReiptID ban muon xoa: ");
+                    int id = Integer.parseInt(sc.nextLine());
+                    ReceiptManager.removeReceipt(id);
+                    break;
+                case 4:
                     return;
                 default:
                     break;
@@ -110,31 +134,47 @@ public class ReceiptManager {
     }
 
     public static void addReceipt(Receipt rc) {
-        if (rc != null && receipts.contains(rc)) {
+        if (rc != null && !receipts.contains(rc)) {
             receipts.add(rc);
             writeToFile();
         }
     }
 
-    public static void writeToFile() {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("./Quoc_Bao_OOP/data/receipt.txt"))) {
-            for (Receipt rc : receipts) {
-                StringBuilder sb = new StringBuilder();
-                sb.append(rc.getId()).append("#");
-                sb.append(rc.getCus().getPhoneNumber()).append("#");
-                for (int i = 0; i < rc.getBookings_choosed().size(); i++) {
-                    sb.append(rc.getBookings_choosed().get(i).getId()).append("$");
-                    if (i < rc.getBookings_choosed().size() - 1) {
-                        sb.append("$");
-                    }
-                }
-                sb.append("#");
-                sb.append(rc.getPaymentmethod().getId()).append("#");
-                sb.append(rc.getDateTime().format(formatter)).append("#");
-                sb.append(rc.getTotalCost());
-                bw.write(sb.toString());
-                bw.newLine();
+    public static void removeReceipt(int id) {
+        for (Receipt rc : ReceiptManager.receipts) {
+            if (rc.getId() == id) {
+                receipts.remove(rc);
+                writeToFile();
+                return;
             }
+        }
+    }
+
+    public static void writeToFile() {
+        StringBuilder str = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
+        for (Receipt rc : receipts) {
+            
+            sb.append(rc.getId()).append("#");
+            sb.append(rc.getCus().getPhoneNumber()).append("#");
+            for (int i = 0; i < rc.getBookings_choosed().size(); i++) {
+                sb.append(rc.getBookings_choosed().get(i).getId()).append("$");
+                if (i < rc.getBookings_choosed().size() - 1) {
+                    sb.append("$");
+                }
+            }
+            sb.append("#");
+            sb.append(rc.getPaymentmethod().getId()).append("#");
+            sb.append(rc.getDateTime().format(formatter)).append("#");
+            sb.append(rc.getTotalCost()+"\n");
+            
+        }
+
+       
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("./Quoc_Bao_OOP/data/receipt.txt"))) {
+            bw.write(sb.toString());
+            bw.newLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -250,5 +290,8 @@ public class ReceiptManager {
             System.out.println("ID: " + booking.getId() + ", Ten khach hang: " + booking.getCus().getName()
                     + ", Receipt ID: " + booking.getReceiptid() + ", Total: " + booking.getPrice());
         }
+    }
+    public static void main(String[] args) {
+        writeToFile();
     }
 }

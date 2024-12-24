@@ -1,5 +1,7 @@
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,6 +13,46 @@ public class StaffManager {
     protected static ArrayList<Staff> staffs;
     protected int MaxFloor = 3;
 
+    static {
+        try (BufferedReader br = new BufferedReader(
+                new FileReader("./Quoc_Bao_OOP/data/staff.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] arrStrings = line.split("#");
+
+                if (arrStrings.length < 7) {
+                    System.out.println("Dòng dữ liệu không hợp lệ: " + line);
+                    continue;
+                }
+
+                Staff a = null;
+                try {
+                    if (arrStrings[5].equals("0")) { // Admin
+                        a = new Admin();
+                        ((Admin) a).setSoGioLam(Integer.parseInt(arrStrings[6]));
+                    } else if (arrStrings[5].equals("1")) { // ServiceTeamMember
+                        a = new ServiceTeamMember();
+                        ((ServiceTeamMember) a).setSoGioLam(Integer.parseInt(arrStrings[6]));
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Lỗi định dạng số ở dòng: " + line);
+                    continue;
+                }
+
+                if (a != null) {
+                    a.setName(arrStrings[0]);
+                    a.setPhoneNumber(arrStrings[1]);
+                    a.setSex(Boolean.parseBoolean(arrStrings[2]));
+                    a.setStatus(Boolean.parseBoolean(arrStrings[3]));
+                    a.setFloor(Integer.parseInt(arrStrings[4]));
+
+                    staffs.add(a); // Thêm vào danh sách staffs
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi khi tải dữ liệu từ file staff.txt: " + e.getMessage());
+        }
+    }
     public StaffManager() {
         staffs = new ArrayList<>();
     }
@@ -52,7 +94,7 @@ public class StaffManager {
         return "\033[32m" + x + "\033[0m";
     }
 
-    public String spacing(Object c, int n) {
+    public static String spacing(Object c, int n) {
         StringBuilder k = new StringBuilder();
         k.append("");
         int space_b = (n - c.toString().length()) / 2;
@@ -205,7 +247,7 @@ public class StaffManager {
         }
     }
 
-    public void themNhanVienTuFile(File name) {
+    public static void themNhanVienTuFile(File name) {
         if (staffs == null) {
             staffs = new ArrayList<>();
         }
@@ -458,11 +500,75 @@ public class StaffManager {
                     System.out.println("  Nhân viên chưa có lịch làm việc.");
                 }
             }
+            if(nv instanceof Admin){
+                System.out.println(nv.XuatThongTin());
+                Admin TargetAdmin = (Admin) nv;
+                ArrayList<AdminSchedule> schedules = TargetAdmin.getPersonalSchedules();
+                if (!schedules.isEmpty()) {
+                    System.out.println("Lịch làm việc của nhân viên là:");
+                    for (AdminSchedule schedule : schedules) {
+                        System.out.println("    Ngày: " + schedule.getDate() + ", Ca: " + schedule.getShift()
+                                + ", Tầng: " + TargetAdmin.getFloor());
+                    }
+                } else {
+                    System.out.println("  Nhân viên chưa có lịch làm việc.");
+                }
+            }
         }
         System.out.println(border_thuong(80));
     }
 
-    private boolean kiemTraTrungLich(ServiceTeamMember member, LocalDate date, int shift) {
+    public void xuatInfoServiceTeamMember() {
+        System.out.println("╔═" + createBorderLine(80) + "═╗");
+        System.out.println("║" + spacing("Info tất cả ServiceTeamMember là", 80) + "║");
+        System.out.println("╚═" + createBorderLine(80) + "═╝s");
+        System.out.println(border_thuong(80));
+        for (Staff nv : staffs) {
+            
+            if (nv instanceof ServiceTeamMember) {
+                System.out.println(nv.XuatThongTin());
+                ServiceTeamMember ServiceMember = (ServiceTeamMember) nv;
+                ArrayList<StaffSchedule> schedules = ServiceMember.getPersonalSchedules();
+                if (!schedules.isEmpty()) {
+                    System.out.println("Lịch làm việc của nhân viên là:");
+                    for (StaffSchedule schedule : schedules) {
+                        System.out.println("    Ngày: " + schedule.getDate() + ", Ca: " + schedule.getShift()
+                                + ", Tầng: " + ServiceMember.getFloor());
+                    }
+                } else {
+                    System.out.println("  Nhân viên chưa có lịch làm việc.");
+                }
+            }
+        }
+        System.out.println(border_thuong(80));
+    }
+
+    public void xuatInfoAdmin() {
+        System.out.println("╔═" + createBorderLine(80) + "═╗");
+        System.out.println("║" + spacing("Info tất cả Admin là", 80) + "║");
+        System.out.println("╚═" + createBorderLine(80) + "═╝s");
+        System.out.println(border_thuong(80));
+        for (Staff nv : staffs) {
+            
+            if (nv instanceof Admin) {
+                System.out.println(nv.XuatThongTin());
+                Admin TargetAdmin = (Admin) nv;
+                ArrayList<AdminSchedule> schedules = TargetAdmin.getPersonalSchedules();
+                if (!schedules.isEmpty()) {
+                    System.out.println("Lịch làm việc của nhân viên là:");
+                    for (AdminSchedule schedule : schedules) {
+                        System.out.println("    Ngày: " + schedule.getDate() + ", Ca: " + schedule.getShift()
+                                + ", Tầng: " + TargetAdmin.getFloor());
+                    }
+                } else {
+                    System.out.println("  Nhân viên chưa có lịch làm việc.");
+                }
+            }
+        }
+        System.out.println(border_thuong(80));
+    }
+
+    private static boolean kiemTraTrungLichChoServiceTeamMember(ServiceTeamMember member, LocalDate date, int shift) {
         for (StaffSchedule lich : member.getPersonalSchedules()) {
             if (lich.getDate().equals(date) && lich.getShift() == shift) {
                 return true; // Trùng lịch
@@ -471,16 +577,82 @@ public class StaffManager {
         return false; // Không trùng lịch
     }
 
-    public void ganLichLamViec(int shift, int roomSize, LocalDate date, int floor) {
+    private static boolean kiemTraTrungLichChoAdmin(Admin member, LocalDate date, int shift) {
+        for (AdminSchedule lich : member.getPersonalSchedules()) {
+            if (lich.getDate().equals(date) && lich.getShift() == shift) {
+                return true; // Trùng lịch
+            }
+        }
+        return false; // Không trùng lịch
+    }
+
+
+    public static void ganLichLamViecChoServiceTeam(int shift, int roomSize, LocalDate date, int floor, Room room) {
+        int soNhanVienHienTai = 0;
+    
+        // Đếm số nhân viên hiện tại đã được gán lịch trong phòng
+        for (Staff nv : staffs) {
+            if (nv instanceof ServiceTeamMember && nv.getFloor() == floor) {
+                ServiceTeamMember serviceMember = (ServiceTeamMember) nv;
+    
+                // Duyệt qua lịch làm việc cá nhân
+                for (StaffSchedule lich : serviceMember.getPersonalSchedules()) {
+                    if (lich.getDate().equals(date) && lich.getShift() == shift && lich.getRoom().equals(room)) {
+                        soNhanVienHienTai++;
+                        break; // Chỉ cần một lịch trùng là đủ, không cần tiếp tục duyệt
+                    }
+                }
+            }
+        }
+    
+        // Kiểm tra nếu số nhân viên hiện tại đã đạt tối đa roomSize
+        if (soNhanVienHienTai >= roomSize) {
+            System.out.println("Phòng " + room.getName() + " đã đủ số nhân viên phục vụ cho ca " + shift + " ngày " + date);
+            return;
+        }
+    
+        // Gán lịch cho đến khi đủ số nhân viên
+        for (Staff nv : staffs) {
+            if (nv instanceof ServiceTeamMember && nv.getFloor() == floor && nv.getStatus()) {
+                ServiceTeamMember serviceMember = (ServiceTeamMember) nv;
+    
+                // Kiểm tra nhân viên này có lịch trùng không
+                if (!kiemTraTrungLichChoServiceTeamMember(serviceMember, date, shift)) {
+                    // Gán lịch mới với thông tin phòng
+                    StaffSchedule lichMoi = new StaffSchedule(date, shift, room);
+                    serviceMember.addPersonalSchedule(lichMoi);
+                    soNhanVienHienTai++;
+    
+                    System.out.println("Đã gán lịch cho nhân viên " + serviceMember.getName() +
+                            ": Ngày = " + date + ", Ca = " + shift + ", Phòng = " + room.getName());
+    
+                    // Dừng nếu đã đạt đủ roomSize
+                    if (soNhanVienHienTai >= roomSize) {
+                        System.out.println("Đã đạt đủ số nhân viên phục vụ cho phòng " + room.getName() + " ngày " + date + ", ca " + shift);
+                        return;
+                    }
+                }
+            }
+        }
+    
+        // Nếu không tìm được đủ nhân viên
+        if (soNhanVienHienTai < roomSize) {
+            System.out.println("Không đủ nhân viên phù hợp để gán lịch. Đã gán " + soNhanVienHienTai + "/" + roomSize + " nhân viên cho phòng " + room.getName());
+        }
+    }
+    
+    
+
+    public static void ganLichLamViecChoAdmin(int shift, int roomSize, LocalDate date, int floor) {
         int soNhanVienHienTai = 0;
 
         // Đếm số phục vụ cho một phòng(trong trường hợp đã có)
         for (Staff nv : staffs) {
-            if (nv instanceof ServiceTeamMember && nv.getFloor() == floor) {
-                ServiceTeamMember serviceMember = (ServiceTeamMember) nv;
+            if (nv instanceof Admin && nv.getFloor() == floor) {
+                Admin serviceMember = (Admin) nv;
 
                 // Duyệt qua lịch làm việc cá nhân
-                for (StaffSchedule lich : serviceMember.getPersonalSchedules()) {
+                for  (AdminSchedule lich : serviceMember.getPersonalSchedules()) {
                     if (lich.getDate().equals(date) && lich.getShift() == shift) {
                         soNhanVienHienTai++;
                     }
@@ -497,16 +669,16 @@ public class StaffManager {
 
         // Gán lịch cho nhân viên
         for (Staff nv : staffs) {
-            if (nv instanceof ServiceTeamMember && nv.getFloor() == floor) {
-                ServiceTeamMember serviceMember = (ServiceTeamMember) nv;
+            if (nv instanceof Admin && nv.getFloor() == floor && nv.getStatus()) {
+                Admin targetAdmin = (Admin) nv;
 
                 // Kiểm tra nhân viên này có lịch trùng không
-                if (!kiemTraTrungLich(serviceMember, date, shift)) {
+                if (!kiemTraTrungLichChoAdmin(targetAdmin, date, shift)) {
                     // Gán lịch mới
-                    StaffSchedule lichMoi = new StaffSchedule(date, shift);
-                    serviceMember.addPersonalSchedule(lichMoi);
+                    AdminSchedule lichMoi = new AdminSchedule(date, shift);
+                    targetAdmin.addPersonalSchedule(lichMoi);
 
-                    System.out.println("Đã gán lịch cho nhân viên " + serviceMember.getName() +
+                    System.out.println("Đã gán lịch cho nhân viên " + targetAdmin.getName() +
                             ": Ngày = " + date + ", Ca = " + shift);
                     return; // Thoát sau khi gán lịch cho 1 nhân viên
                 }
@@ -516,4 +688,126 @@ public class StaffManager {
         System.out.println("Không tìm thấy nhân viên nào phù hợp để gán lịch.");
     }
 
+    public Boolean KiemTraValidPhoneNumber(String PhoneNumber) {
+        // Biểu thức chính quy: Số điện thoại bắt đầu bằng 0 và có 10 chữ số
+        String regex = "^0[0-9]{9}$";
+    
+        // Kiểm tra chuỗi PhoneNumber có khớp với biểu thức chính quy không
+        if (PhoneNumber == null || PhoneNumber.isEmpty()) {
+            return false; // Số điện thoại không được để trống
+        }
+    
+        return PhoneNumber.matches(regex);
+    }
+    
+
+    public void AccessStaffMonitor(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("╔═" + createBorderLine(80) + "═╗");
+        System.out.println("║" + spacing("Xin chào người dùng, bạn muốn làm gì?:", 80) + "║");
+        System.out.println("║" + spacing("1/Thêm nhân viên", 80) + "║");
+        System.out.println("║" + spacing("2/Xóa nhân viên:", 80) + "║");
+        System.out.println("║" + spacing("3/Edit nhân viên:", 80) + "║");
+        System.out.println("╚═" + createBorderLine(80) + "═╝s");
+        System.out.println("Lựa chọn của bạn?:");
+        String pick;
+        while (true) {
+            pick = sc.nextLine().trim();
+
+            if (pick.isEmpty()) {
+                System.out.println("Không được để trống.");
+                continue;
+            }
+
+            if (!pick.matches("^[123]$")) { // \\ chỉ cho phép các ký tự từ '1' hoặc '2' hoặc 3
+                System.out.println("nhập sai, không chứa ký tự hoặc ký tự đặc biệt.");
+                continue;
+            }
+
+            break;
+        }
+    int chon = Integer.parseInt(pick);
+    String newinput;
+    switch(chon){
+        case 1:
+        themNhanvien();
+        break;
+        case 2:
+        do {
+            System.out.println("Hãy nhập số điện thoại nhân viên:");
+            newinput = sc.nextLine();
+            
+        } while (!KiemTraValidPhoneNumber(newinput));
+        removeStaff(timNhanVien(newinput));
+
+        
+        break;
+        case 3:
+        do {
+            System.out.println("Hãy nhập số điện thoại nhân viên:");
+            newinput = sc.nextLine();
+            
+        } while (!KiemTraValidPhoneNumber(newinput));
+        editStaff(timNhanVien(newinput));
+        break;
+        default:
+        break;
+    }
+   
+    }
+
+
+    public static void displayWorkingServiceTeamMember(LocalDate date, int shift, Room room) {
+        System.out.println("╔═" + createBorderLine(80) + "═╗");
+        System.out.println("║" + spacing("Danh sách ServiceTeamMember đang làm việc", 80) + "║");
+        System.out.println("║" + spacing("Ngày: " + date + ", Ca: " + shift + ", Phòng: " + room.getName(), 80) + "║");
+        System.out.println("╚═" + createBorderLine(80) + "═╝");
+        System.out.println(border_thuong(80));
+    
+        boolean found = false;
+    
+        // Duyệt qua danh sách nhân viên
+        for (Staff nv : staffs) {
+            if (nv instanceof ServiceTeamMember) {
+                ServiceTeamMember serviceMember = (ServiceTeamMember) nv;
+    
+                // Kiểm tra lịch làm việc của nhân viên
+                for (StaffSchedule lich : serviceMember.getPersonalSchedules()) {
+                    if (lich.getDate().equals(date) && lich.getShift() == shift && lich.getRoom().equals(room)) {
+                        // Hiển thị thông tin nhân viên
+                        System.out.println("║" + spacing("Nhân viên: " + serviceMember.getName(), 80) + "║");
+                        System.out.println("║" + spacing("Số điện thoại: " + serviceMember.getPhoneNumber(), 80) + "║");
+                        System.out.println("║" + spacing("Tầng: " + serviceMember.getFloor(), 80) + "║");
+                        System.out.println(border_thuong(80));
+                        found = true;
+                        break;
+                    }
+                }
+            }
+        }
+    
+        // Thông báo nếu không tìm thấy nhân viên nào
+        if (!found) {
+            System.out.println("║" + spacing("Không có ServiceTeamMember làm việc trong phòng " + room.getName(), 80) + "║");
+            System.out.println("║" + spacing("vào ngày " + date + ", ca " + shift, 80) + "║");
+        }
+    
+        System.out.println("╚═" + createBorderLine(80) + "═╝");
+    }
+    
+    public static void show(){
+        
+        StringBuilder str = new StringBuilder();
+
+        for (Staff st : StaffManager.staffs){
+            str.append("║"+RoomManager.form_SO(st.getName(),20));
+            str.append("|"+RoomManager.form_SO(st.getPhoneNumber(), 20));
+            str.append("|"+RoomManager.form_SO(st.getRole(), 20) +"║\n");
+            
+        }
+        System.out.println(str);
+    }
+    public static void main(String[] args) {
+        show();
+    }
 }

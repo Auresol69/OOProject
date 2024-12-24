@@ -1,11 +1,14 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Admin extends Staff {
     protected int SoGioLam;
+    protected ArrayList<AdminSchedule> PersonalSchedule;
 
     public Admin() {
         super();
         this.Role = "Quản lý";
+        this.PersonalSchedule = new ArrayList<>();
     }
 
     public Admin(String Name, String PhoneNumber, boolean Sex) {
@@ -19,6 +22,21 @@ public class Admin extends Staff {
             return 2000;
         } else {
             return 1000;
+        }
+    }
+
+    public void addPersonalSchedule(AdminSchedule schedule) {
+        PersonalSchedule.add(schedule);
+    }
+
+    public ArrayList<AdminSchedule> getPersonalSchedules() {
+        return PersonalSchedule;
+    }
+
+    public void viewPersonalSchedules() {
+        System.out.println("Lịch riêng của nhân viên: " + super.getName() + " (Phone: " + super.getPhoneNumber() + ")");
+        for (AdminSchedule schedule : PersonalSchedule) {
+            schedule.displaySchedule();
         }
     }
 

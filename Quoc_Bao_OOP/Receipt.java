@@ -14,7 +14,8 @@ public class Receipt extends ReceiptIdManager {
 
     public Receipt() {
         this.cus = new Customer();
-        this.id = ReceiptIdManager.getNextId();
+        ReceiptManager.ID++;
+        this.id =  ReceiptManager.ID++;
         this.bookings_choosed = new ArrayList<>();
         this.dateTime = LocalDateTime.now();
         this.totalCost = 0;
