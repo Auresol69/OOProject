@@ -6,6 +6,20 @@
   "configurations": [
     {
       "type": "java",
+      "name": "ReceiptManager",
+      "request": "launch",
+      "mainClass": "ReceiptManager",
+      "projectName": "OOProject_c723fb40"
+    },
+    {
+      "type": "java",
+      "name": "home",
+      "request": "launch",
+      "mainClass": "home",
+      "projectName": "OOProject_c723fb40"
+    },
+    {
+      "type": "java",
       "name": "accountManager",
       "request": "launch",
       "mainClass": "accountManager",
